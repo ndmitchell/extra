@@ -1,5 +1,4 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
-{-# OPTIONS_GHC -main-is Test.main #-}
 module Test(main) where
 import TestUtil
 import Extra

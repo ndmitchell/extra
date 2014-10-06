@@ -58,6 +58,7 @@ test-suite extra-test
         time,
         QuickCheck
     hs-source-dirs: src
+    ghc-options: -main-is Test.main
     main-is:        Test.hs
     other-modules:
         TestUtil
