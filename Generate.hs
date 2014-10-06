@@ -18,13 +18,13 @@ main = do
                     unlines $ filter (not . isPrefixOf "--" . trim) $ lines src
         let tests = mapMaybe (stripPrefix "-- > ") $ lines src
         return (mod, funcs, tests)
-    writeFile "Extra.hs" $ unlines $
+    writeFile "src/Extra.hs" $ unlines $
         ["module Extra("] ++
         concat [["    -- * " ++ mod, "    " ++ unwords (map (++",") funs)] | (mod,funs,_) <- ifaces] ++
         ["    ) where"
         ,""] ++
         ["import " ++ x | x <- mods]
-    writeFile "Test.hs" $ unlines $
+    writeFile "src/Test.hs" $ unlines $
         ["module Test(main) where"] ++
         ["import " ++ x | x <- mods] ++
         ["main :: IO ()"
