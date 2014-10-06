@@ -55,6 +55,9 @@ test-suite extra-test
         base == 4.*,
         directory,
         filepath,
-        time
+        time,
+        QuickCheck
     hs-source-dirs: src
     main-is:        Test.hs
+    other-modules:
+        TestUtil

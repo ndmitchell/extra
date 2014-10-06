@@ -176,8 +176,7 @@ drop1 (x:xs) = xs
 --
 -- Laws:
 --
--- > append prefix match == haystack
--- >   where (prefix, match) = breakOn needle haystack
+-- > \needle haystack -> let (prefix,match) = breakOn needle haystack in prefix ++ match == haystack
 breakOn :: Eq a => [a] -> [a] -> ([a], [a])
 breakOn needle haystack | needle `isPrefixOf` haystack = ([], haystack)
 breakOn needle [] = ([], [])
@@ -208,8 +207,8 @@ breakOnEnd needle haystack = (reverse *** reverse) $ swap $ breakOn (reverse nee
 --
 -- and
 --
--- > intercalate s . splitOn s         == id
--- > splitOn [c]                       == split (==c)
+-- > \s x -> s /= "" ==> intercalate s (splitOn s x) == x
+-- > \c x -> splitOn [c] x                           == split (==c) x
 splitOn :: Eq a => [a] -> [a] -> [[a]]
 splitOn [] _ = error "splitOn, needle may not be empty"
 splitOn _ [] = [[]]

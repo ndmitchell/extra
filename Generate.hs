@@ -25,11 +25,17 @@ main = do
         ,""] ++
         ["import " ++ x | x <- mods]
     writeFile "src/Test.hs" $ unlines $
-        ["module Test(main) where"] ++
-        ["import " ++ x | x <- mods] ++
-        ["main :: IO ()"
+        ["{-# LANGUAGE ExtendedDefaultRules #-}"
+        ,"module Main(main) where"
+        ,"import TestUtil"
+        ,"import Extra"
+        ,"import Data.List"
+        ,"import Test.QuickCheck"
+        ,"default(Maybe Bool,Int,Double)"
+        ,"main :: IO ()"
         ,"main = do"] ++
-        ["  " ++ t | (_,_,ts) <- ifaces, t <- ts]
+        ["  test " ++ show t ++ " $ " ++ t | (_,_,ts) <- ifaces, t <- ts] ++
+        ["  putStrLn \"Success\""]
 
 
 validIdentifier (x:xs) = isLower x && (x:xs) /= "module"

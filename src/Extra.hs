@@ -16,7 +16,7 @@ module Extra(
     -- * Numeric.Extra
     showDP, intToDouble, intToFloat, floatToDouble, doubleToFloat,
     -- * System.Directory.Extra
-    withCurrentDirectory, getDirectoryContentsRecursive, getDirectoryContentsRecursiveWith,
+    withCurrentDirectory, getDirectoryContentsRecursive,
     -- * System.Environment.Extra
     getExecutablePath, lookupEnv,
     -- * System.Info.Extra
