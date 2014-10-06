@@ -9,12 +9,12 @@ module System.Environment.Extra(
 import System.Environment
 
 #if __GLASGOW_HASKELL__ < 706
-import Control.Exception as E
+import Control.Exception.Extra
 import System.IO.Error
 
 getExecutablePath :: IO FilePath
 getExecutablePath = getProgName
 
-lookupEnv :: String -> IO (Maybe String) Source
+lookupEnv :: String -> IO (Maybe String)
 lookupEnv x = catchBool isDoesNotExistError (fmap Just $ getEnv x) (const $ return Nothing)
 #endif

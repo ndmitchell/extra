@@ -41,7 +41,7 @@ retry i x = do
 
 
 catch_ :: IO a -> (SomeException -> IO a) -> IO a
-catch_ = catch
+catch_ = Control.Exception.catch
 
 catchJust_ :: (SomeException -> Maybe b) -> IO a -> (b -> IO a) -> IO a
 catchJust_ = catchJust

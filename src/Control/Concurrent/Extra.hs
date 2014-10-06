@@ -8,8 +8,8 @@ module Control.Concurrent.Extra(
 import Control.Concurrent
 #if __GLASGOW_HASKELL__ >= 706
     hiding (setNumCapabilities)
+import qualified Control.Concurrent
 #endif
-import qualified Control.Concurrent as X
 import Control.Exception
 
 
@@ -25,7 +25,7 @@ withNumCapabilities new act | rtsSupportsBoundThreads = do
 -- | A version of 'setNumCapabilities' that works on all versions of GHC, but has no effect before GHC 7.6.
 setNumCapabilities :: Int -> IO ()
 #if __GLASGOW_HASKELL__ >= 706
-setNumCapabilities n = X.setNumCapabilities n
+setNumCapabilities n = Control.Concurrent.setNumCapabilities n
 #else
 setNumCapabilities n = return ()
 #endif
