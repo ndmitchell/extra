@@ -26,7 +26,8 @@ main = do
         ["import " ++ x | x <- mods]
     writeFile "src/Test.hs" $ unlines $
         ["{-# LANGUAGE ExtendedDefaultRules #-}"
-        ,"module Main(main) where"
+        ,"{-# OPTIONS_GHC -main-is Test.main #-}"
+        ,"module Test(main) where"
         ,"import TestUtil"
         ,"import Extra"
         ,"import Data.List"
