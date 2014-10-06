@@ -10,7 +10,7 @@ maintainer:         Neil Mitchell <ndmitchell@gmail.com>
 copyright:          Neil Mitchell 2014
 synopsis:           Extra functions I use.
 description:
-    Like MissingH.
+    A library of extra functions for the standard Haskell libraries. Most functions are new, and add missing functionality. Some are available in later versions of GHC, but this package ports them back to GHC 7.2.
 homepage:           https://github.com/ndmitchell/extra#readme
 bug-reports:        https://github.com/ndmitchell/extra/issues
 tested-with:        GHC==7.8.2, GHC==7.6.3, GHC==7.4.2, GHC==7.2.2
