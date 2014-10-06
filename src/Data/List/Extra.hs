@@ -1,8 +1,6 @@
 {-# LANGUAGE CPP, TupleSections #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
--- FIXME: Todo
-
 -- | This module extends "Data.List" with extra functions of a similar nature.
 --   The package also exports the existing "Data.List" functions.
 --   Some of the names and semantics were inspired by the @text@ package.
