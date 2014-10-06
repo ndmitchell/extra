@@ -1,5 +1,8 @@
 
-module System.Directory.Extra(module System.Directory, module System.Directory.Extra) where
+module System.Directory.Extra(
+    module System.Directory,
+    withCurrentDirectory, getDirectoryContentsRecursive, getDirectoryContentsRecursiveWith
+    ) where
 
 import System.Directory
 import Control.Monad.Extra
@@ -20,5 +23,8 @@ getDirectoryContentsRecursive dir = do
     rest <- concatMapM getDirectoryContentsRecursive $ sort dirs
     return $ sort files ++ rest
     where
-        isBadDir x = "." `isPrefixOf` x || "_" `isPrefixOf` x
+        isBadDir x = "." `isPrefixOf` x || "_" `isPrefixOf` x -- FIXME
+
+getDirectoryContentsRecursiveWith :: (FilePath -> Bool) -> FilePath -> IO [FilePath]
+getDirectoryContentsRecursiveWith = undefined
 

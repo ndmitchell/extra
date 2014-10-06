@@ -1,17 +1,31 @@
 {-# LANGUAGE CPP #-}
 
-module Control.Concurrent.Extra(module Control.Concurrent.Extra) where
+module Control.Concurrent.Extra(
+    module Control.Concurrent,
+    withNumCapabilities, setNumCapabilities
+    ) where
 
 import Control.Concurrent
+#if __GLASGOW_HASKELL__ >= 706
+    hiding (setNumCapabilities)
+#endif
+import qualified Control.Concurrent as X
 import Control.Exception
 
 
-withCapabilities :: Int -> IO a -> IO a
-#if __GLASGOW_HASKELL__ >= 706
-withCapabilities new act | rtsSupportsBoundThreads = do
+-- | On GHC 7.6 and above with the @-threaded@ flag, brackets a call to 'setNumCapabilities'.
+--   On lower versions (which lack 'setNumCapabilities') this function just runs the argument action.
+withNumCapabilities :: Int -> IO a -> IO a
+withNumCapabilities new act | rtsSupportsBoundThreads = do
     old <- getNumCapabilities
     if old == new then act else
         bracket_ (setNumCapabilities new) (setNumCapabilities old) act
-#endif
-withCapabilities new act = act
 
+
+-- | A version of 'setNumCapabilities' that works on all versions of GHC, but has no effect before GHC 7.6.
+setNumCapabilities :: Int -> IO ()
+#if __GLASGOW_HASKELL__ >= 706
+setNumCapabilities n = X.setNumCapabilities n
+#else
+setNumCapabilities n = return ()
+#endif

@@ -1,25 +1,20 @@
-{-# LANGUAGE ScopedTypeVariables, CPP #-}
+{-# LANGUAGE CPP #-}
+{-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
-module System.Environment.Extra(module System.Environment, module System.Environment.Extra) where
+module System.Environment.Extra(
+    module System.Environment,
+    getExecutablePath, lookupEnv
+    ) where
 
-import Control.Exception as E
-import System.IO.Error
 import System.Environment
 
+#if __GLASGOW_HASKELL__ < 706
+import Control.Exception as E
+import System.IO.Error
 
-getExePath :: IO FilePath
-#if __GLASGOW_HASKELL__ >= 706
-getExePath = getExecutablePath
-#else
-getExePath = getProgName
+getExecutablePath :: IO FilePath
+getExecutablePath = getProgName
+
+lookupEnv :: String -> IO (Maybe String) Source
+lookupEnv x = catchBool isDoesNotExistError (fmap Just $ getEnv x) (const $ return Nothing)
 #endif
-
----------------------------------------------------------------------
--- System.IO
-
-getEnvMaybe :: String -> IO (Maybe String)
-getEnvMaybe x = catchJust (\x -> if isDoesNotExistError x then Just x else Nothing) (fmap Just $ getEnv x) (const $ return Nothing)
-
-
-getEnvVar :: String -> IO (Maybe String)
-getEnvVar x = E.catch (fmap Just $ getEnv x) (\(x :: E.SomeException) -> return Nothing)

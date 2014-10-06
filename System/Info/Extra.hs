@@ -1,9 +1,13 @@
-{-# LANGUAGE CPP, ScopedTypeVariables #-}
-module System.Info.Extra(module System.Info, module System.Info.Extra) where
+{-# LANGUAGE CPP #-}
+
+module System.Info.Extra(
+    module System.Info,
+    isWindows, getProcessorCount
+    ) where
 
 import System.Info
 import System.IO.Unsafe
-import Control.Exception
+import Control.Exception.Extra
 import System.Environment.Extra
 import Foreign.C.Types
 import Control.Concurrent
@@ -33,8 +37,8 @@ getProcessorCount = let res = unsafePerformIO act in return res
             if rtsSupportsBoundThreads then
                 fmap fromIntegral getNumberOfProcessors
             else
-                handle (\(_ :: SomeException) -> return 1) $ do
-                    env <- getEnvMaybe "NUMBER_OF_PROCESSORS"
+                handle_ (const $ return 1) $ do
+                    env <- lookupEnv "NUMBER_OF_PROCESSORS"
                     case env of
                         Just s | [(i,"")] <- reads s -> return i
                         _ -> do

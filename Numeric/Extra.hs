@@ -1,5 +1,9 @@
 
-module Numeric.Extra(module Numeric, module Numeric.Extra) where
+module Numeric.Extra(
+    module Numeric,
+    showDP,
+    intToDouble, intToFloat, floatToDouble, doubleToFloat
+    ) where
 
 import Numeric
 import Control.Arrow
@@ -17,6 +21,9 @@ showDP n x = a ++ (if n > 0 then "." else "") ++ b ++ replicate (n - length b) '
 
 intToDouble :: Int -> Double
 intToDouble = fromInteger . toInteger
+
+intToFloat :: Int -> Float
+intToFloat = fromInteger . toInteger
 
 floatToDouble :: Float -> Double
 floatToDouble = fromRational . toRational

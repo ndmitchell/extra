@@ -1,5 +1,8 @@
 
-module Data.Tuple.Extra(module Data.Tuple, module Data.Tuple.Extra) where
+module Data.Tuple.Extra(
+    module Data.Tuple,
+    dupe, fst3, snd3, thd3, concat2, concat3
+    ) where
 
 import Data.Tuple
 
@@ -20,4 +23,5 @@ concat2 :: [([a],[b])] -> ([a],[b])
 concat2 xs = (concat a, concat b)
     where (a,b) = unzip xs
 
+dupe :: a -> (a,a)
 dupe x = (x,x)

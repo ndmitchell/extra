@@ -1,5 +1,8 @@
 
-module Data.Either.Extra(module Data.Either, module Data.Either.Extra) where
+module Data.Either.Extra(
+    module Data.Either,
+    isLeft, isRight, fromLeft, fromRight, fromEither
+    ) where
 
 import Data.Either
 
@@ -9,7 +12,5 @@ fromRight (Right x) = x
 isLeft Left{} = True; isLeft _ = False
 isRight Right{} = True; isRight _ = False
 
-
-loop :: (a -> Either a b) -> a -> b
-loop act x = undefined
-
+fromEither :: Either a a -> a
+fromEither = either id id
