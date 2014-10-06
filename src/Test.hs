@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -w #-}
-module Test(main) where
+module Main(main) where
 import Control.Concurrent.Extra
 import Control.Exception.Extra
 import Control.Monad.Extra
