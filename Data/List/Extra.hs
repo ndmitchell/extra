@@ -1,11 +1,23 @@
+{-# LANGUAGE CPP, TupleSections #-}
+{-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- FIXME: Todo
 
 -- | This module extends "Data.List" with extra functions of a similar nature.
 --   The package also exports the existing "Data.List" functions.
+--   Some of the names and semantics were inspired by the @text@ package.
 module Data.List.Extra(
     module Data.List,
-    module Data.List.Extra
+    lower, upper, trim, trimLeft, trimRight, trimBy, word1,
+    list, uncons, unsnoc,
+    groupSort, groupSortOn, nubOn, groupOn, sortOn,
+    chop, for,
+    rep, reps,
+    disjoint, distinct,
+    dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, takeWhileEnd, stripSuffix,
+    concatUnzip,
+    merge, mergeBy, replace, wordsBy, linesBy, firstJust,
+    breakOn, breakOnEnd, splitOn, split, chunksOf
     ) where
 
 import Data.List
@@ -13,11 +25,11 @@ import Data.Function
 import Data.Ord
 import Control.Arrow
 import Data.Char
-import Data.Maybe
+import Data.Tuple.Extra
 
 
 chop :: ([a] -> (b, [a])) -> [a] -> [b]
-chop _ [] = []
+chop f [] = []
 chop f as = b : chop f as'
     where (b, as') = f as
 
@@ -28,110 +40,82 @@ reps :: Eq a => a -> a -> [a] -> [a]
 reps from to = map (rep from to)
 
 
-unzipEithers :: [Either a b] -> ([a],[b])
-unzipEithers [] = ([],[])
-unzipEithers (Left x:xs) = (x:a,b)
-    where (a,b) = unzipEithers xs
-unzipEithers (Right x:xs) = (a,x:b)
-    where (a,b) = unzipEithers xs
-
-
-initLast :: [a] -> ([a], a)
-initLast [] = error "initLast, empty list []"
-initLast [x] = ([], x)
-initLast (x:xs) = (x:a, b)
-    where (a,b) = initLast xs
-
+for :: [a] -> (a -> b) -> [b]
 for = flip map
-
-notNull = not . null
-
-groupSortFst :: Ord a => [(a,b)] -> [(a,[b])]
-groupSortFst = map (fst . head &&& map snd) . groupBy ((==) `on` fst) . sortBy (comparing fst)
 
 disjoint :: Eq a => [a] -> [a] -> Bool
 disjoint xs = null . intersect xs
 
+distinct :: Eq a => [a] -> Bool
+distinct xs = length xs == length (nub xs)
+
+
+list :: b -> (a -> [a] -> b) -> [a] -> b
+list nil cons [] = nil
+list nil cons (x:xs) = cons x xs
+
+uncons :: [a] -> (a,[a])
+uncons [] = error "Uncons on an empty list"
+uncons (x:xs) = (x,xs)
+
 unsnoc :: [a] -> ([a],a)
 unsnoc [] = error "Unsnoc on empty list"
-unsnoc xs = (init xs, last xs)
+unsnoc [x] = ([], x)
+unsnoc (x:xs) = (x:a, b)
+    where (a,b) = unsnoc xs
 
-revTake :: Int -> [a] -> [a]
-revTake i = reverse . take i . reverse
+
+takeEnd :: Int -> [a] -> [a]
+takeEnd i = reverse . take i . reverse
+
+dropEnd :: Int -> [a] -> [a]
+dropEnd i = reverse . drop i . reverse
 
 concatUnzip :: [([a], [b])] -> ([a], [b])
 concatUnzip = (concat *** concat) . unzip
 
 
-replace :: String -> String -> String -> String
-replace from to xs | Just xs <- stripPrefix from xs = to ++ replace from to xs
-replace from to (x:xs) = x : replace from to xs
-replace from to [] = []
-
-
-
-
-trimLeft = dropWhile isSpace
-trimRight = reverse . trimLeft . reverse
-trim = trimLeft . trimRight
-
+takeWhileEnd :: (a -> Bool) -> [a] -> [a]
+takeWhileEnd f = reverse . takeWhile f . reverse
 
 
 trim, trimLeft, trimRight :: String -> String
+trimLeft = dropWhile isSpace
+trimRight = dropWhileEnd isSpace
+trim = trimRight . trimLeft
 
+lower :: String -> String
 lower = map toLower
+
+upper :: String -> String
 upper = map toUpper
 
 trimBy :: (a -> Bool) -> [a] -> [a]
-trimBy f = reverse . dropWhile f . reverse . dropWhile f
+trimBy f = dropWhileEnd f . dropWhile f
 
 
 word1 :: String -> (String, String)
 word1 x = second (dropWhile isSpace) $ break isSpace $ dropWhile isSpace x
 
 
--- | Only append strings if neither one is empty
-(++?) :: String -> String -> String
-a ++? b = if null a || null b then [] else a ++ b
-
+sortOn :: Ord b => (a -> b) -> [a] -> [a]
 sortOn f = sortBy (comparing f)
+
+groupOn :: Eq b => (a -> b) -> [a] -> [[a]]
 groupOn f = groupBy ((==) `on` f)
+
+nubOn :: Eq b => (a -> b) -> [a] -> [a]
 nubOn f = nubBy ((==) `on` f)
 
-sortFst mr = sortOn fst mr
-groupFst mr = groupOn fst mr
+groupSort :: Ord k => [(k, v)] -> [(k, [v])]
+groupSort = groupSortOn id
 
-
-groupFsts :: Eq k => [(k,v)] -> [(k,[v])]
-groupFsts = map (fst . head &&& map snd) . groupFst
-
-sortGroupFsts mr = groupFsts . sortFst $ mr
-sortGroupFst mr = groupFst . sortFst $ mr
-
-
-fold :: a -> (a -> a -> a) -> [a] -> a
-fold x f [] = x
-fold x f xs = fold1 f xs
-
-
-fold1 :: (a -> a -> a) -> [a] -> a
-fold1 f [x] = x
-fold1 f xs = f (fold1 f a) (fold1 f b)
-    where (a,b) = halves xs
-
-
-halves :: [a] -> ([a],[a])
-halves [] = ([], [])
-halves (x:xs) = (x:b,a)
-    where (a,b) = halves xs
+groupSortOn :: Ord a => (k -> a) -> [(k, v)] -> [(k, [v])]
+groupSortOn f = map (\x -> (fst $ head x, map snd x)) . groupOn (f . fst) . sortOn (f . fst)
 
 
 merge :: Ord a => [a] -> [a] -> [a]
-merge xs [] = xs
-merge [] ys = ys
-merge (x:xs) (y:ys)
-    | x <= y = x : merge xs (y:ys)
-    | otherwise = y : merge (x:xs) ys
+merge = mergeBy compare
 
 
 mergeBy :: (a -> a -> Ordering) -> [a] -> [a] -> [a]
@@ -141,55 +125,20 @@ mergeBy f (x:xs) (y:ys)
     | f x y /= GT = x : mergeBy f xs (y:ys)
     | otherwise = y : mergeBy f (x:xs) ys
 
-
-merges :: Ord a => [[a]] -> [a]
-merges = fold [] merge
-
-mergesBy :: (a -> a -> Ordering) -> [[a]] -> [a]
-mergesBy f = fold [] (mergeBy f)
+replace :: String -> String -> String -> String
+replace from to xs | Just xs <- stripPrefix from xs = to ++ replace from to xs
+replace from to (x:xs) = x : replace from to xs
+replace from to [] = []
 
 
-split :: Eq a => a -> [a] -> [[a]]
-split x [] = []
-split x xs = if null b then [a] else a : split x (tail b)
-    where (a,b) = break (== x) xs
-
-
-
--- | Like splitAt, but also return the number of items that were split.
---   For performance.
-splitAtLength :: Int -> [a] -> (Int,[a],[a])
-splitAtLength n xs = f n xs
-    where
-        f i xs | i == 0 = (n,[],xs)
-        f i [] = (n-i,[],[])
-        f i (x:xs) = (a,x:b,c)
-            where (a,b,c) = f (i-1) xs
-
-
-rbreak f xs = case break f $ reverse xs of
+breakEnd :: (a -> Bool) -> [a] -> ([a], [a])
+breakEnd f xs = case break f $ reverse xs of
     (_, []) -> (xs, [])
     (as, b:bs) -> (reverse bs, b:reverse as)
 
+spanEnd :: (a -> Bool) -> [a] -> ([a], [a])
+spanEnd f xs = breakEnd (not . f) xs
 
-
-
-splitList :: Eq a => [a] -> [a] -> [[a]]
-splitList find str = if isJust q then a : splitList find b else [str]
-    where
-        q = splitPair find str
-        Just (a, b) = q
-
-
-splitPair :: Eq a => [a] -> [a] -> Maybe ([a], [a])
-splitPair find str = f str
-    where
-        f [] = Nothing
-        f x  | isPrefixOf find x = Just ([], drop (length find) x)
-             | otherwise = if isJust q then Just (head x:a, b) else Nothing
-                where
-                    q = f (tail x)
-                    Just (a, b) = q
 
 wordsBy :: (a -> Bool) -> [a] -> [[a]]
 wordsBy f s = case dropWhile f s of
@@ -197,31 +146,110 @@ wordsBy f s = case dropWhile f s of
     x:xs -> (x:w) : wordsBy f (drop1 z)
         where (w,z) = break f xs
 
-linesBy = undefined
+linesBy :: (a -> Bool) -> [a] -> [[a]]
+linesBy f [] = []
+linesBy f s = cons $ case break f s of
+    (l, s) -> (l,) $ case s of
+        [] -> []
+        _:s -> linesBy f s
+  where
+    cons ~(h, t) = h : t -- to fix a space leak, see the GHC defn of lines
 
-findJust = undefined
+firstJust :: (a -> Maybe b) -> [a] -> Maybe b
+firstJust p [] = Nothing
+firstJust p (x:xs) = maybe (firstJust p xs) Just (p x)
 
-drop1 = drop 1
+drop1 :: [a] -> [a]
+drop1 [] = []
+drop1 (x:xs) = xs
 
 
-splitx :: [a] -> [a] -> [[a]]
-splitx = undefined
+-- | Find the first instance of @needle@ in @haystack@.
+-- The first element of the returned tuple
+-- is the prefix of @haystack@ before @needle@ is matched.  The second
+-- is the remainder of @haystack@, starting with the match.
+--
+-- Examples:
+--
+-- > breakOn "::" "a::b::c" == ("a", "::b::c")
+-- > breakOn "/" "foobar"   == ("foobar", "")
+--
+-- Laws:
+--
+-- > append prefix match == haystack
+-- >   where (prefix, match) = breakOn needle haystack
+breakOn :: Eq a => [a] -> [a] -> ([a], [a])
+breakOn needle haystack | needle `isPrefixOf` haystack = ([], haystack)
+breakOn needle [] = ([], [])
+breakOn needle (x:xs) = first (x:) $ breakOn needle xs
 
-{-
-dropWhileEnd :: (a -> Bool) -> [a] -> [a] Source
-dropWhileEnd = undefined
+-- | Similar to 'breakOn', but searches from the end of the
+-- string.
+--
+-- The first element of the returned tuple is the prefix of @haystack@
+-- up to and including the last match of @needle@.  The second is the
+-- remainder of @haystack@, following the match.
+--
+-- > breakOnEnd "::" "a::b::c" == ("a::b::", "c")
+breakOnEnd :: Eq a => [a] -> [a] -> ([a], [a])
+breakOnEnd needle haystack = (reverse *** reverse) $ swap $ breakOn (reverse needle) (reverse haystack)
 
-The dropWhileEnd function drops the largest suffix of a list in which the given predicate holds for all elements. For example:
 
-dropWhileEnd isSpace "foo\n" == "foo"
-dropWhileEnd isSpace "foo bar" == "foo bar"
-dropWhileEnd isSpace ("foo\n" ++ undefined) == "foo" ++ undefined
-Since: 4.5.0.0
--}
+-- | Break a list into pieces separated by the first
+-- list argument, consuming the delimiter. An empty delimiter is
+-- invalid, and will cause an error to be raised.
+--
+-- Examples:
+--
+-- > splitOn "\r\n" "a\r\nb\r\nd\r\ne" == ["a","b","d","e"]
+-- > splitOn "aaa"  "aaaXaaaXaaaXaaa"  == ["","X","X","X",""]
+-- > splitOn "x"    "x"                == ["",""]
+-- > splitOn "x"    ""                 == [""]
+--
+-- and
+--
+-- > intercalate s . splitOn s         == id
+-- > splitOn [c]                       == split (==c)
+splitOn :: Eq a => [a] -> [a] -> [[a]]
+splitOn [] _ = error "splitOn, needle may not be empty"
+splitOn _ [] = [[]]
+splitOn needle haystack = a : if null b then [] else splitOn needle $ drop (length needle) b
+    where (a,b) = breakOn needle haystack
 
-{-
-findJust
--}
 
-list :: b -> (a -> [a] -> b) -> b
-list = undefined
+-- | Splits a list into components delimited by separators,
+-- where the predicate returns True for a separator element.  The
+-- resulting components do not contain the separators.  Two adjacent
+-- separators result in an empty component in the output.  eg.
+--
+-- > split (=='a') "aabbaca" == ["","","bb","c",""]
+-- > split (=='a') ""        == [""]
+split :: (a -> Bool) -> [a] -> [[a]]
+split f [] = [[]]
+split f (x:xs) | f x = [] : split f xs
+split f (x:xs) | y:ys <- split f xs = (x:y) : ys
+
+
+#if __GLASGOW_HASKELL__ < 704
+dropWhileEnd :: (a -> Bool) -> [a] -> [a]
+dropWhileEnd p = foldr (\x xs -> if p x && null xs then [] else x : xs) []
+#endif
+
+-- | Return the prefix of the second string if its suffix
+-- matches the entire first string.
+--
+-- Examples:
+--
+-- > stripSuffix "bar" "foobar" == Just "foo"
+-- > stripSuffix ""    "baz"    == Just "baz"
+-- > stripSuffix "foo" "quux"   == Nothing
+stripSuffix :: Eq a => [a] -> [a] -> Maybe [a]
+stripSuffix a b = fmap reverse $ stripPrefix (reverse a) (reverse b)
+
+
+chunksOf :: Int -> [a] -> [[a]]
+chunksOf i _ | i <= 0 = error $ "chunksOf, number must be positive, got " ++ show i
+chunksOf i [] = []
+chunksOf i xs = a : chunksOf i b
+    where (a,b) = splitAt i xs
+
