@@ -1,6 +1,5 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
--- FIXME: Todo
 module System.IO.Extra(
     module System.IO,
     readFileEncoding, readFileUTF8, readFileBinary,
