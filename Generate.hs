@@ -1,5 +1,5 @@
 
-module Main(main) where
+module Generate(main) where
 
 import Data.List.Extra
 import Control.Monad
@@ -13,7 +13,7 @@ main = do
     src <- readFile "extra.cabal"
     mods <- return $ filter (isSuffixOf ".Extra") $ map trim $ lines src
     ifaces <- forM mods $ \mod -> do
-        src <- readFile $ joinPath (wordsBy (== '.') mod) <.> "hs"
+        src <- readFile $ joinPath ("src" : split (== '.') mod) <.> "hs"
         let funcs = filter validIdentifier $ takeWhile (/= "where") $ words $ reps ',' ' ' $
                     unlines $ filter (not . isPrefixOf "--" . trim) $ lines src
         let tests = mapMaybe (stripPrefix "-- > ") $ lines src

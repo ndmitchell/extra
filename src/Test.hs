@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -w #-}
 module Test(main) where
 import Control.Concurrent.Extra
 import Control.Exception.Extra

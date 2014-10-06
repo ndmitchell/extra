@@ -1,4 +1,8 @@
 :set -fwarn-unused-binds -fwarn-unused-imports
-:load Extra
+:set -isrc
+:load Extra Generate Test
+:module Extra Generate Test
 :def docs_ const $ return $ unlines [":!cabal haddock"]
 :def docs const $ return $ unlines [":docs_",":!start dist\\doc\\html\\extra\\Extra.html"]
+:def gen const $ return $ unlines ["Generate.main"]
+:def test const $ return $ unlines ["Test.main"]

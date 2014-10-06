@@ -47,3 +47,14 @@ library
         System.Info.Extra
         System.IO.Extra
         System.Time.Extra
+
+test-suite extra-test
+    type:            exitcode-stdio-1.0
+    default-language: Haskell2010
+    build-depends:
+        base == 4.*,
+        directory,
+        filepath,
+        time
+    hs-source-dirs: src
+    main-is:        Test.hs
