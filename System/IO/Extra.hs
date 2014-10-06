@@ -2,7 +2,13 @@
 
 -- FIXME: Todo
 module System.IO.Extra(
-    module System.IO, module System.IO.Extra
+    module System.IO,
+    readFileEncoding, readFileUTF8, readFileBinary,
+    readFile', readFileEncoding', readFileUTF8', readFileBinary',
+    writeFileEncoding, writeFileUTF8, writeFileBinary,
+    withTemporaryFile,
+    captureOutput,
+    withBuffering,
     ) where
 
 import System.IO
@@ -11,49 +17,60 @@ import Control.Exception as E
 import GHC.IO.Handle(hDuplicate,hDuplicateTo)
 
 
+-- File reading
 
-readFile' x = do
-    src <- readFile x
-    evaluate $ length src
-    return src
-
-
-readFileUtf8' :: FilePath -> IO String
-readFileUtf8' x = do
-    src <- readFileUtf8 x
-    evaluate $ length src
-    return src
-
-
-readFileUtf8 :: FilePath -> IO String
-readFileUtf8 x = do
-    h <- openFile x ReadMode
-    hSetEncoding h utf8
+readFileEncoding :: TextEncoding -> FilePath -> IO String
+readFileEncoding enc file = do
+    h <- openFile file ReadMode
+    hSetEncoding h enc
     hGetContents h
 
+readFileUTF8 :: FilePath -> IO String
+readFileUTF8 = readFileEncoding utf8
 
-readFileLatin1' :: FilePath -> IO String
-readFileLatin1' x = do
-    src <- readFileLatin1 x
-    length src `seq` return src
-
-
-readFileLatin1 :: FilePath -> IO String
-readFileLatin1 x = do
-    h <- openFile x ReadMode
-    hSetEncoding h latin1
+readFileBinary :: FilePath -> IO String
+readFileBinary file = do
+    h <- openBinaryFile file ReadMode
     hGetContents h
 
+-- Strict file reading
 
-writeFileUtf8 :: FilePath -> String -> IO ()
-writeFileUtf8 x y = withFile x WriteMode $ \h -> do
-    hSetEncoding h utf8
-    hPutStr h y
+readFile' :: FilePath -> IO String
+readFile' file = withFile file ReadMode $ \h -> do
+    s <- hGetContents h
+    evaluate $ length s
+    return s
 
+readFileEncoding' :: TextEncoding -> FilePath -> IO String
+readFileEncoding' e file = withFile file ReadMode $ \h -> do
+    hSetEncoding h e
+    s <- hGetContents h
+    evaluate $ length s
+    return s
+
+readFileUTF8' :: FilePath -> IO String
+readFileUTF8' = readFileEncoding' utf8
+
+readFileBinary' :: FilePath -> IO String
+readFileBinary' file = withBinaryFile file ReadMode $ \h -> do
+    s <- hGetContents h
+    evaluate $ length s
+    return s
+
+-- File writing
+
+writeFileEncoding :: TextEncoding -> FilePath -> String -> IO ()
+writeFileEncoding enc file x = withFile x WriteMode $ \h -> do
+    hSetEncoding h enc
+    hPutStr h x
+
+writeFileUTF8 :: FilePath -> String -> IO ()
+writeFileUTF8 = writeFileEncoding utf8
 
 writeFileBinary :: FilePath -> String -> IO ()
-writeFileBinary x y = withBinaryFile x WriteMode $ \h -> hPutStr h y
+writeFileBinary file x = withBinaryFile file WriteMode $ \h -> hPutStr h x
 
+-- Other
 
 withTemporaryFile :: String -> (FilePath -> IO a) -> IO a
 withTemporaryFile pat act = do
@@ -61,15 +78,9 @@ withTemporaryFile pat act = do
     bracket (openTempFile tmp pat) (removeFile . fst) $
         \(file,h) -> hClose h >> act file
 
-withTemporaryFiles :: String -> Int -> ([FilePath] -> IO a) -> IO a
-withTemporaryFiles pat 0 act = act []
-withTemporaryFiles pat i act | i > 0 =
-    withTemporaryFile pat $ \file ->
-        withTemporaryFiles pat (i-1) $ \files ->
-            act $ file : files
 
 captureOutput :: IO () -> IO String
-captureOutput act = withTemporaryFile "hlint_capture_output.txt" $ \file -> do
+captureOutput act = withTemporaryFile "extra-capture.txt" $ \file -> do
     h <- openFile file ReadWriteMode
     bout <- hGetBuffering stdout
     berr <- hGetBuffering stderr
@@ -90,28 +101,3 @@ withBuffering :: Handle -> BufferMode -> IO a -> IO a
 withBuffering h m act = bracket (hGetBuffering h) (hSetBuffering h) $ const $ do
     hSetBuffering h m
     act
-
-withBufferMode :: Handle -> BufferMode -> IO a -> IO a
-withBufferMode h b act = bracket (hGetBuffering h) (hSetBuffering h) $ const $ do
-    hSetBuffering h LineBuffering
-    act
-
-readFileStrict :: FilePath -> IO String
-readFileStrict file = withFile file ReadMode $ \h -> do
-    src <- hGetContents h
-    evaluate $ length src
-    return src
-
-readFileUCS2 :: FilePath -> IO String
-readFileUCS2 name = openFile name ReadMode >>= \h -> do
-    hSetEncoding h utf16
-    hGetContents h
-
-
-removeFile_ x = removeFile x `E.catch` \(_ :: E.SomeException) -> return ()
-
-
-withDirectory dir cmd = E.bracket
-    (do x <- getCurrentDirectory; setCurrentDirectory dir; return x)
-    setCurrentDirectory
-    (const cmd)

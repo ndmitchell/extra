@@ -1,18 +1,28 @@
--- FIXME: Todo
 
-module Control.Monad.Extra(module Control.Monad.Extra) where
+-- If you need a wider selection of monad loops and list generalisations,
+-- see <http://hackage.haskell.org/package/monad-loops>
+module Control.Monad.Extra(
+    module Control.Monad,
+    whenJust,
+    unit,
+    partitionM, concatMapM,
+    loopM, whileM,
+    ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
+    findM, firstJustM
+    ) where
 
 import Control.Monad
-import Data.Maybe
+import Control.Applicative
 
+-- General utilities
 
-whenJust :: Monad m => Maybe a -> (a -> m ()) -> m ()
-whenJust mg f = maybe (return ()) f mg
+whenJust :: Applicative m => Maybe a -> (a -> m ()) -> m ()
+whenJust mg f = maybe (pure ()) f mg
 
 unit :: m () -> m ()
 unit = id
 
-
+-- Data.List for Monad
 
 partitionM :: Monad m => (a -> m Bool) -> [a] -> m ([a], [a])
 partitionM f [] = return ([], [])
@@ -25,18 +35,7 @@ partitionM f (x:xs) = do
 concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
 concatMapM f = liftM concat . mapM f
 
-concatM :: Monad m => [m [a]] -> m [a]
-concatM = liftM concat . sequence
-
-concatZipWithM :: Monad m => (a -> b -> m [c]) -> [a] -> [b] -> m [c]
-concatZipWithM f xs ys = liftM concat $ zipWithM f xs ys
-
-listM' :: Monad m => [a] -> m [a]
-listM' x = length x `seq` return x
-
-
----------------------------------------------------------------------
--- Control.Monad
+-- Looping
 
 loopM :: Monad m => (a -> m (Either a b)) -> a -> m b
 loopM act x = do
@@ -50,8 +49,7 @@ whileM act = do
     b <- act
     when b $ whileM act
 
-mapMaybeM :: Monad m => (a -> m (Maybe b)) -> [a] -> m [b]
-mapMaybeM f xs = liftM catMaybes $ mapM f xs
+-- Booleans
 
 ifM :: Monad m => m Bool -> m a -> m a -> m a
 ifM b t f = do b <- b; if b then t else f
@@ -60,14 +58,29 @@ notM :: Functor m => m Bool -> m Bool
 notM = fmap not
 
 (||^), (&&^) :: Monad m => m Bool -> m Bool -> m Bool
-(||^) a b = do a <- a; if a then return True else b
-(&&^) a b = do a <- a; if a then b else return False
+(||^) a b = ifM a (return True) b
+(&&^) a b = ifM a b (return False)
 
+anyM :: Monad m => (a -> m Bool) -> [a] -> m Bool
+anyM p [] = return False
+anyM p (x:xs) = ifM (p x) (return True) (anyM p xs)
+
+allM :: Monad m => (a -> m Bool) -> [a] -> m Bool
+allM p [] = return True
+allM p (x:xs) = ifM (p x) (allM p xs) (return False)
+
+orM :: Monad m => [m Bool] -> m Bool
+orM = anyM id
+
+andM :: Monad m => [m Bool] -> m Bool
+andM = allM id
+
+-- Searching
 
 findM :: Monad m => (a -> m Bool) -> [a] -> m (Maybe a)
 findM p [] = return Nothing
-findM p (x:xs) = do
-    v <- p x
-    if v then return $ Just x else findM p xs
+findM p (x:xs) = ifM (p x) (return $ Just x) (findM p xs)
 
-findJustM = undefined
+firstJustM :: Monad m => (a -> m (Maybe b)) -> [a] -> m (Maybe b)
+firstJustM p [] = return Nothing
+firstJustM p (x:xs) = maybe (firstJustM p xs) (return . Just) =<< p x

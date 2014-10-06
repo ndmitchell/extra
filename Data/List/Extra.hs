@@ -4,9 +4,7 @@
 -- | This module extends "Data.List" with extra functions of a similar nature.
 --   The package also exports the existing "Data.List" functions.
 module Data.List.Extra(
-    -- * Existing functions
     module Data.List,
-    -- * Extra functions
     module Data.List.Extra
     ) where
 
@@ -193,8 +191,37 @@ splitPair find str = f str
                     q = f (tail x)
                     Just (a, b) = q
 
-wordsBy = undefined
+wordsBy :: (a -> Bool) -> [a] -> [[a]]
+wordsBy f s = case dropWhile f s of
+    [] -> []
+    x:xs -> (x:w) : wordsBy f (drop1 z)
+        where (w,z) = break f xs
 
 linesBy = undefined
 
 findJust = undefined
+
+drop1 = drop 1
+
+
+splitx :: [a] -> [a] -> [[a]]
+splitx = undefined
+
+{-
+dropWhileEnd :: (a -> Bool) -> [a] -> [a] Source
+dropWhileEnd = undefined
+
+The dropWhileEnd function drops the largest suffix of a list in which the given predicate holds for all elements. For example:
+
+dropWhileEnd isSpace "foo\n" == "foo"
+dropWhileEnd isSpace "foo bar" == "foo bar"
+dropWhileEnd isSpace ("foo\n" ++ undefined) == "foo" ++ undefined
+Since: 4.5.0.0
+-}
+
+{-
+findJust
+-}
+
+list :: b -> (a -> [a] -> b) -> b
+list = undefined

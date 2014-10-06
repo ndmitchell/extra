@@ -3,7 +3,7 @@
 
 module Data.IORef.Extra(
     module Data.IORef,
-    modifyIORef', writeIORef', atomicModifyIORef', atomicWriteIORef', atomicWriteIORef'
+    modifyIORef', writeIORef', atomicModifyIORef', atomicWriteIORef, atomicWriteIORef'
     ) where
 
 import Data.IORef
