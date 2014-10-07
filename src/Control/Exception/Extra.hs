@@ -11,16 +11,16 @@ import Control.Exception
 import Control.Monad
 
 
--- | Print an exception, but if that exception itself contains exceptions, simply print
---   @\<NestedException\>@. Since Haskell is a lazy language it is possible to throw
+-- | Print a value, but if that value contains exceptions, simply print
+--   @\<Exception\>@. Since Haskell is a lazy language it is possible to throw
 --   exceptions that are themselves undefined. This function is useful to report them to users.
-showException :: SomeException -> IO String
+showException :: Show e => e -> IO String
 showException = f . show
     where
         f xs = do
             r <- try_ $ evaluate xs
             case r of
-                Left e -> return "<NestedException>"
+                Left e -> return "<Exception>"
                 Right [] -> return []
                 Right (x:xs) -> fmap (x :) $ f xs
 
