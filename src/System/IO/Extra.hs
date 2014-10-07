@@ -71,14 +71,14 @@ writeFileBinary file x = withBinaryFile file WriteMode $ \h -> hPutStr h x
 
 -- Other
 
-withTempFile :: String -> (FilePath -> IO a) -> IO a
-withTempFile template act = T.withSystemTempFile template $ \file h -> hClose h >> act file
+withTempFile :: (FilePath -> IO a) -> IO a
+withTempFile act = T.withSystemTempFile "extra" $ \file h -> hClose h >> act file
 
-withTempDir :: String -> (FilePath -> IO a) -> IO a
-withTempDir template = T.withSystemTempDirectory template
+withTempDir :: (FilePath -> IO a) -> IO a
+withTempDir = T.withSystemTempDirectory "extra"
 
 captureOutput :: IO () -> IO String
-captureOutput act = withTempFile "extra-capture.txt" $ \file -> do
+captureOutput act = withTempFile $ \file -> do
     h <- openFile file ReadWriteMode
     bout <- hGetBuffering stdout
     berr <- hGetBuffering stderr
