@@ -10,7 +10,7 @@ module Extra(
     -- * Data.IORef.Extra
     modifyIORef', writeIORef', atomicModifyIORef', atomicWriteIORef, atomicWriteIORef',
     -- * Data.List.Extra
-    lower, upper, trim, trimLeft, trimRight, trimBy, word1, drop1, list, uncons, unsnoc, groupSort, groupSortOn, nubOn, groupOn, sortOn, chop, for, rep, reps, disjoint, distinct, dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, takeWhileEnd, stripSuffix, concatUnzip, merge, mergeBy, replace, wordsBy, linesBy, firstJust, breakOn, breakOnEnd, splitOn, split, chunksOf,
+    lower, upper, strip, stripStart, stripEnd, dropAround, word1, drop1, list, uncons, unsnoc, groupSort, groupSortOn, nubOn, groupOn, sortOn, chop, for, rep, reps, disjoint, distinct, dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, takeWhileEnd, stripSuffix, concatUnzip, merge, mergeBy, replace, wordsBy, linesBy, firstJust, breakOn, breakOnEnd, splitOn, split, chunksOf,
     -- * Data.Tuple.Extra
     dupe, fst3, snd3, thd3, concat2, concat3,
     -- * Numeric.Extra

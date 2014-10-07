@@ -6,7 +6,7 @@
 --   Some of the names and semantics were inspired by the @text@ package.
 module Data.List.Extra(
     module Data.List,
-    lower, upper, trim, trimLeft, trimRight, trimBy, word1, drop1,
+    lower, upper, strip, stripStart, stripEnd, dropAround, word1, drop1,
     list, uncons, unsnoc,
     groupSort, groupSortOn, nubOn, groupOn, sortOn,
     chop, for,
@@ -77,10 +77,10 @@ takeWhileEnd :: (a -> Bool) -> [a] -> [a]
 takeWhileEnd f = reverse . takeWhile f . reverse
 
 
-trim, trimLeft, trimRight :: String -> String
-trimLeft = dropWhile isSpace
-trimRight = dropWhileEnd isSpace
-trim = trimRight . trimLeft
+strip, stripStart, stripEnd :: String -> String
+stripStart = dropWhile isSpace
+stripEnd = dropWhileEnd isSpace
+strip = dropAround isSpace
 
 lower :: String -> String
 lower = map toLower
@@ -88,8 +88,8 @@ lower = map toLower
 upper :: String -> String
 upper = map toUpper
 
-trimBy :: (a -> Bool) -> [a] -> [a]
-trimBy f = dropWhileEnd f . dropWhile f
+dropAround :: (a -> Bool) -> [a] -> [a]
+dropAround f = dropWhileEnd f . dropWhile f
 
 
 word1 :: String -> (String, String)
