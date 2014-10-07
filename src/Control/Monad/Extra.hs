@@ -57,6 +57,8 @@ ifM b t f = do b <- b; if b then t else f
 notM :: Functor m => m Bool -> m Bool
 notM = fmap not
 
+-- > Just False &&^ undefined == Just False
+-- > Just True &&^ Just True == Just True
 (||^), (&&^) :: Monad m => m Bool -> m Bool -> m Bool
 (||^) a b = ifM a (return True) b
 (&&^) a b = ifM a b (return False)

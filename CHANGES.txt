@@ -1,4 +1,5 @@
 Changelog for Extra
 
+    Ensure operators get exported
 0.1
     Initial version, still unstable

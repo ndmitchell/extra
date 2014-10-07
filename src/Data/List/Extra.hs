@@ -6,7 +6,7 @@
 --   Some of the names and semantics were inspired by the @text@ package.
 module Data.List.Extra(
     module Data.List,
-    lower, upper, trim, trimLeft, trimRight, trimBy, word1,
+    lower, upper, trim, trimLeft, trimRight, trimBy, word1, drop1,
     list, uncons, unsnoc,
     groupSort, groupSortOn, nubOn, groupOn, sortOn,
     chop, for,

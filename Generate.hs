@@ -14,7 +14,8 @@ main = do
     mods <- return $ filter (isSuffixOf ".Extra") $ map trim $ lines src
     ifaces <- forM mods $ \mod -> do
         src <- readFile $ joinPath ("src" : split (== '.') mod) <.> "hs"
-        let funcs = filter validIdentifier $ takeWhile (/= "where") $ words $ reps ',' ' ' $
+        let funcs = filter validIdentifier $ takeWhile (/= "where") $
+                    words $ reps ',' ' ' $ drop1 $ dropWhile (/= '(') $
                     unlines $ filter (not . isPrefixOf "--" . trim) $ lines src
         let tests = mapMaybe (stripPrefix "-- > ") $ lines src
         return (mod, funcs, tests)
@@ -38,5 +39,5 @@ main = do
         ["  putStrLn \"Success\""]
 
 
-validIdentifier (x:xs) = isLower x && (x:xs) /= "module"
+validIdentifier (x:xs) = (x == '(' || isLower x) && (x:xs) /= "module"
 validIdentifier _ = False

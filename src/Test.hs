@@ -7,6 +7,8 @@ import Test.QuickCheck
 default(Maybe Bool,Int,Double)
 main :: IO ()
 main = do
+  test "Just False &&^ undefined == Just False" $ Just False &&^ undefined == Just False
+  test "Just True &&^ Just True == Just True" $ Just True &&^ Just True == Just True
   test "breakOn \"::\" \"a::b::c\" == (\"a\", \"::b::c\")" $ breakOn "::" "a::b::c" == ("a", "::b::c")
   test "breakOn \"/\" \"foobar\"   == (\"foobar\", \"\")" $ breakOn "/" "foobar"   == ("foobar", "")
   test "\\needle haystack -> let (prefix,match) = breakOn needle haystack in prefix ++ match == haystack" $ \needle haystack -> let (prefix,match) = breakOn needle haystack in prefix ++ match == haystack
