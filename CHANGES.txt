@@ -1,5 +1,6 @@
 Changelog for Extra
 
+0.2
     Redo the cons/uncons functions
     Add withTempDir
     Rename withTemporaryFile to withTempFile
