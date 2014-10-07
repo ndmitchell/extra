@@ -1,5 +1,6 @@
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE ScopedTypeVariables, CPP #-}
 
+-- | More advanced temporary file manipulation functions can be found in the @exceptions@ package.
 module System.IO.Extra(
     module System.IO,
     readFileEncoding, readFileUTF8, readFileBinary,
@@ -11,9 +12,17 @@ module System.IO.Extra(
     ) where
 
 import System.IO
-import Control.Exception as E
+import Control.Exception.Extra as E
 import GHC.IO.Handle(hDuplicate,hDuplicateTo)
-import qualified System.IO.Temp as T
+import System.Directory
+import System.IO.Error
+import System.FilePath
+import Data.Char
+import Data.Time.Clock
+
+#ifndef mingw32_HOST_OS
+import qualified System.Posix
+#endif
 
 
 -- File reading
@@ -71,12 +80,6 @@ writeFileBinary file x = withBinaryFile file WriteMode $ \h -> hPutStr h x
 
 -- Other
 
-withTempFile :: (FilePath -> IO a) -> IO a
-withTempFile act = T.withSystemTempFile "extra" $ \file h -> hClose h >> act file
-
-withTempDir :: (FilePath -> IO a) -> IO a
-withTempDir = T.withSystemTempDirectory "extra"
-
 captureOutput :: IO () -> IO String
 captureOutput act = withTempFile $ \file -> do
     h <- openFile file ReadWriteMode
@@ -99,3 +102,41 @@ withBuffering :: Handle -> BufferMode -> IO a -> IO a
 withBuffering h m act = bracket (hGetBuffering h) (hSetBuffering h) $ const $ do
     hSetBuffering h m
     act
+
+
+withTempFile :: (FilePath -> IO a) -> IO a
+withTempFile act = do
+    tmpdir <- getTemporaryDirectory
+    bracket
+        (openTempFile tmpdir "extra")
+        (\(file, h) -> ignore $ removeFile file)
+        (\(file, h) -> hClose h >> act file)
+
+
+withTempDir :: (FilePath -> IO a) -> IO a
+withTempDir act = do
+    tmpdir <- getTemporaryDirectory
+    bracket
+        (createTempDirectory tmpdir "extra")
+        (ignore . removeDirectoryRecursive)
+        act
+
+
+createTempDirectory :: FilePath -> String -> IO FilePath
+createTempDirectory dir prefix = do
+    -- get the number of seconds during today (including floating point), and grab some interesting digits
+    rand :: Integer <- fmap (read . take 20 . filter isDigit . show . utctDayTime) getCurrentTime
+    findTempName rand
+    where
+        findTempName x = do
+            let dirpath = dir </> prefix ++ show x
+            catchBool isAlreadyExistsError
+                (mkPrivateDir dirpath >> return dirpath) $
+                \e -> findTempName (x+1)
+
+mkPrivateDir :: String -> IO ()
+#ifdef mingw32_HOST_OS
+mkPrivateDir s = createDirectory s
+#else
+mkPrivateDir s = System.Posix.createDirectory s 0o700
+#endif
