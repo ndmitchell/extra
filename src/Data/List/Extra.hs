@@ -7,7 +7,7 @@
 module Data.List.Extra(
     module Data.List,
     lower, upper, strip, stripStart, stripEnd, dropAround, word1, drop1,
-    list, uncons, unsnoc,
+    list, uncons, unsnoc, cons, snoc,
     groupSort, groupSortOn, nubOn, groupOn, sortOn,
     chop, for,
     rep, reps,
@@ -52,16 +52,21 @@ list :: b -> (a -> [a] -> b) -> [a] -> b
 list nil cons [] = nil
 list nil cons (x:xs) = cons x xs
 
-uncons :: [a] -> (a,[a])
-uncons [] = error "Uncons on an empty list"
-uncons (x:xs) = (x,xs)
+uncons :: [a] -> Maybe (a, [a])
+uncons [] = Nothing
+uncons (x:xs) = Just (x,xs)
 
-unsnoc :: [a] -> ([a],a)
-unsnoc [] = error "Unsnoc on empty list"
-unsnoc [x] = ([], x)
-unsnoc (x:xs) = (x:a, b)
-    where (a,b) = unsnoc xs
+unsnoc :: [a] -> Maybe ([a], a)
+unsnoc [] = Nothing
+unsnoc [x] = Just ([], x)
+unsnoc (x:xs) = Just (x:a, b)
+    where Just (a,b) = unsnoc xs
 
+cons :: a -> [a] -> [a]
+cons = (:)
+
+snoc :: [a] -> a -> [a]
+snoc xs x = xs ++ [x]
 
 takeEnd :: Int -> [a] -> [a]
 takeEnd i = reverse . take i . reverse
