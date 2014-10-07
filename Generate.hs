@@ -2,6 +2,7 @@
 module Generate(main) where
 
 import Data.List.Extra
+import System.IO.Extra
 import Control.Monad
 import System.FilePath
 import Data.Char
@@ -19,13 +20,13 @@ main = do
                     unlines $ filter (not . isPrefixOf "--" . strip) $ lines src
         let tests = mapMaybe (stripPrefix "-- > ") $ lines src
         return (mod, funcs, tests)
-    writeFile "src/Extra.hs" $ unlines $
+    writeFileBinary "src/Extra.hs" $ unlines $
         ["module Extra("] ++
         concat [["    -- * " ++ mod, "    " ++ unwords (map (++",") funs)] | (mod,funs,_) <- ifaces] ++
         ["    ) where"
         ,""] ++
         ["import " ++ x | x <- mods]
-    writeFile "src/Test.hs" $ unlines $
+    writeFileBinary "src/Test.hs" $ unlines $
         ["{-# LANGUAGE ExtendedDefaultRules #-}"
         ,"module Test(main) where"
         ,"import TestUtil"
