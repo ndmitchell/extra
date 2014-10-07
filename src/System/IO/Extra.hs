@@ -5,15 +5,15 @@ module System.IO.Extra(
     readFileEncoding, readFileUTF8, readFileBinary,
     readFile', readFileEncoding', readFileUTF8', readFileBinary',
     writeFileEncoding, writeFileUTF8, writeFileBinary,
-    withTemporaryFile,
+    withTempFile, withTempDir,
     captureOutput,
     withBuffering,
     ) where
 
 import System.IO
-import System.Directory
 import Control.Exception as E
 import GHC.IO.Handle(hDuplicate,hDuplicateTo)
+import qualified System.IO.Temp as T
 
 
 -- File reading
@@ -71,15 +71,14 @@ writeFileBinary file x = withBinaryFile file WriteMode $ \h -> hPutStr h x
 
 -- Other
 
-withTemporaryFile :: String -> (FilePath -> IO a) -> IO a
-withTemporaryFile pat act = do
-    tmp <- getTemporaryDirectory
-    bracket (openTempFile tmp pat) (removeFile . fst) $
-        \(file,h) -> hClose h >> act file
+withTempFile :: String -> (FilePath -> IO a) -> IO a
+withTempFile template act = T.withSystemTempFile template $ \file h -> hClose h >> act file
 
+withTempDir :: String -> (FilePath -> IO a) -> IO a
+withTempDir template = T.withSystemTempDirectory template
 
 captureOutput :: IO () -> IO String
-captureOutput act = withTemporaryFile "extra-capture.txt" $ \file -> do
+captureOutput act = withTempFile "extra-capture.txt" $ \file -> do
     h <- openFile file ReadWriteMode
     bout <- hGetBuffering stdout
     berr <- hGetBuffering stderr

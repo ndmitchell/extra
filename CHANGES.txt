@@ -1,5 +1,7 @@
 Changelog for Extra
 
+    Add withTempDir
+    Rename withTemporaryFile to withTempFile
     Change trim to strip (follow text naming convention)
     Ensure operators get exported
 0.1
