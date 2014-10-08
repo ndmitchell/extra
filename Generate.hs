@@ -12,12 +12,12 @@ import Data.Maybe
 main :: IO ()
 main = do
     src <- readFile "extra.cabal"
-    mods <- return $ filter (isSuffixOf ".Extra") $ map strip $ lines src
+    mods <- return $ filter (isSuffixOf ".Extra") $ map trim $ lines src
     ifaces <- forM mods $ \mod -> do
         src <- readFile $ joinPath ("src" : split (== '.') mod) <.> "hs"
         let funcs = filter validIdentifier $ takeWhile (/= "where") $
                     words $ reps ',' ' ' $ drop1 $ dropWhile (/= '(') $
-                    unlines $ filter (not . isPrefixOf "--" . strip) $ lines src
+                    unlines $ filter (not . isPrefixOf "--" . trim) $ lines src
         let tests = mapMaybe (stripPrefix "-- > ") $ lines src
         return (mod, funcs, tests)
     writeFileBinary "src/Extra.hs" $ unlines $
