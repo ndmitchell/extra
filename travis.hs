@@ -1,8 +1,7 @@
 
 import Neil
-import System.IO.Extra
 
-main = do
+main = neil $ do
     let files = ["src/Extra.hs","src/Test.hs"]
     before <- mapM readFile' files
     cmd "runhaskell -isrc Generate"
