@@ -17,7 +17,7 @@ module Extra(
     isLeft, isRight, fromLeft, fromRight, fromEither,
     -- * Data.IORef.Extra
     -- | Extra functions available in @"Data.IORef.Extra"@.
-    atomicWriteIORef,
+    modifyIORef', writeIORef', atomicModifyIORef', atomicWriteIORef, atomicWriteIORef',
     -- * Data.List.Extra
     -- | Extra functions available in @"Data.List.Extra"@.
     lower, upper, trim, trimStart, trimEnd, dropAround, word1, drop1, list, uncons, unsnoc, cons, snoc, groupSort, groupSortOn, nubOn, groupOn, sortOn, repeatedly, for, disjoint, allSame, anySame, dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, takeWhileEnd, stripSuffix, concatUnzip, concatUnzip3, merge, mergeBy, replace, wordsBy, linesBy, firstJust, breakOn, breakOnEnd, splitOn, split, chunksOf,
@@ -38,7 +38,7 @@ module Extra(
     isWindows, getProcessorCount,
     -- * System.IO.Extra
     -- | Extra functions available in @"System.IO.Extra"@.
-    readFileEncoding, readFileUTF8, readFileBinary, writeFileEncoding, writeFileUTF8, writeFileBinary, withTempFile, withTempDir, newTempFile, newTempDir, captureOutput, withBuffering,
+    readFileEncoding, readFileUTF8, readFileBinary, readFile', readFileEncoding', readFileUTF8', readFileBinary', writeFileEncoding, writeFileUTF8, writeFileBinary, withTempFile, withTempDir, newTempFile, newTempDir, captureOutput, withBuffering,
     -- * System.Process.Extra
     -- | Extra functions available in @"System.Process.Extra"@.
     system_, systemOutput, systemOutput_,

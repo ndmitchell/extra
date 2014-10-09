@@ -50,7 +50,7 @@ validIdentifier xs =
     (take 1 xs == "(" || isName xs) &&
     xs `notElem` ["module","Numeric"]
 
-isName (x:xs) = isAlpha x && all (\x -> isAlphaNum x || x == '_') xs
+isName (x:xs) = isAlpha x && all (\x -> isAlphaNum x || x `elem` "_'") xs
 isName _ = False
 
 tweakTest x | Just x <- stripSuffix " == error" x = "erroneous $ " ++ x
