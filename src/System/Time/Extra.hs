@@ -1,5 +1,6 @@
 
 module System.Time.Extra(
+    Seconds,
     sleep,
     subtractTime,
     showTime,
@@ -11,16 +12,17 @@ import Data.Time.Clock
 import Numeric.Extra
 import Data.IORef
 
+type Seconds = Double
 
-sleep :: Double -> IO ()
+sleep :: Seconds -> IO ()
 sleep x = threadDelay $ ceiling $ x * 1000000
 
 
-subtractTime :: UTCTime -> UTCTime -> Double
+subtractTime :: UTCTime -> UTCTime -> Seconds
 subtractTime end start = fromRational $ toRational $ end `diffUTCTime` start
 
 
-showTime :: Double -> String
+showTime :: Seconds -> String
 showTime x | x >= 3600 = f (x / 60) "h" "m"
            | x >= 60 = f x "m" "s"
            | otherwise = showDP 2 x ++ "s"
@@ -39,7 +41,7 @@ offsetTime = do
         return $ end `subtractTime` start
 
 -- | Like offsetTime, but results will never decrease (though they may stay the same)
-offsetTimeIncrease :: IO (IO Double)
+offsetTimeIncrease :: IO (IO Seconds)
 offsetTimeIncrease = do
     t <- offsetTime
     ref <- newIORef 0
@@ -48,7 +50,7 @@ offsetTimeIncrease = do
         atomicModifyIORef ref $ \o -> let m = max t o in m `seq` (m, m)
 
 
-duration :: IO a -> IO (Double, a)
+duration :: IO a -> IO (Seconds, a)
 duration act = do
     time <- offsetTime
     res <- act
