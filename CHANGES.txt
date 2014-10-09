@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Rename chop to repeatedly
     Add whenM/unlessM
     Redo the Tuple module, additions and deletions
     Add newTempFile, newTempDir

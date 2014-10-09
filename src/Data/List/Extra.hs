@@ -9,7 +9,7 @@ module Data.List.Extra(
     lower, upper, trim, trimStart, trimEnd, dropAround, word1, drop1,
     list, uncons, unsnoc, cons, snoc,
     groupSort, groupSortOn, nubOn, groupOn, sortOn,
-    chop, for,
+    repeatedly, for,
     rep, reps,
     disjoint, distinct,
     dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, takeWhileEnd, stripSuffix,
@@ -25,9 +25,9 @@ import Data.Char
 import Data.Tuple.Extra
 
 
-chop :: ([a] -> (b, [a])) -> [a] -> [b]
-chop f [] = []
-chop f as = b : chop f as'
+repeatedly :: ([a] -> (b, [a])) -> [a] -> [b]
+repeatedly f [] = []
+repeatedly f as = b : repeatedly f as'
     where (b, as') = f as
 
 rep :: Eq a => a -> a -> a -> a
