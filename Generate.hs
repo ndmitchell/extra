@@ -44,9 +44,12 @@ main = do
         ,"default(Maybe Bool,Int,Double)"
         ,"main :: IO ()"
         ,"main = do"] ++
-        ["  test " ++ show t ++ " $ " ++ t | (_,_,ts) <- ifaces, t <- ts] ++
+        ["  test " ++ show t ++ " $ " ++ tweakTest t | (_,_,ts) <- ifaces, t <- ts] ++
         ["  putStrLn \"Success (" ++ show (length $ concatMap thd3 ifaces) ++ " tests)\""]
 
 
 validIdentifier (x:xs) = (x == '(' || isLower x) && (x:xs) /= "module"
 validIdentifier _ = False
+
+tweakTest x | Just x <- stripSuffix " == error" x = "erroneous $ " ++ x
+            | otherwise = x
