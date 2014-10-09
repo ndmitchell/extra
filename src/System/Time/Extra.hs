@@ -33,7 +33,7 @@ showTime x | x >= 3600 = f (x / 60) "h" "m"
 
 
 -- | Call once at the start, then call repeatedly to get Time values out
-offsetTime :: IO (IO Double)
+offsetTime :: IO (IO Seconds)
 offsetTime = do
     start <- getCurrentTime
     return $ do
