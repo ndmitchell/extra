@@ -6,3 +6,4 @@
 :def docs const $ return $ unlines [":docs_",":!start dist\\doc\\html\\extra\\Extra.html"]
 :def generate const $ return $ unlines ["Generate.main",":reload"]
 :def test const $ return $ unlines ["Test.main"]
+:def & \x -> return $ unlines $ map (':':) $ words x
