@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Add whenM/unlessM
     Redo the Tuple module, additions and deletions
     Add newTempFile, newTempDir
     Add createDirectoryPrivate

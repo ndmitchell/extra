@@ -7,6 +7,7 @@ module Control.Monad.Extra(
     unit,
     partitionM, concatMapM,
     loopM, whileM,
+    whenM, unlessM,
     ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
     findM, firstJustM
     ) where
@@ -50,6 +51,12 @@ whileM act = do
     when b $ whileM act
 
 -- Booleans
+
+whenM :: Monad m => m Bool -> m () -> m ()
+whenM b t = ifM b t (return ())
+
+unlessM :: Monad m => m Bool -> m () -> m ()
+unlessM b f = ifM b (return ()) f
 
 ifM :: Monad m => m Bool -> m a -> m a -> m a
 ifM b t f = do b <- b; if b then t else f
