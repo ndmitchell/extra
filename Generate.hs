@@ -34,18 +34,17 @@ main = do
         ["    ) where"
         ,""] ++
         ["import " ++ x | x <- mods]
-    writeFileBinary "test/Test.hs" $ unlines $
+    writeFileBinary "test/TestGen.hs" $ unlines $
         ["{-# LANGUAGE ExtendedDefaultRules #-}"
-        ,"module Test(main) where"
+        ,"module TestGen(tests) where"
         ,"import TestUtil"
         ,"import Extra"
         ,"import Data.List"
         ,"import Test.QuickCheck"
         ,"default(Maybe Bool,Int,Double)"
-        ,"main :: IO ()"
-        ,"main = do"] ++
-        ["  test " ++ show t ++ " $ " ++ tweakTest t | (_,_,ts) <- ifaces, t <- ts] ++
-        ["  putStrLn \"Success (" ++ show (length $ concatMap thd3 ifaces) ++ " tests)\""]
+        ,"tests :: IO ()"
+        ,"tests = do"] ++
+        ["    testGen " ++ show t ++ " $ " ++ tweakTest t | (_,_,ts) <- ifaces, t <- ts]
 
 
 validIdentifier (x:xs) = (x == '(' || isLower x) && (x:xs) /= "module"
