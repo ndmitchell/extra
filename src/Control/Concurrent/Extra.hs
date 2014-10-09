@@ -2,7 +2,7 @@
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- | Extra functions for "Control.Concurrent".
---   The functions manipulate the number of capabilities.
+--   These functions manipulate the number of capabilities.
 module Control.Concurrent.Extra(
     module Control.Concurrent,
     withNumCapabilities, setNumCapabilities
