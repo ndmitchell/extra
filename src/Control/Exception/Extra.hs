@@ -4,7 +4,9 @@
 --   and functions to catch\/ignore exceptions, including monomorphic (no 'Exception' context) versions.
 module Control.Exception.Extra(
     module Control.Exception,
-    retry, showException, ignore,
+    retry, showException,
+    -- * Exception catching/ignoring
+    ignore,
     catch_, handle_, try_,
     catchJust_, handleJust_, tryJust_,
     catchBool, handleBool, tryBool

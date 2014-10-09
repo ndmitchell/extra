@@ -21,8 +21,15 @@ main = do
         let tests = mapMaybe (stripPrefix "-- > ") $ lines src
         return (mod, funcs, tests)
     writeFileBinary "src/Extra.hs" $ unlines $
-        ["module Extra("] ++
-        concat [["    -- * " ++ mod, "    " ++ unwords (map (++",") funs)] | (mod,funs,_) <- ifaces] ++
+        ["-- | This module documents all the functions available in this package."
+        ,"--"
+        ,"--   Most users should import the specific modules (e.g. @\"Data.List.Extra\"@), which"
+        ,"--   also reexport their non-@Extra@ modules (e.g. @\"Data.List\"@)."
+        ,"module Extra("] ++
+        concat [ ["    -- * " ++ mod
+                 ,"    -- | Extra functions available in @" ++ show mod ++ "@."
+                 ,"    " ++ unwords (map (++",") funs)]
+               | (mod,funs,_) <- ifaces] ++
         ["    ) where"
         ,""] ++
         ["import " ++ x | x <- mods]
