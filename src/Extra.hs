@@ -11,7 +11,7 @@ module Extra(
     retry, showException, ignore, catch_, handle_, try_, catchJust_, handleJust_, tryJust_, catchBool, handleBool, tryBool,
     -- * Control.Monad.Extra
     -- | Extra functions available in @"Control.Monad.Extra"@.
-    whenJust, unit, partitionM, concatMapM, loopM, whileM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM, findM, firstJustM,
+    whenJust, unit, partitionM, concatMapM, loopM, whileM, whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM, findM, firstJustM,
     -- * Data.Either.Extra
     -- | Extra functions available in @"Data.Either.Extra"@.
     isLeft, isRight, fromLeft, fromRight, fromEither,
@@ -20,7 +20,7 @@ module Extra(
     modifyIORef', writeIORef', atomicModifyIORef', atomicWriteIORef, atomicWriteIORef',
     -- * Data.List.Extra
     -- | Extra functions available in @"Data.List.Extra"@.
-    lower, upper, trim, trimStart, trimEnd, dropAround, word1, drop1, list, uncons, unsnoc, cons, snoc, groupSort, groupSortOn, nubOn, groupOn, sortOn, chop, for, rep, reps, disjoint, distinct, dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, takeWhileEnd, stripSuffix, concatUnzip, concatUnzip3, merge, mergeBy, replace, wordsBy, linesBy, firstJust, breakOn, breakOnEnd, splitOn, split, chunksOf,
+    lower, upper, trim, trimStart, trimEnd, dropAround, word1, drop1, list, uncons, unsnoc, cons, snoc, groupSort, groupSortOn, nubOn, groupOn, sortOn, repeatedly, for, rep, reps, disjoint, allSame, anySame, dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, takeWhileEnd, stripSuffix, concatUnzip, concatUnzip3, merge, mergeBy, replace, wordsBy, linesBy, firstJust, breakOn, breakOnEnd, splitOn, split, chunksOf,
     -- * Data.Tuple.Extra
     -- | Extra functions available in @"Data.Tuple.Extra"@.
     first, second, (***), (&&&), dupe, both, fst3, snd3, thd3, first3, second3, third3, dupe3, both3,
