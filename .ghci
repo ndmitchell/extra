@@ -7,3 +7,4 @@
 :def generate const $ return $ unlines ["Generate.main",":reload"]
 :def test const $ return $ unlines ["Test.main"]
 :def & \x -> return $ unlines $ map (':':) $ words x
+:def travis const $ return $ unlines [":!runhaskell -isrc travis.hs"]
