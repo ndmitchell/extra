@@ -7,6 +7,7 @@ import Control.Monad
 import System.FilePath
 import Data.Char
 import Data.Maybe
+import Data.Tuple.Extra
 
 
 main :: IO ()
@@ -44,7 +45,7 @@ main = do
         ,"main :: IO ()"
         ,"main = do"] ++
         ["  test " ++ show t ++ " $ " ++ t | (_,_,ts) <- ifaces, t <- ts] ++
-        ["  putStrLn \"Success\""]
+        ["  putStrLn \"Success (" ++ show (length $ concatMap thd3 ifaces) ++ " tests)\""]
 
 
 validIdentifier (x:xs) = (x == '(' || isLower x) && (x:xs) /= "module"
