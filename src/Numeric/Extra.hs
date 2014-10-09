@@ -20,15 +20,15 @@ showDP n x = a ++ (if n > 0 then "." else "") ++ b ++ replicate (n - length b) '
 -- Numeric
 
 intToDouble :: Int -> Double
-intToDouble = fromInteger . toInteger
+intToDouble = fromIntegral
 
 intToFloat :: Int -> Float
-intToFloat = fromInteger . toInteger
+intToFloat = fromIntegral
 
 floatToDouble :: Float -> Double
-floatToDouble = fromRational . toRational
+floatToDouble = realToFrac
 
 doubleToFloat :: Double -> Float
-doubleToFloat = fromRational . toRational
+doubleToFloat = realToFrac
 
 

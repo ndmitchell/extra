@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Optimise the numeric conversions
     Rename chop to repeatedly
     Add whenM/unlessM
     Redo the Tuple module, additions and deletions
