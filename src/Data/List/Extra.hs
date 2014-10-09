@@ -27,8 +27,8 @@ import Data.Tuple.Extra
 -- | Apply some operation repeatedly, producing an element of output
 --   and the remainder of the list.
 --
--- > \xs -> repeatedly (splitAt 3) xs == chunksOf 3 xs
--- > \xs -> repeatedly word1 xs       == words xs
+-- > \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
+-- > \xs -> repeatedly word1 (trim xs) == words xs
 repeatedly :: ([a] -> (b, [a])) -> [a] -> [b]
 repeatedly f [] = []
 repeatedly f as = b : repeatedly f as'
