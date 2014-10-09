@@ -56,6 +56,8 @@ test-suite extra-test
     type:            exitcode-stdio-1.0
     default-language: Haskell2010
     build-depends:
+        base == 4.*,
+        extra,
         QuickCheck
     if !os(windows)
         build-depends: unix
