@@ -24,21 +24,43 @@ import Data.Char
 import Data.Tuple.Extra
 
 
+-- | Apply some operation repeatedly, producing an element of output
+--   and the remainder of the list.
+--
+-- > \xs -> repeatedly (splitAt 3) xs == chunksOf 3 xs
+-- > \xs -> repeatedly word1 xs       == words xs
 repeatedly :: ([a] -> (b, [a])) -> [a] -> [b]
 repeatedly f [] = []
 repeatedly f as = b : repeatedly f as'
     where (b, as') = f as
 
 
+-- | Flipped version of 'map'.
+--
+-- > for [1,2,3] (+1) == [2,3,4]
 for :: [a] -> (a -> b) -> [b]
 for = flip map
 
+-- | Are two lists disjoint, with no elements in common.
+--
+-- > disjoint [1,2,3] [4,5] == True
+-- > disjoint [1,2,3] [4,1] == False
 disjoint :: Eq a => [a] -> [a] -> Bool
 disjoint xs = null . intersect xs
 
+-- | Is there any element which occurs more than once.
+--
+-- > anySame [1,1,2] == True
+-- > anySame [1,2,3] == False
 anySame :: Eq a => [a] -> Bool
 anySame xs = length xs /= length (nub xs)
 
+-- | Are all elements the same.
+--
+-- > allSame [1,1,2] == False
+-- > allSame [1,1,1] == True
+-- > allSame [1]     == True
+-- > allSame []      == True
 allSame :: Eq a => [a] -> Bool
 allSame xs = length (nub xs) <= 1
 
@@ -248,9 +270,13 @@ stripSuffix :: Eq a => [a] -> [a] -> Maybe [a]
 stripSuffix a b = fmap reverse $ stripPrefix (reverse a) (reverse b)
 
 
+-- | Split a list into chunks of a given size. The last chunk may contain
+--   fewer than n elements. The chunk size must be positive.
+--
+-- > chunksOf 3 "my test" == ["my ","tes","t"]
+-- > chunksOf 3 "mytest"  == ["myt","est"]
+-- > chunksOf 8 ""        == []
+-- > chunksOf 0 "test"    == error
 chunksOf :: Int -> [a] -> [[a]]
-chunksOf i _ | i <= 0 = error $ "chunksOf, number must be positive, got " ++ show i
-chunksOf i [] = []
-chunksOf i xs = a : chunksOf i b
-    where (a,b) = splitAt i xs
-
+chunksOf i xs | i <= 0 = error $ "chunksOf, number must be positive, got " ++ show i
+chunksOf i xs = repeatedly (splitAt i) xs
