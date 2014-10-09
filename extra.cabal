@@ -59,7 +59,7 @@ test-suite extra-test
         QuickCheck
     if !os(windows)
         build-depends: unix
-    hs-source-dirs: src
+    hs-source-dirs: test
     ghc-options: -main-is Test.main
     main-is:        Test.hs
     other-modules:

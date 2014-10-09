@@ -34,7 +34,7 @@ main = do
         ["    ) where"
         ,""] ++
         ["import " ++ x | x <- mods]
-    writeFileBinary "src/Test.hs" $ unlines $
+    writeFileBinary "test/Test.hs" $ unlines $
         ["{-# LANGUAGE ExtendedDefaultRules #-}"
         ,"module Test(main) where"
         ,"import TestUtil"

@@ -1,5 +1,5 @@
 :set -fwarn-unused-binds -fwarn-unused-imports
-:set -isrc
+:set -isrc -itest
 :load Extra Generate Test
 :module Extra
 :def docs_ const $ return $ unlines [":!cabal haddock"]
