@@ -15,9 +15,11 @@ import qualified Control.Arrow as Arrow
 
 infixr 3 ***, &&&
 
+-- | Update the first component of a pair.
 first :: (a -> a') -> (a, b) -> (a', b)
 first = Arrow.first
 
+-- | Update the second component of a pair.
 second :: (b -> b') -> (a, b) -> (a, b')
 second = Arrow.second
 
@@ -42,12 +44,15 @@ snd3 (a,b,c) = b
 thd3 :: (a,b,c) -> c
 thd3 (a,b,c) = c
 
+-- | Update the first component of a triple.
 first3 :: (a -> a') -> (a, b, c) -> (a', b, c)
 first3 f (a,b,c) = (f a, b, c)
 
+-- | Update the second component of a triple.
 second3 :: (b -> b') -> (a, b, c) -> (a, b', c)
 second3 f (a,b,c) = (a, f b, c)
 
+-- | Update the third component of a triple.
 third3 :: (c -> c') -> (a, b, c) -> (a, b, c')
 third3 f (a,b,c) = (a, b, f c)
 
