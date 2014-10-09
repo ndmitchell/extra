@@ -64,3 +64,4 @@ test-suite extra-test
     main-is:        Test.hs
     other-modules:
         TestUtil
+        TestGen
