@@ -16,7 +16,7 @@ main = do
     ifaces <- forM mods $ \mod -> do
         src <- readFile $ joinPath ("src" : split (== '.') mod) <.> "hs"
         let funcs = filter validIdentifier $ takeWhile (/= "where") $
-                    words $ reps ',' ' ' $ drop1 $ dropWhile (/= '(') $
+                    words $ replace "," " " $ drop1 $ dropWhile (/= '(') $
                     unlines $ filter (not . isPrefixOf "--" . trim) $ lines src
         let tests = mapMaybe (stripPrefix "-- > ") $ lines src
         return (mod, funcs, tests)

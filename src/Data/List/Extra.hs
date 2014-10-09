@@ -10,7 +10,6 @@ module Data.List.Extra(
     list, uncons, unsnoc, cons, snoc,
     groupSort, groupSortOn, nubOn, groupOn, sortOn,
     repeatedly, for,
-    rep, reps,
     disjoint, allSame, anySame,
     dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, takeWhileEnd, stripSuffix,
     concatUnzip, concatUnzip3,
@@ -29,12 +28,6 @@ repeatedly :: ([a] -> (b, [a])) -> [a] -> [b]
 repeatedly f [] = []
 repeatedly f as = b : repeatedly f as'
     where (b, as') = f as
-
-rep :: Eq a => a -> a -> a -> a
-rep from to x = if x == from then to else x
-
-reps :: Eq a => a -> a -> [a] -> [a]
-reps from to = map (rep from to)
 
 
 for :: [a] -> (a -> b) -> [b]
