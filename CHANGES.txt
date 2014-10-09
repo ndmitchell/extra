@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Switch distinct for allSame/anySame
     Optimise the numeric conversions
     Rename chop to repeatedly
     Add whenM/unlessM

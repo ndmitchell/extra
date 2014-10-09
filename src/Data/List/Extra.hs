@@ -11,7 +11,7 @@ module Data.List.Extra(
     groupSort, groupSortOn, nubOn, groupOn, sortOn,
     repeatedly, for,
     rep, reps,
-    disjoint, distinct,
+    disjoint, allSame, anySame,
     dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, takeWhileEnd, stripSuffix,
     concatUnzip, concatUnzip3,
     merge, mergeBy, replace, wordsBy, linesBy, firstJust,
@@ -43,8 +43,11 @@ for = flip map
 disjoint :: Eq a => [a] -> [a] -> Bool
 disjoint xs = null . intersect xs
 
-distinct :: Eq a => [a] -> Bool
-distinct xs = length xs == length (nub xs)
+anySame :: Eq a => [a] -> Bool
+anySame xs = length xs /= length (nub xs)
+
+allSame :: Eq a => [a] -> Bool
+allSame xs = length (nub xs) <= 1
 
 
 list :: b -> (a -> [a] -> b) -> [a] -> b
@@ -131,7 +134,7 @@ mergeBy f (x:xs) (y:ys)
     | f x y /= GT = x : mergeBy f xs (y:ys)
     | otherwise = y : mergeBy f (x:xs) ys
 
-replace :: String -> String -> String -> String
+replace :: Eq a => [a] -> [a] -> [a] -> [a]
 replace from to xs | Just xs <- stripPrefix from xs = to ++ replace from to xs
 replace from to (x:xs) = x : replace from to xs
 replace from to [] = []
