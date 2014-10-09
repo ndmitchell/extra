@@ -22,7 +22,7 @@ module Extra(
     -- * System.Info.Extra
     isWindows, getProcessorCount,
     -- * System.IO.Extra
-    readFileEncoding, readFileUTF8, readFileBinary, readFile', readFileEncoding', readFileUTF8', readFileBinary', writeFileEncoding, writeFileUTF8, writeFileBinary, withTempFile, withTempDir, captureOutput, withBuffering,
+    readFileEncoding, readFileUTF8, readFileBinary, readFile', readFileEncoding', readFileUTF8', readFileBinary', writeFileEncoding, writeFileUTF8, writeFileBinary, withTempFile, withTempDir, newTempFile, newTempDir, captureOutput, withBuffering,
     -- * System.Time.Extra
     sleep, subtractTime, showTime, offsetTime, offsetTimeIncrease, duration,
     ) where

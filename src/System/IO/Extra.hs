@@ -1,4 +1,4 @@
-{-# LANGUAGE ScopedTypeVariables, CPP #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 -- | More advanced temporary file manipulation functions can be found in the @exceptions@ package.
 module System.IO.Extra(
@@ -6,7 +6,7 @@ module System.IO.Extra(
     readFileEncoding, readFileUTF8, readFileBinary,
     readFile', readFileEncoding', readFileUTF8', readFileBinary',
     writeFileEncoding, writeFileUTF8, writeFileBinary,
-    withTempFile, withTempDir,
+    withTempFile, withTempDir, newTempFile, newTempDir,
     captureOutput,
     withBuffering,
     ) where
@@ -14,15 +14,11 @@ module System.IO.Extra(
 import System.IO
 import Control.Exception.Extra as E
 import GHC.IO.Handle(hDuplicate,hDuplicateTo)
-import System.Directory
+import System.Directory.Extra
 import System.IO.Error
 import System.FilePath
 import Data.Char
 import Data.Time.Clock
-
-#ifndef mingw32_HOST_OS
-import qualified System.Posix
-#endif
 
 
 -- File reading
@@ -78,7 +74,7 @@ writeFileUTF8 = writeFileEncoding utf8
 writeFileBinary :: FilePath -> String -> IO ()
 writeFileBinary file x = withBinaryFile file WriteMode $ \h -> hPutStr h x
 
--- Other
+-- Console
 
 captureOutput :: IO () -> IO String
 captureOutput act = withTempFile $ \file -> do
@@ -103,40 +99,36 @@ withBuffering h m act = bracket (hGetBuffering h) (hSetBuffering h) $ const $ do
     hSetBuffering h m
     act
 
+-- Temporary file
+
+newTempFile :: (IO FilePath, FilePath -> IO ())
+newTempFile = (create, ignore . removeFile)
+    where
+        create = do
+            tmpdir <- getTemporaryDirectory
+            (file, h) <- openTempFile tmpdir "extra"
+            hClose h
+            return file
+
 
 withTempFile :: (FilePath -> IO a) -> IO a
-withTempFile act = do
-    tmpdir <- getTemporaryDirectory
-    bracket
-        (openTempFile tmpdir "extra")
-        (\(file, h) -> ignore $ removeFile file)
-        (\(file, h) -> hClose h >> act file)
+withTempFile = uncurry bracket newTempFile
+
+newTempDir :: (IO FilePath, FilePath -> IO ())
+newTempDir = (create, ignore . removeDirectoryRecursive)
+    where
+        create = do
+            tmpdir <- getTemporaryDirectory
+            -- get the number of seconds during today (including floating point), and grab some interesting digits
+            rand :: Integer <- fmap (read . take 20 . filter isDigit . show . utctDayTime) getCurrentTime
+            find tmpdir rand
+
+        find tmpdir x = do
+            let dir = tmpdir </> "extra" ++ show x
+            catchBool isAlreadyExistsError
+                (createDirectoryPrivate dir >> return dir) $
+                \e -> find tmpdir (x+1)
 
 
 withTempDir :: (FilePath -> IO a) -> IO a
-withTempDir act = do
-    tmpdir <- getTemporaryDirectory
-    bracket
-        (createTempDirectory tmpdir "extra")
-        (ignore . removeDirectoryRecursive)
-        act
-
-
-createTempDirectory :: FilePath -> String -> IO FilePath
-createTempDirectory dir prefix = do
-    -- get the number of seconds during today (including floating point), and grab some interesting digits
-    rand :: Integer <- fmap (read . take 20 . filter isDigit . show . utctDayTime) getCurrentTime
-    findTempName rand
-    where
-        findTempName x = do
-            let dirpath = dir </> prefix ++ show x
-            catchBool isAlreadyExistsError
-                (mkPrivateDir dirpath >> return dirpath) $
-                \e -> findTempName (x+1)
-
-mkPrivateDir :: String -> IO ()
-#ifdef mingw32_HOST_OS
-mkPrivateDir s = createDirectory s
-#else
-mkPrivateDir s = System.Posix.createDirectory s 0o700
-#endif
+withTempDir = uncurry bracket newTempDir
