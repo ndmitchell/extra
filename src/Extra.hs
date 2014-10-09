@@ -17,7 +17,7 @@ module Extra(
     isLeft, isRight, fromLeft, fromRight, fromEither,
     -- * Data.IORef.Extra
     -- | Extra functions available in @"Data.IORef.Extra"@.
-    modifyIORef', writeIORef', atomicModifyIORef', atomicWriteIORef, atomicWriteIORef',
+    atomicWriteIORef,
     -- * Data.List.Extra
     -- | Extra functions available in @"Data.List.Extra"@.
     lower, upper, trim, trimStart, trimEnd, dropAround, word1, drop1, list, uncons, unsnoc, cons, snoc, groupSort, groupSortOn, nubOn, groupOn, sortOn, repeatedly, for, disjoint, allSame, anySame, dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, takeWhileEnd, stripSuffix, concatUnzip, concatUnzip3, merge, mergeBy, replace, wordsBy, linesBy, firstJust, breakOn, breakOnEnd, splitOn, split, chunksOf,
@@ -38,13 +38,13 @@ module Extra(
     isWindows, getProcessorCount,
     -- * System.IO.Extra
     -- | Extra functions available in @"System.IO.Extra"@.
-    readFileEncoding, readFileUTF8, readFileBinary, readFile', readFileEncoding', readFileUTF8', readFileBinary', writeFileEncoding, writeFileUTF8, writeFileBinary, withTempFile, withTempDir, newTempFile, newTempDir, captureOutput, withBuffering,
+    readFileEncoding, readFileUTF8, readFileBinary, writeFileEncoding, writeFileUTF8, writeFileBinary, withTempFile, withTempDir, newTempFile, newTempDir, captureOutput, withBuffering,
     -- * System.Process.Extra
     -- | Extra functions available in @"System.Process.Extra"@.
     system_, systemOutput, systemOutput_,
     -- * System.Time.Extra
     -- | Extra functions available in @"System.Time.Extra"@.
-    sleep, subtractTime, showTime, offsetTime, offsetTimeIncrease, duration,
+    Seconds, sleep, subtractTime, showTime, offsetTime, offsetTimeIncrease, duration,
     ) where
 
 import Control.Concurrent.Extra
