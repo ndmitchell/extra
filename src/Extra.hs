@@ -20,7 +20,7 @@ module Extra(
     modifyIORef', writeIORef', atomicModifyIORef', atomicWriteIORef, atomicWriteIORef',
     -- * Data.List.Extra
     -- | Extra functions available in @"Data.List.Extra"@.
-    lower, upper, trim, trimStart, trimEnd, dropAround, word1, drop1, list, uncons, unsnoc, cons, snoc, groupSort, groupSortOn, nubOn, groupOn, sortOn, repeatedly, for, rep, reps, disjoint, allSame, anySame, dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, takeWhileEnd, stripSuffix, concatUnzip, concatUnzip3, merge, mergeBy, replace, wordsBy, linesBy, firstJust, breakOn, breakOnEnd, splitOn, split, chunksOf,
+    lower, upper, trim, trimStart, trimEnd, dropAround, word1, drop1, list, uncons, unsnoc, cons, snoc, groupSort, groupSortOn, nubOn, groupOn, sortOn, repeatedly, for, disjoint, allSame, anySame, dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, takeWhileEnd, stripSuffix, concatUnzip, concatUnzip3, merge, mergeBy, replace, wordsBy, linesBy, firstJust, breakOn, breakOnEnd, splitOn, split, chunksOf,
     -- * Data.Tuple.Extra
     -- | Extra functions available in @"Data.Tuple.Extra"@.
     first, second, (***), (&&&), dupe, both, fst3, snd3, thd3, first3, second3, third3, dupe3, both3,
@@ -39,6 +39,9 @@ module Extra(
     -- * System.IO.Extra
     -- | Extra functions available in @"System.IO.Extra"@.
     readFileEncoding, readFileUTF8, readFileBinary, readFile', readFileEncoding', readFileUTF8', readFileBinary', writeFileEncoding, writeFileUTF8, writeFileBinary, withTempFile, withTempDir, newTempFile, newTempDir, captureOutput, withBuffering,
+    -- * System.Process.Extra
+    -- | Extra functions available in @"System.Process.Extra"@.
+    system_, systemOutput, systemOutput_,
     -- * System.Time.Extra
     -- | Extra functions available in @"System.Time.Extra"@.
     sleep, subtractTime, showTime, offsetTime, offsetTimeIncrease, duration,
@@ -56,4 +59,5 @@ import System.Directory.Extra
 import System.Environment.Extra
 import System.Info.Extra
 import System.IO.Extra
+import System.Process.Extra
 import System.Time.Extra
