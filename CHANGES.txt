@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Redo the Tuple module, additions and deletions
     Add newTempFile, newTempDir
     Add createDirectoryPrivate
     Rename strip* to trim*

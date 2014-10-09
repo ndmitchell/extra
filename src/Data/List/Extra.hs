@@ -13,7 +13,7 @@ module Data.List.Extra(
     rep, reps,
     disjoint, distinct,
     dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, takeWhileEnd, stripSuffix,
-    concatUnzip,
+    concatUnzip, concatUnzip3,
     merge, mergeBy, replace, wordsBy, linesBy, firstJust,
     breakOn, breakOnEnd, splitOn, split, chunksOf
     ) where
@@ -21,7 +21,6 @@ module Data.List.Extra(
 import Data.List
 import Data.Function
 import Data.Ord
-import Control.Arrow
 import Data.Char
 import Data.Tuple.Extra
 
@@ -76,6 +75,10 @@ dropEnd i = reverse . drop i . reverse
 
 concatUnzip :: [([a], [b])] -> ([a], [b])
 concatUnzip = (concat *** concat) . unzip
+
+concatUnzip3 :: [([a],[b],[c])] -> ([a],[b],[c])
+concatUnzip3 xs = (concat a, concat b, concat c)
+    where (a,b,c) = unzip3 xs
 
 
 takeWhileEnd :: (a -> Bool) -> [a] -> [a]
