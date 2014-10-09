@@ -7,7 +7,6 @@ import Control.Monad
 import System.FilePath
 import Data.Char
 import Data.Maybe
-import Data.Tuple.Extra
 
 
 main :: IO ()
@@ -47,8 +46,12 @@ main = do
         ["    testGen " ++ show t ++ " $ " ++ tweakTest t | (_,_,ts) <- ifaces, t <- ts]
 
 
-validIdentifier (x:xs) = (x == '(' || isLower x) && (x:xs) /= "module"
-validIdentifier _ = False
+validIdentifier xs =
+    (take 1 xs == "(" || isName xs) &&
+    xs `notElem` ["module","Numeric"]
+
+isName (x:xs) = isAlpha x && all (\x -> isAlphaNum x || x == '_') xs
+isName _ = False
 
 tweakTest x | Just x <- stripSuffix " == error" x = "erroneous $ " ++ x
             | otherwise = x
