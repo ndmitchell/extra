@@ -30,6 +30,7 @@ library
         base == 4.*,
         directory,
         filepath,
+        process,
         time
     if !os(windows)
         build-depends: unix
@@ -48,6 +49,7 @@ library
         System.Environment.Extra
         System.Info.Extra
         System.IO.Extra
+        System.Process.Extra
         System.Time.Extra
 
 test-suite extra-test
