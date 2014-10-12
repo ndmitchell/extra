@@ -11,6 +11,8 @@ import Data.List
 import Control.Exception
 
 
+-- | Remember that the current directory is a global variable, so calling this function
+--   multithreaded is almost certain to go wrong. Avoid changing the dir if you can.
 withCurrentDirectory :: FilePath -> IO a -> IO a
 withCurrentDirectory dir act =
     bracket getCurrentDirectory setCurrentDirectory $ const $ do
