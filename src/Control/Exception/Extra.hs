@@ -1,7 +1,12 @@
 
+-- | Extra functions for "Control.Exception".
+--   These functions provide retrying, showing in the presence of exceptions,
+--   and functions to catch\/ignore exceptions, including monomorphic (no 'Exception' context) versions.
 module Control.Exception.Extra(
     module Control.Exception,
-    retry, showException, ignore,
+    retry, showException,
+    -- * Exception catching/ignoring
+    ignore,
     catch_, handle_, try_,
     catchJust_, handleJust_, tryJust_,
     catchBool, handleBool, tryBool
@@ -22,7 +27,11 @@ showException = f . show
             case r of
                 Left e -> return "<Exception>"
                 Right [] -> return []
-                Right (x:xs) -> fmap (x :) $ f xs
+                Right (x:xs) -> do
+                    r <- try_ $ evaluate x
+                    case r of
+                        Left e -> return "<Exception>"
+                        Right c -> fmap (c:) $ f xs
 
 
 -- | Ignore any exceptions thrown by the action and continue as normal.

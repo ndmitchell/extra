@@ -1,17 +1,17 @@
 
-import Neil
+import Control.Monad
 import System.IO.Extra
+import System.Process.Extra
 
 main = do
-    let files = ["src/Extra.hs","src/Test.hs"]
+    let files = ["src/Extra.hs","test/TestGen.hs"]
     before <- mapM readFile' files
-    cmd "runhaskell -isrc Generate"
+    mapM_ (`appendFile` " ") files -- ensure that if they don't regen, it will error
+    system_ "runhaskell -isrc Generate"
     after <- mapM readFile' files
     when (before /= after) $ error "Generator changed some files, that's a bug"
 
-    cmd "git checkout > temp.txt" -- should have no stdout
-    src <- readFile "temp.txt"
-    print src
-    when (lines src /= []) $ error "generating changed something!"
+    src <- systemOutput_ "git checkout" -- should have no stdout
+    when (lines src /= []) $ error $ "generating changed something!" ++ src
 
-    cmd "runhaskell -isrc Test"
+    system_ "runhaskell -isrc -itest Test"

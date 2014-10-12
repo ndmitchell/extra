@@ -1,5 +1,14 @@
 Changelog for Extra
 
+    Eliminate rep/reps, use replace instead
+    Switch distinct for allSame/anySame
+    Optimise the numeric conversions
+    Rename chop to repeatedly
+    Add whenM/unlessM
+    Redo the Tuple module, additions and deletions
+    Add newTempFile, newTempDir
+    Add createDirectoryPrivate
+    Rename strip* to trim*
     Generalise showException
 0.2
     Redo the cons/uncons functions

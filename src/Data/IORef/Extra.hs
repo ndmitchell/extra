@@ -10,12 +10,13 @@ import Data.IORef
 import Control.Exception
 
 
--- Evaluates before writing to the IORef
+-- | Evaluates the value before calling 'writeIORef'
 writeIORef' :: IORef a -> a -> IO ()
 writeIORef' ref x = do
     evaluate x
     writeIORef ref x
 
+-- | Evaluates the value before calling 'atomicWriteIORef'
 atomicWriteIORef' :: IORef a -> a -> IO ()
 atomicWriteIORef' ref x = do
     evaluate x
@@ -24,10 +25,7 @@ atomicWriteIORef' ref x = do
 
 #if __GLASGOW_HASKELL__ < 706
 
----------------------------------------------------------------------
--- Data.IORef
-
--- Two 's because GHC 7.6 has a strict modifyIORef
+-- | Version of 'modifyIORef' that evaluates the function.
 modifyIORef' :: IORef a -> (a -> a) -> IO ()
 modifyIORef' ref f = do
     x <- readIORef ref
