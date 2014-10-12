@@ -8,4 +8,10 @@ main = do
     cmd "runhaskell -isrc Generate"
     after <- mapM readFile' files
     when (before /= after) $ error "Generator changed some files, that's a bug"
+
+    cmd "git checkout > temp.txt" -- should have no stdout
+    src <- readFile "temp.txt"
+    print src
+    when (lines src /= []) $ error "generating changed something!"
+
     cmd "runhaskell -isrc Test"
