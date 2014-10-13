@@ -1,11 +1,13 @@
 
+-- | Extra functions for "Control.Exception".
+--   These functions provide looping, list operations and booleans.
 -- If you need a wider selection of monad loops and list generalisations,
 -- see <http://hackage.haskell.org/package/monad-loops>
 module Control.Monad.Extra(
     module Control.Monad,
     whenJust,
     unit,
-    partitionM, concatMapM,
+    partitionM, concatMapM, mapMaybeM,
     loopM, whileM,
     whenM, unlessM,
     ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
@@ -14,9 +16,14 @@ module Control.Monad.Extra(
 
 import Control.Monad
 import Control.Applicative
+import Data.Maybe
 
 -- General utilities
 
+-- | Perform some operation on 'Just', given the field inside the 'Just'.
+--
+-- > whenJust Nothing  print == return ()
+-- > whenJust (Just 1) print == print 1
 whenJust :: Applicative m => Maybe a -> (a -> m ()) -> m ()
 whenJust mg f = maybe (pure ()) f mg
 
@@ -35,6 +42,9 @@ partitionM f (x:xs) = do
 
 concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
 concatMapM f = liftM concat . mapM f
+
+mapMaybeM :: Monad m => (a -> m (Maybe b)) -> [a] -> m [b]
+mapMaybeM f = liftM catMaybes . mapM f
 
 -- Looping
 
