@@ -8,10 +8,10 @@ module Extra(
     withNumCapabilities, setNumCapabilities,
     -- * Control.Exception.Extra
     -- | Extra functions available in @"Control.Exception.Extra"@.
-    retry, showException, ignore, catch_, handle_, try_, catchJust_, handleJust_, tryJust_, catchBool, handleBool, tryBool,
+    retry, showException, stringException, ignore, catch_, handle_, try_, catchJust_, handleJust_, tryJust_, catchBool, handleBool, tryBool,
     -- * Control.Monad.Extra
     -- | Extra functions available in @"Control.Monad.Extra"@.
-    whenJust, unit, partitionM, concatMapM, loopM, whileM, whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM, findM, firstJustM,
+    whenJust, unit, partitionM, concatMapM, mapMaybeM, loopM, whileM, whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM, findM, firstJustM,
     -- * Data.Either.Extra
     -- | Extra functions available in @"Data.Either.Extra"@.
     isLeft, isRight, fromLeft, fromRight, fromEither,
