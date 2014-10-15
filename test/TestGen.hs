@@ -18,6 +18,7 @@ tests = do
     testGen "whenJust (Just 1) print == print 1" $ whenJust (Just 1) print == print 1
     testGen "\\(x :: Maybe ()) -> unit x == x" $ \(x :: Maybe ()) -> unit x == x
     testGen "partitionM (Just . even) [1,2,3] == Just ([2], [1,3])" $ partitionM (Just . even) [1,2,3] == Just ([2], [1,3])
+    testGen "partitionM (const Nothing) [1,2,3] == Nothing" $ partitionM (const Nothing) [1,2,3] == Nothing
     testGen "Just False &&^ undefined == Just False" $ Just False &&^ undefined == Just False
     testGen "Just True &&^ Just True == Just True" $ Just True &&^ Just True == Just True
     testGen "\\xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs" $ \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
