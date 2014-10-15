@@ -15,7 +15,6 @@ import System.IO.Unsafe
 testCount :: IORef Int
 testCount = unsafePerformIO $ newIORef 0
 
-
 testGen :: Testable prop => String -> prop -> IO ()
 testGen msg prop = do
     putStrLn msg

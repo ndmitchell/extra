@@ -1,4 +1,4 @@
-{-# LANGUAGE ExtendedDefaultRules #-}
+{-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables #-}
 module TestGen(tests) where
 import TestUtil
 import Extra
@@ -16,6 +16,8 @@ tests = do
     testGen "retry 3 (fail \"die\") == fail \"die\"" $ retry 3 (fail "die") == fail "die"
     testGen "whenJust Nothing  print == return ()" $ whenJust Nothing  print == return ()
     testGen "whenJust (Just 1) print == print 1" $ whenJust (Just 1) print == print 1
+    testGen "\\(x :: Maybe ()) -> unit x == x" $ \(x :: Maybe ()) -> unit x == x
+    testGen "partitionM (Just . even) [1,2,3] == Just ([2], [1,3])" $ partitionM (Just . even) [1,2,3] == Just ([2], [1,3])
     testGen "Just False &&^ undefined == Just False" $ Just False &&^ undefined == Just False
     testGen "Just True &&^ Just True == Just True" $ Just True &&^ Just True == Just True
     testGen "\\xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs" $ \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
@@ -29,6 +31,8 @@ tests = do
     testGen "allSame [1,1,1] == True" $ allSame [1,1,1] == True
     testGen "allSame [1]     == True" $ allSame [1]     == True
     testGen "allSame []      == True" $ allSame []      == True
+    testGen "lower \"This is A TEST\" == \"this is a test\"" $ lower "This is A TEST" == "this is a test"
+    testGen "lower \"\" == \"\"" $ lower "" == ""
     testGen "breakOn \"::\" \"a::b::c\" == (\"a\", \"::b::c\")" $ breakOn "::" "a::b::c" == ("a", "::b::c")
     testGen "breakOn \"/\" \"foobar\"   == (\"foobar\", \"\")" $ breakOn "/" "foobar"   == ("foobar", "")
     testGen "\\needle haystack -> let (prefix,match) = breakOn needle haystack in prefix ++ match == haystack" $ \needle haystack -> let (prefix,match) = breakOn needle haystack in prefix ++ match == haystack
