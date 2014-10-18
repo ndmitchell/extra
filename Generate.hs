@@ -34,7 +34,7 @@ main = do
         ,""] ++
         ["import " ++ x | x <- mods]
     writeFileBinary "test/TestGen.hs" $ unlines $
-        ["{-# LANGUAGE ExtendedDefaultRules #-}"
+        ["{-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables #-}"
         ,"module TestGen(tests) where"
         ,"import TestUtil"
         ,"import Extra"

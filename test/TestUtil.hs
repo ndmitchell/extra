@@ -6,6 +6,7 @@ import Test.QuickCheck.Test
 import Control.Monad
 import Control.Exception.Extra
 import Data.Either.Extra
+import System.IO.Extra
 import Data.IORef
 import System.IO.Unsafe
 
@@ -13,7 +14,6 @@ import System.IO.Unsafe
 {-# NOINLINE testCount #-}
 testCount :: IORef Int
 testCount = unsafePerformIO $ newIORef 0
-
 
 testGen :: Testable prop => String -> prop -> IO ()
 testGen msg prop = do
@@ -33,3 +33,13 @@ runTests t = do
     t
     n <- readIORef testCount
     putStrLn $ "Success (" ++ show n ++ " tests)"
+
+
+instance Eq a => Eq (IO a) where
+    a == b = unsafePerformIO $ do
+        a <- try_ $ captureOutput a
+        b <- try_ $ captureOutput b
+        return $ a == b
+
+instance Eq SomeException where
+    a == b = show a == show b

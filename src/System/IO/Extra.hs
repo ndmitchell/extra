@@ -76,22 +76,25 @@ writeFileBinary file x = withBinaryFile file WriteMode $ \h -> hPutStr h x
 
 -- Console
 
-captureOutput :: IO () -> IO String
+-- | Capture the 'stdout' and 'stderr' of a computation.
+--
+-- > captureOutput (print 1) == return ("1\n",())
+captureOutput :: IO a -> IO (String, a)
 captureOutput act = withTempFile $ \file -> do
-    h <- openFile file ReadWriteMode
-    bout <- hGetBuffering stdout
-    berr <- hGetBuffering stderr
-    sto <- hDuplicate stdout
-    ste <- hDuplicate stderr
-    hDuplicateTo h stdout
-    hDuplicateTo h stderr
-    hClose h
-    act
-    hDuplicateTo sto stdout
-    hDuplicateTo ste stderr
-    hSetBuffering stdout bout
-    hSetBuffering stderr berr
-    readFile' file
+    withFile file ReadWriteMode $ \h -> do
+        res <- clone stdout h $ clone stderr h $ do
+            hClose h
+            act
+        out <- readFile' file
+        return (out, res)
+    where
+        clone out h act = do
+            buf <- hGetBuffering out
+            out2 <- hDuplicate out
+            hDuplicateTo h out
+            act `finally` do
+                hDuplicateTo out2 out
+                hSetBuffering out buf
 
 
 withBuffering :: Handle -> BufferMode -> IO a -> IO a

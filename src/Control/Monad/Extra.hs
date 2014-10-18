@@ -1,11 +1,13 @@
 
+-- | Extra functions for "Control.Exception".
+--   These functions provide looping, list operations and booleans.
 -- If you need a wider selection of monad loops and list generalisations,
 -- see <http://hackage.haskell.org/package/monad-loops>
 module Control.Monad.Extra(
     module Control.Monad,
     whenJust,
     unit,
-    partitionM, concatMapM,
+    partitionM, concatMapM, mapMaybeM,
     loopM, whileM,
     whenM, unlessM,
     ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
@@ -14,17 +16,30 @@ module Control.Monad.Extra(
 
 import Control.Monad
 import Control.Applicative
+import Data.Maybe
 
 -- General utilities
 
+-- | Perform some operation on 'Just', given the field inside the 'Just'.
+--
+-- > whenJust Nothing  print == return ()
+-- > whenJust (Just 1) print == print 1
 whenJust :: Applicative m => Maybe a -> (a -> m ()) -> m ()
 whenJust mg f = maybe (pure ()) f mg
 
+-- | The identity function which requires the inner argument to be '()'. Useful for functions
+--   with overloaded return times.
+--
+-- > \(x :: Maybe ()) -> unit x == x
 unit :: m () -> m ()
 unit = id
 
 -- Data.List for Monad
 
+-- | A version of 'partition' that works with a monadic predicate.
+--
+-- > partitionM (Just . even) [1,2,3] == Just ([2], [1,3])
+-- > partitionM (const Nothing) [1,2,3] == Nothing
 partitionM :: Monad m => (a -> m Bool) -> [a] -> m ([a], [a])
 partitionM f [] = return ([], [])
 partitionM f (x:xs) = do
@@ -33,11 +48,18 @@ partitionM f (x:xs) = do
     return ([x | res]++as, [x | not res]++bs)
 
 
+-- | A version of 'concatMap' that works with a monadic predicate.
 concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
 concatMapM f = liftM concat . mapM f
 
+-- | A version of 'mapMaybe' that works with a monadic predicate.
+mapMaybeM :: Monad m => (a -> m (Maybe b)) -> [a] -> m [b]
+mapMaybeM f = liftM catMaybes . mapM f
+
 -- Looping
 
+-- | A looping operation, where the predicate returns 'Left' as a seed for the next loop
+--   or 'Right' to abort the loop.
 loopM :: Monad m => (a -> m (Either a b)) -> a -> m b
 loopM act x = do
     res <- act x
@@ -45,6 +67,7 @@ loopM act x = do
         Left x -> loopM act x
         Right v -> return v
 
+-- | Keep running an operation until it becomes 'False'.
 whileM :: Monad m => m Bool -> m ()
 whileM act = do
     b <- act

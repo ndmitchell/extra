@@ -108,6 +108,10 @@ trimStart = dropWhile isSpace
 trimEnd = dropWhileEnd isSpace
 trim = dropAround isSpace
 
+-- | Documentation about lowercase
+--
+-- > lower "This is A TEST" == "this is a test"
+-- > lower "" == ""
 lower :: String -> String
 lower = map toLower
 
