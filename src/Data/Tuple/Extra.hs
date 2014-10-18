@@ -1,5 +1,7 @@
 
 -- | Extra functions for working with tuples.
+--   Some of these functions are available in the "Control.Arrow" module,
+--   but here are available specialised to pairs.
 module Data.Tuple.Extra(
     module Data.Tuple,
     -- * Specialised 'Arrow' functions
