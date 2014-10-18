@@ -1,5 +1,6 @@
 Changelog for Extra
 
+0.3
     Rename showTime to showDuration
     Add stringException
     Eliminate rep/reps, use replace instead
