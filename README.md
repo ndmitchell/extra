@@ -3,7 +3,7 @@
 A library of extra functions for the standard Haskell libraries. Most functions are simple additions, filling out missing functionality. A few functions are available in later versions of GHC, but this package makes them available back to GHC 7.2. A few examples:
 
 * `Control.Monad.Extra.concatMapM` provides a monadic version of `concatMap`, in the same way that `mapM` is a monadic version of `map`.
-* `Data.Either.fromRight` provides an `Either` version of `fromJust`.
+* `Data.Tuple.Extra.fst3` provides a function to get the first element of a triple.
 * `Control.Exception.Extra.retry` provides a function that retries an `IO` action a number of times.
 * `System.Environment.Extra.lookupEnv` is a functional available in GHC 7.6 and above. On GHC 7.6 and above this package reexports the version from `System.Environment` while on GHC 7.4 and below it defines an equivalent version.
 
@@ -16,4 +16,4 @@ When producing a library of extra functions I have been guided by a few principl
 * I have been using most of these functions in my packages - they have proved useful enough to be worth copying/pasting into each project.
 * The functions follow the spirit of the original Prelude/base libraries. I am happy to provide partial functions (e.g. `fromRight`), and functions which are specialisations of more generic functions (`whenJust`).
 * Most of the functions have trivial implementations. If a beginner couldn't write the function, it probably doesn't belong here.
-* I have not defined any new data types, and only one type alias. It's a package for defining new utilities on existing types, not new types or concepts.
+* I have defined only a few new data types or type aliases. It's a package for defining new utilities on existing types, not new types or concepts.
