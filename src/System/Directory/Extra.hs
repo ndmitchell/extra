@@ -23,16 +23,18 @@ withCurrentDirectory dir act =
     bracket getCurrentDirectory setCurrentDirectory $ const $ do
         setCurrentDirectory dir; act
 
+-- | Find all the files within a directory, including recursively.
+--   Looks through all folders, including those beginning with @.@.
 getDirectoryContentsRecursive :: FilePath -> IO [FilePath]
 getDirectoryContentsRecursive dir = do
     xs <- getDirectoryContents dir
-    (dirs,files) <- partitionM doesDirectoryExist [dir </> x | x <- xs, not $ isBadDir x]
+    (dirs,files) <- partitionM doesDirectoryExist [dir </> x | x <- xs, not $ all (== '.') x]
     rest <- concatMapM getDirectoryContentsRecursive $ sort dirs
     return $ sort files ++ rest
-    where
-        isBadDir x = "." `isPrefixOf` x -- FIXME, need a version that can also exclude _ dirs
 
 
+-- | Create a directory with permissions so that only the current user can view it.
+--   On Windows this function is equivalent to 'createDirectory'.
 createDirectoryPrivate :: String -> IO ()
 #ifdef mingw32_HOST_OS
 createDirectoryPrivate s = createDirectory s
