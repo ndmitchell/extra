@@ -2,7 +2,7 @@
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- | Extra functions for "Control.Concurrent".
---   These functions manipulate the number of capabilities.
+--   These functions manipulate the number of capabilities and new types of lock.
 module Control.Concurrent.Extra(
     module Control.Concurrent,
     withNumCapabilities, setNumCapabilities,
@@ -56,7 +56,6 @@ forkFinally action and_then =
 
 -- | Like an MVar, but has no value
 newtype Lock = Lock (MVar ())
-instance Show Lock where show _ = "Lock"
 
 newLock :: IO Lock
 newLock = fmap Lock $ newMVar ()
@@ -78,7 +77,6 @@ withLockTry (Lock m) act =
 
 -- | Like an MVar, but must always be full
 newtype Var a = Var (MVar a)
-instance Show (Var a) where show _ = "Var"
 
 newVar :: a -> IO (Var a)
 newVar = fmap Var . newMVar
@@ -101,7 +99,6 @@ withVar (Var x) f = withMVar x f
 
 -- | Starts out empty, then is filled exactly once
 newtype Barrier a = Barrier (MVar a)
-instance Show (Barrier a) where show _ = "Barrier"
 
 newBarrier :: IO (Barrier a)
 newBarrier = fmap Barrier newEmptyMVar
