@@ -53,4 +53,11 @@ tests = do
     testGen "chunksOf 3 \"mytest\"  == [\"myt\",\"est\"]" $ chunksOf 3 "mytest"  == ["myt","est"]
     testGen "chunksOf 8 \"\"        == []" $ chunksOf 8 ""        == []
     testGen "chunksOf 0 \"test\"    == error" $ erroneous $ chunksOf 0 "test"   
+    testGen "showDP 4 pi == \"3.1416\"" $ showDP 4 pi == "3.1416"
+    testGen "showDP 0 pi == \"3\"" $ showDP 0 pi == "3"
+    testGen "showDP 2 3  == \"3.00\"" $ showDP 2 3  == "3.00"
     testGen "captureOutput (print 1) == return (\"1\\n\",())" $ captureOutput (print 1) == return ("1\n",())
+    testGen "showDuration 3.435   == \"3.44s\"" $ showDuration 3.435   == "3.44s"
+    testGen "showDuration 623.8   == \"10m24s\"" $ showDuration 623.8   == "10m24s"
+    testGen "showDuration 62003.8 == \"17h13m\"" $ showDuration 62003.8 == "17h13m"
+    testGen "showDuration 1e8     == \"27777h47m\"" $ showDuration 1e8     == "27777h47m"
