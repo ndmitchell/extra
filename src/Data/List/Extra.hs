@@ -11,7 +11,7 @@ module Data.List.Extra(
     groupSort, groupSortOn, nubOn, groupOn, sortOn,
     repeatedly, for,
     disjoint, allSame, anySame,
-    dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, takeWhileEnd, stripSuffix,
+    dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, dropWhileEnd', takeWhileEnd, stripSuffix,
     concatUnzip, concatUnzip3,
     merge, mergeBy, replace, wordsBy, linesBy, firstJust,
     breakOn, breakOnEnd, splitOn, split, chunksOf
@@ -257,6 +257,12 @@ split f (x:xs) | y:ys <- split f xs = (x:y) : ys
 dropWhileEnd :: (a -> Bool) -> [a] -> [a]
 dropWhileEnd p = foldr (\x xs -> if p x && null xs then [] else x : xs) []
 #endif
+
+
+-- | A version of 'dropWhileEnd' but with different strictness properties.
+--   Often outperforms if the list is short or the test is expensive.
+dropWhileEnd' :: (a -> Bool) -> [a] -> [a]
+dropWhileEnd' p = foldr (\x xs -> if null xs && p x then [] else x : xs) []
 
 -- | Return the prefix of the second string if its suffix
 -- matches the entire first string.
