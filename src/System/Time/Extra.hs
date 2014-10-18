@@ -3,7 +3,7 @@ module System.Time.Extra(
     Seconds,
     sleep,
     subtractTime,
-    showTime,
+    showDuration,
     offsetTime, offsetTimeIncrease, duration
     ) where
 
@@ -22,14 +22,21 @@ subtractTime :: UTCTime -> UTCTime -> Seconds
 subtractTime end start = fromRational $ toRational $ end `diffUTCTime` start
 
 
-showTime :: Seconds -> String
-showTime x | x >= 3600 = f (x / 60) "h" "m"
-           | x >= 60 = f x "m" "s"
-           | otherwise = showDP 2 x ++ "s"
+-- | Show a number of seconds, typically a duration, in a suitable manner with
+--   responable precision for a human.
+--
+-- > showDuration 3.435   == "3.44s"
+-- > showDuration 623.8   == "10m24s"
+-- > showDuration 62003.8 == "17h13m"
+-- > showDuration 1e8     == "27777h47m"
+showDuration :: Seconds -> String
+showDuration x
+    | x >= 3600 = f (x / 60) "h" "m"
+    | x >= 60 = f x "m" "s"
+    | otherwise = showDP 2 x ++ "s"
     where
-        f x m s = show ms ++ m ++ ['0' | ss < 10] ++ show ss ++ m
+        f x m s = show ms ++ m ++ ['0' | ss < 10] ++ show ss ++ s
             where (ms,ss) = round x `divMod` 60
-
 
 
 -- | Call once at the start, then call repeatedly to get Time values out
