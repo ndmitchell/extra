@@ -8,6 +8,8 @@ import Data.Either.Extra
 import System.IO.Extra
 import Data.IORef
 import System.IO.Unsafe
+import Data.Time.Clock
+import Data.Time.Calendar
 
 import Extra as X
 import Control.Monad as X
@@ -50,3 +52,12 @@ instance Eq a => Eq (IO a) where
 
 instance Eq SomeException where
     a == b = show a == show b
+
+instance Arbitrary UTCTime where
+    arbitrary = liftM2 UTCTime arbitrary arbitrary
+
+instance Arbitrary Day where
+    arbitrary = fmap ModifiedJulianDay arbitrary
+
+instance Arbitrary DiffTime where
+    arbitrary = fmap realToFrac $ choose (0 :: Double, 86401)
