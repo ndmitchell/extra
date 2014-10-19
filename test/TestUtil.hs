@@ -38,6 +38,9 @@ runTests t = do
     n <- readIORef testCount
     putStrLn $ "Success (" ++ show n ++ " tests)"
 
+instance Testable a => Testable (IO a) where
+    property = property . unsafePerformIO
+    exhaustive = exhaustive . unsafePerformIO
 
 instance Eq a => Eq (IO a) where
     a == b = unsafePerformIO $ do
