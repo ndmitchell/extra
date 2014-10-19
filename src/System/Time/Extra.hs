@@ -22,9 +22,9 @@ sleep :: Seconds -> IO ()
 sleep x = threadDelay $ ceiling $ x * 1000000
 
 
--- Calculate the difference between two times in seconds.
--- Usually the first time will be the end of an event, and the
--- second time will be the beginning.
+-- | Calculate the difference between two times in seconds.
+--   Usually the first time will be the end of an event, and the
+--   second time will be the beginning.
 --
 -- > \a b -> a > b ==> subtractTime a b > 0
 subtractTime :: UTCTime -> UTCTime -> Seconds
