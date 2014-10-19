@@ -60,6 +60,7 @@ test-suite extra-test
     build-depends:
         base == 4.*,
         extra,
+        time,
         QuickCheck
     if !os(windows)
         build-depends: unix
