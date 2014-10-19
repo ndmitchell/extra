@@ -90,7 +90,9 @@ tryJust_ = tryJust
 -- | Catch an exception if the predicate passes, then call the handler with the original exception.
 --   As an example:
 --
--- >> readFileExists x == catchBool isDoesNotExistError (readFile "myfile") (const $ return "")
+-- @
+-- readFileExists x == catchBool isDoesNotExistError (readFile \"myfile\") (const $ return \"\")
+-- @
 catchBool :: Exception e => (e -> Bool) -> IO a -> (e -> IO a) -> IO a
 catchBool f a b = catchJust (bool f) a b
 

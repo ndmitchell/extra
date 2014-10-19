@@ -38,9 +38,11 @@ setNumCapabilities n = return ()
 -- to terminate, with an exception or a returned value.  The function is
 -- called with asynchronous exceptions masked.
 --
--- >> forkFinally action and_then =
--- >>   mask $ \restore ->
--- >>     forkIO $ try (restore action) >>= and_then
+-- @
+-- forkFinally action and_then =
+--    mask $ \restore ->
+--      forkIO $ try (restore action) >>= and_then
+-- @
 --
 -- This function is useful for informing the parent when a child
 -- terminates, for example.
