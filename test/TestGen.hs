@@ -1,9 +1,6 @@
 {-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables #-}
 module TestGen(tests) where
 import TestUtil
-import Extra
-import Data.List
-import Test.QuickCheck
 default(Maybe Bool,Int,Double)
 tests :: IO ()
 tests = do

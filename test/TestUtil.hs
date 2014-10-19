@@ -1,14 +1,18 @@
 
-module TestUtil(runTests, testGen, erroneous) where
+module TestUtil(runTests, testGen, erroneous, module X) where
 
 import Test.QuickCheck
 import Test.QuickCheck.Test
-import Control.Monad
 import Control.Exception.Extra
 import Data.Either.Extra
 import System.IO.Extra
 import Data.IORef
 import System.IO.Unsafe
+
+import Extra as X
+import Control.Monad as X
+import Data.List as X
+import Test.QuickCheck as X
 
 
 {-# NOINLINE testCount #-}
