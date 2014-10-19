@@ -54,7 +54,10 @@ tests = do
     testGen "showDP 0 pi == \"3\"" $ showDP 0 pi == "3"
     testGen "showDP 2 3  == \"3.00\"" $ showDP 2 3  == "3.00"
     testGen "captureOutput (print 1) == return (\"1\\n\",())" $ captureOutput (print 1) == return ("1\n",())
+    testGen "fmap (round . fst) (duration $ sleep 1) == return 1" $ fmap (round . fst) (duration $ sleep 1) == return 1
+    testGen "\\a b -> a > b ==> subtractTime a b > 0" $ \a b -> a > b ==> subtractTime a b > 0
     testGen "showDuration 3.435   == \"3.44s\"" $ showDuration 3.435   == "3.44s"
     testGen "showDuration 623.8   == \"10m24s\"" $ showDuration 623.8   == "10m24s"
     testGen "showDuration 62003.8 == \"17h13m\"" $ showDuration 62003.8 == "17h13m"
     testGen "showDuration 1e8     == \"27777h47m\"" $ showDuration 1e8     == "27777h47m"
+    testGen "do f <- offsetTimeIncrease; xs <- replicateM 10 f; return $ xs == sort xs" $ do f <- offsetTimeIncrease; xs <- replicateM 10 f; return $ xs == sort xs
