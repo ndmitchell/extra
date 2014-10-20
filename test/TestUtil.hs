@@ -10,10 +10,13 @@ import Data.IORef
 import System.IO.Unsafe
 import Data.Time.Clock
 import Data.Time.Calendar
+import Text.Show.Functions()
 
 import Extra as X
 import Control.Monad as X
 import Data.List as X
+import Data.Char as X
+import Data.Tuple as X
 import Test.QuickCheck as X
 
 
