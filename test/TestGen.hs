@@ -31,6 +31,12 @@ tests = do
     testGen "allSame []      == True" $ allSame []      == True
     testGen "lower \"This is A TEST\" == \"this is a test\"" $ lower "This is A TEST" == "this is a test"
     testGen "lower \"\" == \"\"" $ lower "" == ""
+    testGen "breakEnd isLower \"youRE\" === (\"you\",\"RE\")" $ breakEnd isLower "youRE" === ("you","RE")
+    testGen "breakEnd isLower \"youre\" === (\"youre\",\"\")" $ breakEnd isLower "youre" === ("youre","")
+    testGen "breakEnd isLower \"YOURE\" === (\"\",\"YOURE\")" $ breakEnd isLower "YOURE" === ("","YOURE")
+    testGen "spanEnd isUpper \"youRE\" == (\"you\",\"RE\")" $ spanEnd isUpper "youRE" == ("you","RE")
+    testGen "spanEnd (not . isSpace) \"x y z\" == (\"x y \",\"z\")" $ spanEnd (not . isSpace) "x y z" == ("x y ","z")
+    testGen "\\f xs-> spanEnd f xs == swap (both reverse (span f (reverse xs)))" $ \f xs-> spanEnd f xs == swap (both reverse (span f (reverse xs)))
     testGen "breakOn \"::\" \"a::b::c\" == (\"a\", \"::b::c\")" $ breakOn "::" "a::b::c" == ("a", "::b::c")
     testGen "breakOn \"/\" \"foobar\"   == (\"foobar\", \"\")" $ breakOn "/" "foobar"   == ("foobar", "")
     testGen "\\needle haystack -> let (prefix,match) = breakOn needle haystack in prefix ++ match == haystack" $ \needle haystack -> let (prefix,match) = breakOn needle haystack in prefix ++ match == haystack

@@ -159,13 +159,21 @@ replace from to (x:xs) = x : replace from to xs
 replace from to [] = []
 
 
+-- | Break, but from the end.
+--
+-- > breakEnd isLower "youRE" === ("you","RE")
+-- > breakEnd isLower "youre" === ("youre","")
+-- > breakEnd isLower "YOURE" === ("","YOURE")
 breakEnd :: (a -> Bool) -> [a] -> ([a], [a])
-breakEnd f xs = case break f $ reverse xs of
-    (_, []) -> (xs, [])
-    (as, b:bs) -> (reverse bs, b:reverse as)
+breakEnd f = swap . both reverse . break f . reverse
 
+-- | Span, but from the end.
+--
+-- > spanEnd isUpper "youRE" == ("you","RE")
+-- > spanEnd (not . isSpace) "x y z" == ("x y ","z")
+-- > \f xs-> spanEnd f xs == swap (both reverse (span f (reverse xs)))
 spanEnd :: (a -> Bool) -> [a] -> ([a], [a])
-spanEnd f xs = breakEnd (not . f) xs
+spanEnd f = breakEnd (not . f)
 
 
 wordsBy :: (a -> Bool) -> [a] -> [[a]]

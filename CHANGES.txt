@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Fix a bug in breakEnd/spanEnd
 0.3
     Rename showTime to showDuration
     Add stringException
