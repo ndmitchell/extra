@@ -37,6 +37,12 @@ tests = do
     testGen "findM (Just . isUpper) \"henRY\"            == Just (Just 'R')" $ findM (Just . isUpper) "henRY"            == Just (Just 'R')
     testGen "findM (Just . isUpper) \"henry\"            == Just Nothing" $ findM (Just . isUpper) "henry"            == Just Nothing
     testGen "findM (Just . const True) [\"x\",undefined] == Just (Just \"x\")" $ findM (Just . const True) ["x",undefined] == Just (Just "x")
+    testGen "\\x -> fromLeft (Left  x) == x" $ \x -> fromLeft (Left  x) == x
+    testGen "\\x -> fromLeft (Right x) == undefined" $ \x -> erroneous $  fromLeft (Right x)
+    testGen "\\x -> fromRight (Right x) == x" $ \x -> fromRight (Right x) == x
+    testGen "\\x -> fromRight (Left  x) == undefined" $ \x -> erroneous $  fromRight (Left  x)
+    testGen "\\x -> fromEither (Left x ) == x" $ \x -> fromEither (Left x ) == x
+    testGen "\\x -> fromEither (Right x) == x" $ \x -> fromEither (Right x) == x
     testGen "\\xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs" $ \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
     testGen "\\xs -> repeatedly word1 (trim xs) == words xs" $ \xs -> repeatedly word1 (trim xs) == words xs
     testGen "for [1,2,3] (+1) == [2,3,4]" $ for [1,2,3] (+1) == [2,3,4]
