@@ -294,7 +294,7 @@ stripSuffix a b = fmap reverse $ stripPrefix (reverse a) (reverse b)
 -- > chunksOf 3 "my test" == ["my ","tes","t"]
 -- > chunksOf 3 "mytest"  == ["myt","est"]
 -- > chunksOf 8 ""        == []
--- > chunksOf 0 "test"    == error
+-- > chunksOf 0 "test"    == undefined
 chunksOf :: Int -> [a] -> [[a]]
 chunksOf i xs | i <= 0 = error $ "chunksOf, number must be positive, got " ++ show i
 chunksOf i xs = repeatedly (splitAt i) xs

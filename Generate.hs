@@ -58,5 +58,5 @@ validIdentifier xs =
 isName (x:xs) = isAlpha x && all (\x -> isAlphaNum x || x `elem` "_'") xs
 isName _ = False
 
-tweakTest x | Just x <- stripSuffix " == error" x = "erroneous $ " ++ x
+tweakTest x | Just x <- stripSuffix " == undefined" x = "erroneous $ " ++ x
             | otherwise = x
