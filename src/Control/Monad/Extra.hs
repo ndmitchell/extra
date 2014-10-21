@@ -156,8 +156,8 @@ andM = allM id
 
 -- | Like 'find', but where the test can be monadic.
 --
--- > findM (Just . isUpper) "henRY"            == Just (Just 'R')
--- > findM (Just . isUpper) "henry"            == Just Nothing
+-- > findM (Just . isUpper) "teST"             == Just (Just 'S')
+-- > findM (Just . isUpper) "test"             == Just Nothing
 -- > findM (Just . const True) ["x",undefined] == Just (Just "x")
 findM :: Monad m => (a -> m Bool) -> [a] -> m (Maybe a)
 findM p [] = return Nothing
