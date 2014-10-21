@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Remove use of ===, allows older QuickCheck versions
 0.3.1
     Fix a bug in breakEnd/spanEnd
 0.3
