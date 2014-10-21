@@ -16,8 +16,24 @@ tests = do
     testGen "\\(x :: Maybe ()) -> unit x == x" $ \(x :: Maybe ()) -> unit x == x
     testGen "partitionM (Just . even) [1,2,3] == Just ([2], [1,3])" $ partitionM (Just . even) [1,2,3] == Just ([2], [1,3])
     testGen "partitionM (const Nothing) [1,2,3] == Nothing" $ partitionM (const Nothing) [1,2,3] == Nothing
-    testGen "Just False &&^ undefined == Just False" $ Just False &&^ undefined == Just False
-    testGen "Just True &&^ Just True == Just True" $ Just True &&^ Just True == Just True
+    testGen "Just True  ||^ undefined  == Just True" $ Just True  ||^ undefined  == Just True
+    testGen "Just False ||^ Just True  == Just True" $ Just False ||^ Just True  == Just True
+    testGen "Just False ||^ Just False == Just False" $ Just False ||^ Just False == Just False
+    testGen "Just False &&^ undefined  == Just False" $ Just False &&^ undefined  == Just False
+    testGen "Just True  &&^ Just True  == Just True" $ Just True  &&^ Just True  == Just True
+    testGen "Just True  &&^ Just False == Just False" $ Just True  &&^ Just False == Just False
+    testGen "anyM Just [False,True ,undefined] == Just True" $ anyM Just [False,True ,undefined] == Just True
+    testGen "anyM Just [False,False,undefined] == undefined" $ erroneous $ anyM Just [False,False,undefined]
+    testGen "\\(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)" $ \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
+    testGen "allM Just [True,False,undefined] == Just False" $ allM Just [True,False,undefined] == Just False
+    testGen "allM Just [True,True ,undefined] == undefined" $ erroneous $ allM Just [True,True ,undefined]
+    testGen "\\(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)" $ \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
+    testGen "orM [Just False,Just True ,undefined] == Just True" $ orM [Just False,Just True ,undefined] == Just True
+    testGen "orM [Just False,Just False,undefined] == undefined" $ erroneous $ orM [Just False,Just False,undefined]
+    testGen "\\xs -> Just (or xs) == orM (map Just xs)" $ \xs -> Just (or xs) == orM (map Just xs)
+    testGen "andM [Just True,Just False,undefined] == Just False" $ andM [Just True,Just False,undefined] == Just False
+    testGen "andM [Just True,Just True ,undefined] == undefined" $ erroneous $ andM [Just True,Just True ,undefined]
+    testGen "\\xs -> Just (and xs) == andM (map Just xs)" $ \xs -> Just (and xs) == andM (map Just xs)
     testGen "\\xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs" $ \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
     testGen "\\xs -> repeatedly word1 (trim xs) == words xs" $ \xs -> repeatedly word1 (trim xs) == words xs
     testGen "for [1,2,3] (+1) == [2,3,4]" $ for [1,2,3] (+1) == [2,3,4]

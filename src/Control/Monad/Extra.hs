@@ -67,7 +67,14 @@ loopM act x = do
         Left x -> loopM act x
         Right v -> return v
 
--- | Keep running an operation until it becomes 'False'.
+-- | Keep running an operation until it becomes 'False'. As an example:
+--
+-- @
+-- whileM $ do sleep 0.1; notM $ doesFileExist "foo.txt"
+-- readFile "foo.txt"
+-- @
+--
+--   If you need some state persisted between each test, use 'loopM'.
 whileM :: Monad m => m Bool -> m ()
 whileM act = do
     b <- act
@@ -75,35 +82,73 @@ whileM act = do
 
 -- Booleans
 
+-- | Like 'when', but where the test can be monadic.
 whenM :: Monad m => m Bool -> m () -> m ()
 whenM b t = ifM b t (return ())
 
+-- | Like 'unless', but where the test can be monadic.
 unlessM :: Monad m => m Bool -> m () -> m ()
 unlessM b f = ifM b (return ()) f
 
+-- | Like 'if', but where the test can be monadic.
 ifM :: Monad m => m Bool -> m a -> m a -> m a
 ifM b t f = do b <- b; if b then t else f
 
+-- | Like 'not', but where the test can be monadic.
 notM :: Functor m => m Bool -> m Bool
 notM = fmap not
 
--- > Just False &&^ undefined == Just False
--- > Just True &&^ Just True == Just True
-(||^), (&&^) :: Monad m => m Bool -> m Bool -> m Bool
+-- | The lazy '||' operator lifted to a monad. If the first
+--   argument evaluates to 'True' the second argument will not
+--   be evaluated.
+--
+-- > Just True  ||^ undefined  == Just True
+-- > Just False ||^ Just True  == Just True
+-- > Just False ||^ Just False == Just False
+(||^) :: Monad m => m Bool -> m Bool -> m Bool
 (||^) a b = ifM a (return True) b
+
+-- | The lazy '&&' operator lifted to a monad. If the first
+--   argument evaluates to 'False' the second argument will not
+--   be evaluated.
+--
+-- > Just False &&^ undefined  == Just False
+-- > Just True  &&^ Just True  == Just True
+-- > Just True  &&^ Just False == Just False
+(&&^) :: Monad m => m Bool -> m Bool -> m Bool
 (&&^) a b = ifM a b (return False)
 
+-- | A version of 'any' lifted to a moand. Retains the short-circuiting behaviour.
+--
+-- > anyM Just [False,True ,undefined] == Just True
+-- > anyM Just [False,False,undefined] == undefined
+-- > \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
 anyM :: Monad m => (a -> m Bool) -> [a] -> m Bool
 anyM p [] = return False
 anyM p (x:xs) = ifM (p x) (return True) (anyM p xs)
 
+-- | A version of 'all' lifted to a moand. Retains the short-circuiting behaviour.
+--
+-- > allM Just [True,False,undefined] == Just False
+-- > allM Just [True,True ,undefined] == undefined
+-- > \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
 allM :: Monad m => (a -> m Bool) -> [a] -> m Bool
 allM p [] = return True
 allM p (x:xs) = ifM (p x) (allM p xs) (return False)
 
+-- | A version of 'or' lifted to a moand. Retains the short-circuiting behaviour.
+--
+-- > orM [Just False,Just True ,undefined] == Just True
+-- > orM [Just False,Just False,undefined] == undefined
+-- > \xs -> Just (or xs) == orM (map Just xs)
 orM :: Monad m => [m Bool] -> m Bool
 orM = anyM id
 
+-- | A version of 'and' lifted to a moand. Retains the short-circuiting behaviour.
+--
+-- > andM [Just True,Just False,undefined] == Just False
+-- > andM [Just True,Just True ,undefined] == undefined
+-- > \xs -> Just (and xs) == andM (map Just xs)
 andM :: Monad m => [m Bool] -> m Bool
 andM = allM id
 
