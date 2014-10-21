@@ -90,7 +90,7 @@ whenM b t = ifM b t (return ())
 unlessM :: Monad m => m Bool -> m () -> m ()
 unlessM b f = ifM b (return ()) f
 
--- | Like 'if', but where the test can be monadic.
+-- | Like @if@, but where the test can be monadic.
 ifM :: Monad m => m Bool -> m a -> m a -> m a
 ifM b t f = do b <- b; if b then t else f
 
