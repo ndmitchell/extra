@@ -55,7 +55,7 @@ tests = do
     testGen "chunksOf 3 \"my test\" == [\"my \",\"tes\",\"t\"]" $ chunksOf 3 "my test" == ["my ","tes","t"]
     testGen "chunksOf 3 \"mytest\"  == [\"myt\",\"est\"]" $ chunksOf 3 "mytest"  == ["myt","est"]
     testGen "chunksOf 8 \"\"        == []" $ chunksOf 8 ""        == []
-    testGen "chunksOf 0 \"test\"    == error" $ erroneous $ chunksOf 0 "test"   
+    testGen "chunksOf 0 \"test\"    == undefined" $ erroneous $ chunksOf 0 "test"   
     testGen "showDP 4 pi == \"3.1416\"" $ showDP 4 pi == "3.1416"
     testGen "showDP 0 pi == \"3\"" $ showDP 0 pi == "3"
     testGen "showDP 2 3  == \"3.00\"" $ showDP 2 3  == "3.00"
