@@ -58,5 +58,11 @@ validIdentifier xs =
 isName (x:xs) = isAlpha x && all (\x -> isAlphaNum x || x `elem` "_'") xs
 isName _ = False
 
-tweakTest x | Just x <- stripSuffix " == undefined" x = "erroneous $ " ++ x
-            | otherwise = x
+tweakTest x
+    | Just x <- stripSuffix " == undefined" x =
+        if not $ "\\" `isPrefixOf` x then
+            "erroneous $ " ++ x
+        else
+            let (a,b) = breakOn "->" x
+            in a ++ "-> erroneous $ " ++ drop 2 b
+    | otherwise = x
