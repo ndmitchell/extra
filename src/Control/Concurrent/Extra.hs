@@ -158,7 +158,7 @@ withVar (Var x) f = withMVar x f
 -- @
 -- bar <- 'newBarrier'
 -- forkIO $ do ...; val <- ...; 'signalBarrier' bar val
--- print =<< waitBarrier bar
+-- print =<< 'waitBarrier' bar
 -- @
 --
 --   Here we create a barrier which will contain some computed value.
