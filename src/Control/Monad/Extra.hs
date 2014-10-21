@@ -154,10 +154,16 @@ andM = allM id
 
 -- Searching
 
+-- | Like 'find', but where the test can be monadic.
+--
+-- > findM (Just . isUpper) "henRY"            == Just (Just 'R')
+-- > findM (Just . isUpper) "henry"            == Just Nothing
+-- > findM (Just . const True) ["x",undefined] == Just (Just "x")
 findM :: Monad m => (a -> m Bool) -> [a] -> m (Maybe a)
 findM p [] = return Nothing
 findM p (x:xs) = ifM (p x) (return $ Just x) (findM p xs)
 
+-- | Like 'findM', but also allows you to compute some additional information in the predicate.
 firstJustM :: Monad m => (a -> m (Maybe b)) -> [a] -> m (Maybe b)
 firstJustM p [] = return Nothing
 firstJustM p (x:xs) = maybe (firstJustM p xs) (return . Just) =<< p x

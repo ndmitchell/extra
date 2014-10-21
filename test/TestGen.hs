@@ -1,7 +1,7 @@
 {-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables #-}
 module TestGen(tests) where
 import TestUtil
-default(Maybe Bool,Int,Double)
+default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))
 tests :: IO ()
 tests = do
     testGen "stringException (\"test\" ++ undefined)            == return \"test<Exception>\"" $ stringException ("test" ++ undefined)            == return "test<Exception>"
@@ -34,6 +34,9 @@ tests = do
     testGen "andM [Just True,Just False,undefined] == Just False" $ andM [Just True,Just False,undefined] == Just False
     testGen "andM [Just True,Just True ,undefined] == undefined" $ erroneous $ andM [Just True,Just True ,undefined]
     testGen "\\xs -> Just (and xs) == andM (map Just xs)" $ \xs -> Just (and xs) == andM (map Just xs)
+    testGen "findM (Just . isUpper) \"henRY\"            == Just (Just 'R')" $ findM (Just . isUpper) "henRY"            == Just (Just 'R')
+    testGen "findM (Just . isUpper) \"henry\"            == Just Nothing" $ findM (Just . isUpper) "henry"            == Just Nothing
+    testGen "findM (Just . const True) [\"x\",undefined] == Just (Just \"x\")" $ findM (Just . const True) ["x",undefined] == Just (Just "x")
     testGen "\\xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs" $ \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
     testGen "\\xs -> repeatedly word1 (trim xs) == words xs" $ \xs -> repeatedly word1 (trim xs) == words xs
     testGen "for [1,2,3] (+1) == [2,3,4]" $ for [1,2,3] (+1) == [2,3,4]
