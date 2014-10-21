@@ -3,8 +3,10 @@ module Generate(main) where
 
 import Data.List.Extra
 import System.IO.Extra
-import Control.Monad
+import Control.Monad.Extra
+import Control.Applicative
 import System.FilePath
+import System.Directory
 import Data.Char
 import Data.Maybe
 
@@ -20,7 +22,7 @@ main = do
                     unlines $ filter (not . isPrefixOf "--" . trim) $ lines src
         let tests = mapMaybe (stripPrefix "-- > ") $ lines src
         return (mod, funcs, tests)
-    writeFileBinary "src/Extra.hs" $ unlines $
+    writeFileBinaryChanged "src/Extra.hs" $ unlines $
         ["-- | This module documents all the functions available in this package."
         ,"--"
         ,"--   Most users should import the specific modules (e.g. @\"Data.List.Extra\"@), which"
@@ -33,7 +35,7 @@ main = do
         ["    ) where"
         ,""] ++
         ["import " ++ x | x <- mods]
-    writeFileBinary "test/TestGen.hs" $ unlines $
+    writeFileBinaryChanged "test/TestGen.hs" $ unlines $
         ["{-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables #-}"
         ,"module TestGen(tests) where"
         ,"import TestUtil"
@@ -41,6 +43,12 @@ main = do
         ,"tests :: IO ()"
         ,"tests = do"] ++
         ["    testGen " ++ show t ++ " $ " ++ tweakTest t | (_,_,ts) <- ifaces, t <- ts]
+
+writeFileBinaryChanged :: FilePath -> String -> IO ()
+writeFileBinaryChanged file x = do
+    old <- ifM (doesFileExist file) (Just <$> readFileBinary' file) (return Nothing)
+    when (Just x /= old) $
+        writeFileBinary file x
 
 
 validIdentifier xs =
