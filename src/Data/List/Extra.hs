@@ -52,8 +52,14 @@ disjoint xs = null . intersect xs
 --
 -- > anySame [1,1,2] == True
 -- > anySame [1,2,3] == False
+-- > anySame (1:2:1:undefined) == True
+-- > anySame [] == False
+-- > \xs -> anySame xs == (length (nub xs) < length xs)
 anySame :: Eq a => [a] -> Bool
-anySame xs = length xs /= length (nub xs)
+anySame = f []
+    where
+        f seen (x:xs) = x `elem` seen || f (x:seen) xs
+        f seen [] = False
 
 -- | Are all elements the same.
 --
@@ -61,27 +67,53 @@ anySame xs = length xs /= length (nub xs)
 -- > allSame [1,1,1] == True
 -- > allSame [1]     == True
 -- > allSame []      == True
+-- > allSame (1:1:2:undefined) == False
+-- > \xs -> allSame xs == (length (nub xs) <= 1)
 allSame :: Eq a => [a] -> Bool
-allSame xs = length (nub xs) <= 1
+allSame [] = True
+allSame (x:xs) = all (x ==) xs
 
 
+-- | Non-recursive transform over a list, like 'maybe'.
+--
+-- > list 1 (\v _ -> v - 2) [5,6,7] == 3
+-- > list 1 (\v _ -> v - 2) []      == 1
+-- > \nil cons xs -> maybe nil (uncurry cons) (uncons xs) == list nil cons xs
 list :: b -> (a -> [a] -> b) -> [a] -> b
 list nil cons [] = nil
 list nil cons (x:xs) = cons x xs
 
+-- | If the list is empty returns 'Nothing', otherwise returns the 'head' and the 'tail'.
+--
+-- > uncons "test" == Just ('t',"est")
+-- > uncons ""     == Nothing
+-- > \xs -> uncons xs == if null xs then Nothing else Just (head xs, tail xs)
 uncons :: [a] -> Maybe (a, [a])
 uncons [] = Nothing
 uncons (x:xs) = Just (x,xs)
 
+-- | If the list is empty returns 'Nothing', otherwise returns the 'init' and the 'last'.
+--
+-- > unsnoc "test" == Just ("tes",'t')
+-- > unsnoc ""     == Nothing
+-- > \xs -> unsnoc xs == if null xs then Nothing else Just (init xs, last xs)
 unsnoc :: [a] -> Maybe ([a], a)
 unsnoc [] = Nothing
 unsnoc [x] = Just ([], x)
 unsnoc (x:xs) = Just (x:a, b)
     where Just (a,b) = unsnoc xs
 
+-- | Append an element to the start of a list, an alias for '(:)'.
+--
+-- > cons 't' "est" == "test"
+-- > \x xs -> uncons (cons x xs) == Just (x,xs)
 cons :: a -> [a] -> [a]
 cons = (:)
 
+-- | Append an element to the end of a list, takes /O(n)/ time.
+--
+-- > snoc "tes" 't' == "test"
+-- > \xs x -> unsnoc (snoc xs x) == Just (xs,x)
 snoc :: [a] -> a -> [a]
 snoc xs x = xs ++ [x]
 

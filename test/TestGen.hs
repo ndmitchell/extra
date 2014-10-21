@@ -34,8 +34,8 @@ tests = do
     testGen "andM [Just True,Just False,undefined] == Just False" $ andM [Just True,Just False,undefined] == Just False
     testGen "andM [Just True,Just True ,undefined] == undefined" $ erroneous $ andM [Just True,Just True ,undefined]
     testGen "\\xs -> Just (and xs) == andM (map Just xs)" $ \xs -> Just (and xs) == andM (map Just xs)
-    testGen "findM (Just . isUpper) \"henRY\"            == Just (Just 'R')" $ findM (Just . isUpper) "henRY"            == Just (Just 'R')
-    testGen "findM (Just . isUpper) \"henry\"            == Just Nothing" $ findM (Just . isUpper) "henry"            == Just Nothing
+    testGen "findM (Just . isUpper) \"teST\"             == Just (Just 'S')" $ findM (Just . isUpper) "teST"             == Just (Just 'S')
+    testGen "findM (Just . isUpper) \"test\"             == Just Nothing" $ findM (Just . isUpper) "test"             == Just Nothing
     testGen "findM (Just . const True) [\"x\",undefined] == Just (Just \"x\")" $ findM (Just . const True) ["x",undefined] == Just (Just "x")
     testGen "\\x -> fromLeft (Left  x) == x" $ \x -> fromLeft (Left  x) == x
     testGen "\\x -> fromLeft (Right x) == undefined" $ \x -> erroneous $  fromLeft (Right x)
@@ -50,10 +50,28 @@ tests = do
     testGen "disjoint [1,2,3] [4,1] == False" $ disjoint [1,2,3] [4,1] == False
     testGen "anySame [1,1,2] == True" $ anySame [1,1,2] == True
     testGen "anySame [1,2,3] == False" $ anySame [1,2,3] == False
+    testGen "anySame (1:2:1:undefined) == True" $ anySame (1:2:1:undefined) == True
+    testGen "anySame [] == False" $ anySame [] == False
+    testGen "\\xs -> anySame xs == (length (nub xs) < length xs)" $ \xs -> anySame xs == (length (nub xs) < length xs)
     testGen "allSame [1,1,2] == False" $ allSame [1,1,2] == False
     testGen "allSame [1,1,1] == True" $ allSame [1,1,1] == True
     testGen "allSame [1]     == True" $ allSame [1]     == True
     testGen "allSame []      == True" $ allSame []      == True
+    testGen "allSame (1:1:2:undefined) == False" $ allSame (1:1:2:undefined) == False
+    testGen "\\xs -> allSame xs == (length (nub xs) <= 1)" $ \xs -> allSame xs == (length (nub xs) <= 1)
+    testGen "list 1 (\\v _ -> v - 2) [5,6,7] == 3" $ list 1 (\v _ -> v - 2) [5,6,7] == 3
+    testGen "list 1 (\\v _ -> v - 2) []      == 1" $ list 1 (\v _ -> v - 2) []      == 1
+    testGen "\\nil cons xs -> maybe nil (uncurry cons) (uncons xs) == list nil cons xs" $ \nil cons xs -> maybe nil (uncurry cons) (uncons xs) == list nil cons xs
+    testGen "uncons \"test\" == Just ('t',\"est\")" $ uncons "test" == Just ('t',"est")
+    testGen "uncons \"\"     == Nothing" $ uncons ""     == Nothing
+    testGen "\\xs -> uncons xs == if null xs then Nothing else Just (head xs, tail xs)" $ \xs -> uncons xs == if null xs then Nothing else Just (head xs, tail xs)
+    testGen "unsnoc \"test\" == Just (\"tes\",'t')" $ unsnoc "test" == Just ("tes",'t')
+    testGen "unsnoc \"\"     == Nothing" $ unsnoc ""     == Nothing
+    testGen "\\xs -> unsnoc xs == if null xs then Nothing else Just (init xs, last xs)" $ \xs -> unsnoc xs == if null xs then Nothing else Just (init xs, last xs)
+    testGen "cons 't' \"est\" == \"test\"" $ cons 't' "est" == "test"
+    testGen "\\x xs -> uncons (cons x xs) == Just (x,xs)" $ \x xs -> uncons (cons x xs) == Just (x,xs)
+    testGen "snoc \"tes\" 't' == \"test\"" $ snoc "tes" 't' == "test"
+    testGen "\\xs x -> unsnoc (snoc xs x) == Just (xs,x)" $ \xs x -> unsnoc (snoc xs x) == Just (xs,x)
     testGen "lower \"This is A TEST\" == \"this is a test\"" $ lower "This is A TEST" == "this is a test"
     testGen "lower \"\" == \"\"" $ lower "" == ""
     testGen "breakEnd isLower \"youRE\" == (\"you\",\"RE\")" $ breakEnd isLower "youRE" == ("you","RE")
