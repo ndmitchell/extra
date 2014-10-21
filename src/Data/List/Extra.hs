@@ -161,9 +161,9 @@ replace from to [] = []
 
 -- | Break, but from the end.
 --
--- > breakEnd isLower "youRE" === ("you","RE")
--- > breakEnd isLower "youre" === ("youre","")
--- > breakEnd isLower "YOURE" === ("","YOURE")
+-- > breakEnd isLower "youRE" == ("you","RE")
+-- > breakEnd isLower "youre" == ("youre","")
+-- > breakEnd isLower "YOURE" == ("","YOURE")
 breakEnd :: (a -> Bool) -> [a] -> ([a], [a])
 breakEnd f = swap . both reverse . break f . reverse
 
