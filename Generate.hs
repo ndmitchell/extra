@@ -39,7 +39,7 @@ main = do
         ["{-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables #-}"
         ,"module TestGen(tests) where"
         ,"import TestUtil"
-        ,"default(Maybe Bool,Int,Double)"
+        ,"default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))"
         ,"tests :: IO ()"
         ,"tests = do"] ++
         ["    testGen " ++ show t ++ " $ " ++ tweakTest t | (_,_,ts) <- ifaces, t <- ts]
