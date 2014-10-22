@@ -126,7 +126,9 @@ snoc xs x = xs ++ [x]
 -- > \i xs -> takeEnd i xs `isSuffixOf` xs
 -- > \i xs -> length (takeEnd i xs) == min (max 0 i) (length xs)
 takeEnd :: Int -> [a] -> [a]
-takeEnd i = reverse . take i . reverse
+takeEnd i xs = f xs (drop i xs)
+    where f (x:xs) (y:ys) = f xs ys
+          f xs _ = xs
 
 -- | Drop a number of elements from the end of the list.
 --
@@ -135,8 +137,12 @@ takeEnd i = reverse . take i . reverse
 -- > dropEnd (-1) "bye" == "bye"
 -- > \i xs -> dropEnd i xs `isPrefixOf` xs
 -- > \i xs -> length (dropEnd i xs) == max 0 (length xs - max 0 i)
+-- > \i -> take 3 (dropEnd 5 [i..]) == take 3 [i..]
 dropEnd :: Int -> [a] -> [a]
-dropEnd i = reverse . drop i . reverse
+dropEnd i xs = f xs (drop i xs)
+    where f (x:xs) (y:ys) = x : f xs ys
+          f _ _ = []
+
 
 concatUnzip :: [([a], [b])] -> ([a], [b])
 concatUnzip = (concat *** concat) . unzip
