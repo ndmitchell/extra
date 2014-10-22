@@ -102,7 +102,7 @@ tests = do
     testGen "\\xs ys -> merge (sort xs) (sort ys) == sort (xs ++ ys)" $ \xs ys -> merge (sort xs) (sort ys) == sort (xs ++ ys)
     testGen "replace \"el\" \"_\" \"Hello Bella\" == \"H_lo B_la\"" $ replace "el" "_" "Hello Bella" == "H_lo B_la"
     testGen "replace \"el\" \"e\" \"Hello\"       == \"Helo\"" $ replace "el" "e" "Hello"       == "Helo"
-    testGen "replace \"\" \"e\" \"Hello\"         == undefined" $ erroneous $ replace "" "e" "Hello"        
+    testGen "replace \"\" \"e\" \"Hello\"         == undefined" $ erroneous $ replace "" "e" "Hello"
     testGen "\\xs ys -> not (null xs) ==> replace xs xs ys == ys" $ \xs ys -> not (null xs) ==> replace xs xs ys == ys
     testGen "breakEnd isLower \"youRE\" == (\"you\",\"RE\")" $ breakEnd isLower "youRE" == ("you","RE")
     testGen "breakEnd isLower \"youre\" == (\"youre\",\"\")" $ breakEnd isLower "youre" == ("youre","")
@@ -146,7 +146,7 @@ tests = do
     testGen "chunksOf 3 \"my test\" == [\"my \",\"tes\",\"t\"]" $ chunksOf 3 "my test" == ["my ","tes","t"]
     testGen "chunksOf 3 \"mytest\"  == [\"myt\",\"est\"]" $ chunksOf 3 "mytest"  == ["myt","est"]
     testGen "chunksOf 8 \"\"        == []" $ chunksOf 8 ""        == []
-    testGen "chunksOf 0 \"test\"    == undefined" $ erroneous $ chunksOf 0 "test"   
+    testGen "chunksOf 0 \"test\"    == undefined" $ erroneous $ chunksOf 0 "test"
     testGen "showDP 4 pi == \"3.1416\"" $ showDP 4 pi == "3.1416"
     testGen "showDP 0 pi == \"3\"" $ showDP 0 pi == "3"
     testGen "showDP 2 3  == \"3.00\"" $ showDP 2 3  == "3.00"

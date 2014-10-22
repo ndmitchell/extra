@@ -61,8 +61,8 @@ isName _ = False
 tweakTest x
     | Just x <- stripSuffix " == undefined" x =
         if not $ "\\" `isPrefixOf` x then
-            "erroneous $ " ++ x
+            "erroneous $ " ++ trim x
         else
-            let (a,b) = breakOn "->" x
+            let (a,b) = breakOn "->" $ trim x
             in a ++ "-> erroneous $ " ++ drop 2 b
     | otherwise = x
