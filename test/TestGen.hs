@@ -85,6 +85,11 @@ tests = do
     testGen "\\i -> take 3 (dropEnd 5 [i..]) == take 3 [i..]" $ \i -> take 3 (dropEnd 5 [i..]) == take 3 [i..]
     testGen "concatUnzip [(\"a\",\"AB\"),(\"bc\",\"C\")] == (\"abc\",\"ABC\")" $ concatUnzip [("a","AB"),("bc","C")] == ("abc","ABC")
     testGen "concatUnzip3 [(\"a\",\"AB\",\"\"),(\"bc\",\"C\",\"123\")] == (\"abc\",\"ABC\",\"123\")" $ concatUnzip3 [("a","AB",""),("bc","C","123")] == ("abc","ABC","123")
+    testGen "takeWhileEnd even [2,3,4,6] == [4,6]" $ takeWhileEnd even [2,3,4,6] == [4,6]
+    testGen "trim      \"  hello   \" == \"hello\"" $ trim      "  hello   " == "hello"
+    testGen "trimStart \"  hello   \" == \"hello   \"" $ trimStart "  hello   " == "hello   "
+    testGen "trimEnd   \"  hello   \" == \"hello   \"" $ trimEnd   "  hello   " == "hello   "
+    testGen "\\s -> trim s == trimEnd (trimStart s)" $ \s -> trim s == trimEnd (trimStart s)
     testGen "lower \"This is A TEST\" == \"this is a test\"" $ lower "This is A TEST" == "this is a test"
     testGen "lower \"\" == \"\"" $ lower "" == ""
     testGen "upper \"This is A TEST\" == \"THIS IS A TEST\"" $ upper "This is A TEST" == "THIS IS A TEST"

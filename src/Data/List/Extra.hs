@@ -158,13 +158,28 @@ concatUnzip3 xs = (concat a, concat b, concat c)
     where (a,b,c) = unzip3 xs
 
 
+-- | A version of 'takeWhile' operating from the end.
+--
+-- > takeWhileEnd even [2,3,4,6] == [4,6]
 takeWhileEnd :: (a -> Bool) -> [a] -> [a]
 takeWhileEnd f = reverse . takeWhile f . reverse
 
 
-trim, trimStart, trimEnd :: String -> String
+-- | Remove spaces from the start of a string, see 'trim'.
+trimStart :: String -> String
 trimStart = dropWhile isSpace
+
+-- | Remove spaces from the end of a string, see 'trim'.
+trimEnd :: String -> String
 trimEnd = dropWhileEnd isSpace
+
+-- | Remove spaces from either side of a string. A combination of 'trimEnd' and 'trimStart'.
+--
+-- > trim      "  hello   " == "hello"
+-- > trimStart "  hello   " == "hello   "
+-- > trimEnd   "  hello   " == "hello   "
+-- > \s -> trim s == trimEnd (trimStart s)
+trim :: String -> String
 trim = trimEnd . trimStart
 
 -- | Convert a string to lower case.
