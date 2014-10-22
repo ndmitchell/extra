@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Remove dropAround
 0.3.2
     Remove use of ===, allows older QuickCheck versions
 0.3.1
