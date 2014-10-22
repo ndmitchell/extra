@@ -19,7 +19,6 @@ module Data.List.Extra(
 
 import Data.List
 import Data.Function
-import Data.Ord
 import Data.Char
 import Data.Tuple.Extra
 
@@ -202,7 +201,7 @@ word1 x = second (dropWhile isSpace) $ break isSpace $ dropWhile isSpace x
 
 
 sortOn :: Ord b => (a -> b) -> [a] -> [a]
-sortOn f = sortBy (comparing f)
+sortOn f = sortBy (compare `on` f)
 
 groupOn :: Eq b => (a -> b) -> [a] -> [[a]]
 groupOn f = groupBy ((==) `on` f)
