@@ -83,8 +83,12 @@ tests = do
     testGen "\\i xs -> dropEnd i xs `isPrefixOf` xs" $ \i xs -> dropEnd i xs `isPrefixOf` xs
     testGen "\\i xs -> length (dropEnd i xs) == max 0 (length xs - max 0 i)" $ \i xs -> length (dropEnd i xs) == max 0 (length xs - max 0 i)
     testGen "\\i -> take 3 (dropEnd 5 [i..]) == take 3 [i..]" $ \i -> take 3 (dropEnd 5 [i..]) == take 3 [i..]
+    testGen "concatUnzip [(\"a\",\"AB\"),(\"bc\",\"C\")] == (\"abc\",\"ABC\")" $ concatUnzip [("a","AB"),("bc","C")] == ("abc","ABC")
+    testGen "concatUnzip3 [(\"a\",\"AB\",\"\"),(\"bc\",\"C\",\"123\")] == (\"abc\",\"ABC\",\"123\")" $ concatUnzip3 [("a","AB",""),("bc","C","123")] == ("abc","ABC","123")
     testGen "lower \"This is A TEST\" == \"this is a test\"" $ lower "This is A TEST" == "this is a test"
     testGen "lower \"\" == \"\"" $ lower "" == ""
+    testGen "upper \"This is A TEST\" == \"THIS IS A TEST\"" $ upper "This is A TEST" == "THIS IS A TEST"
+    testGen "upper \"\" == \"\"" $ upper "" == ""
     testGen "breakEnd isLower \"youRE\" == (\"you\",\"RE\")" $ breakEnd isLower "youRE" == ("you","RE")
     testGen "breakEnd isLower \"youre\" == (\"youre\",\"\")" $ breakEnd isLower "youre" == ("youre","")
     testGen "breakEnd isLower \"YOURE\" == (\"\",\"YOURE\")" $ breakEnd isLower "YOURE" == ("","YOURE")
@@ -103,6 +107,12 @@ tests = do
     testGen "\\c x -> splitOn [c] x                           == split (==c) x" $ \c x -> splitOn [c] x                           == split (==c) x
     testGen "split (=='a') \"aabbaca\" == [\"\",\"\",\"bb\",\"c\",\"\"]" $ split (=='a') "aabbaca" == ["","","bb","c",""]
     testGen "split (=='a') \"\"        == [\"\"]" $ split (=='a') ""        == [""]
+    testGen "dropWhileEnd  isSpace \"ab cde  \" == \"ab cde\"" $ dropWhileEnd  isSpace "ab cde  " == "ab cde"
+    testGen "dropWhileEnd' isSpace \"ab cde  \" == \"ab cde\"" $ dropWhileEnd' isSpace "ab cde  " == "ab cde"
+    testGen "last (dropWhileEnd  even [undefined,3]) == undefined" $ erroneous $ last (dropWhileEnd  even [undefined,3])
+    testGen "last (dropWhileEnd' even [undefined,3]) == 3" $ last (dropWhileEnd' even [undefined,3]) == 3
+    testGen "head (dropWhileEnd  even (3:undefined)) == 3" $ head (dropWhileEnd  even (3:undefined)) == 3
+    testGen "head (dropWhileEnd' even (3:undefined)) == undefined" $ erroneous $ head (dropWhileEnd' even (3:undefined))
     testGen "stripSuffix \"bar\" \"foobar\" == Just \"foo\"" $ stripSuffix "bar" "foobar" == Just "foo"
     testGen "stripSuffix \"\"    \"baz\"    == Just \"baz\"" $ stripSuffix ""    "baz"    == Just "baz"
     testGen "stripSuffix \"foo\" \"quux\"   == Nothing" $ stripSuffix "foo" "quux"   == Nothing

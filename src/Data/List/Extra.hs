@@ -144,9 +144,15 @@ dropEnd i xs = f xs (drop i xs)
           f _ _ = []
 
 
+-- | A merging of 'unzip' and 'concat'.
+--
+-- > concatUnzip [("a","AB"),("bc","C")] == ("abc","ABC")
 concatUnzip :: [([a], [b])] -> ([a], [b])
 concatUnzip = (concat *** concat) . unzip
 
+-- | A merging of 'unzip3' and 'concat'.
+--
+-- > concatUnzip3 [("a","AB",""),("bc","C","123")] == ("abc","ABC","123")
 concatUnzip3 :: [([a],[b],[c])] -> ([a],[b],[c])
 concatUnzip3 xs = (concat a, concat b, concat c)
     where (a,b,c) = unzip3 xs
@@ -161,13 +167,17 @@ trimStart = dropWhile isSpace
 trimEnd = dropWhileEnd isSpace
 trim = trimEnd . trimStart
 
--- | Documentation about lowercase
+-- | Convert a string to lower case.
 --
 -- > lower "This is A TEST" == "this is a test"
 -- > lower "" == ""
 lower :: String -> String
 lower = map toLower
 
+-- | Convert a string to upper case.
+--
+-- > upper "This is A TEST" == "THIS IS A TEST"
+-- > upper "" == ""
 upper :: String -> String
 upper = map toUpper
 
@@ -322,7 +332,18 @@ dropWhileEnd p = foldr (\x xs -> if p x && null xs then [] else x : xs) []
 
 
 -- | A version of 'dropWhileEnd' but with different strictness properties.
---   Often outperforms if the list is short or the test is expensive.
+--   The function 'dropWhileEnd' can be used on an infinite list and tests the property
+--   on each character. In contrast, 'dropWhileEnd'' is strict in the spine of the list
+--   but only tests the trailing suffix.
+--   This version usually outperforms 'dropWhileEnd' if the list is short or the test is expensive.
+--   Note the tests below cover both the prime and non-prime variants.
+--
+-- > dropWhileEnd  isSpace "ab cde  " == "ab cde"
+-- > dropWhileEnd' isSpace "ab cde  " == "ab cde"
+-- > last (dropWhileEnd  even [undefined,3]) == undefined
+-- > last (dropWhileEnd' even [undefined,3]) == 3
+-- > head (dropWhileEnd  even (3:undefined)) == 3
+-- > head (dropWhileEnd' even (3:undefined)) == undefined
 dropWhileEnd' :: (a -> Bool) -> [a] -> [a]
 dropWhileEnd' p = foldr (\x xs -> if null xs && p x then [] else x : xs) []
 
