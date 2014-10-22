@@ -18,6 +18,7 @@ module Data.List.Extra(
     ) where
 
 import Data.List
+import Data.Maybe
 import Data.Function
 import Data.Char
 import Data.Tuple.Extra
@@ -200,23 +201,38 @@ word1 :: String -> (String, String)
 word1 x = second (dropWhile isSpace) $ break isSpace $ dropWhile isSpace x
 
 
+-- | A version of 'sort' where the comparison is done on some extracted value.
+--
+-- > sortOn fst [(3,"z"),(1,""),(3,"a")] == [(1,""),(3,"z"),(3,"a")]
 sortOn :: Ord b => (a -> b) -> [a] -> [a]
 sortOn f = sortBy (compare `on` f)
 
+-- | A version of 'group' where the equality is done on some extracted value.
 groupOn :: Eq b => (a -> b) -> [a] -> [[a]]
 groupOn f = groupBy ((==) `on` f)
 
+-- | A version of 'nub' where the equality is done on some extracted value.
 nubOn :: Eq b => (a -> b) -> [a] -> [a]
 nubOn f = nubBy ((==) `on` f)
 
+-- | A combination of 'group' and 'sort'.
+--
+-- > groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,"t"),(2,"es"),(3,"t")]
+-- > \xs -> map fst (groupSort xs) == sort (nub (map fst xs))
+-- > \xs -> concatMap snd (groupSort xs) == map snd (sortOn fst xs)
 groupSort :: Ord k => [(k, v)] -> [(k, [v])]
 groupSort = map (\x -> (fst $ head x, map snd x)) . groupOn fst . sortOn fst
 
 
+-- | Merge two lists which are assumed to be ordered.
+--
+-- > merge "ace" "bd" == "abcde"
+-- > \xs ys -> merge (sort xs) (sort ys) == sort (xs ++ ys)
 merge :: Ord a => [a] -> [a] -> [a]
 merge = mergeBy compare
 
 
+-- | Like 'merge', but with a custom ordering function.
 mergeBy :: (a -> a -> Ordering) -> [a] -> [a] -> [a]
 mergeBy f xs [] = xs
 mergeBy f [] ys = ys
@@ -224,7 +240,16 @@ mergeBy f (x:xs) (y:ys)
     | f x y /= GT = x : mergeBy f xs (y:ys)
     | otherwise = y : mergeBy f (x:xs) ys
 
+
+-- | Replace a subsequence everywhere it occurs. The first argument must
+--   not be the empty list.
+--
+-- > replace "el" "_" "Hello Bella" == "H_lo B_la"
+-- > replace "el" "e" "Hello"       == "Helo"
+-- > replace "" "e" "Hello"         == undefined
+-- > \xs ys -> not (null xs) ==> replace xs xs ys == ys
 replace :: Eq a => [a] -> [a] -> [a] -> [a]
+replace [] _ _ = error "Extra.replace, first argument cannot be empty"
 replace from to xs | Just xs <- stripPrefix from xs = to ++ replace from to xs
 replace from to (x:xs) = x : replace from to xs
 replace from to [] = []
@@ -247,12 +272,23 @@ spanEnd :: (a -> Bool) -> [a] -> ([a], [a])
 spanEnd f = breakEnd (not . f)
 
 
+-- | A variant of 'words' with a custom test. In particular,
+--   adjacent separators are discarded, as are leading or trailing separators.
+--
+-- > wordsBy (== ':') "::xyz:abc::123::" == ["xyz","abc","123"]
+-- > \s -> wordsBy isSpace s == words s
 wordsBy :: (a -> Bool) -> [a] -> [[a]]
 wordsBy f s = case dropWhile f s of
     [] -> []
     x:xs -> (x:w) : wordsBy f (drop1 z)
         where (w,z) = break f xs
 
+-- | A variant of 'lines' with a custom test. In particular,
+--   if there is a trailing separator it will be discarded.
+--
+-- > linesBy (== ':') "::xyz:abc::123::" == ["","","xyz","abc","","123",""]
+-- > \s -> linesBy (== '\n') s == lines s
+-- > linesBy (== ';') "my;list;here;" == ["my","list","here"]
 linesBy :: (a -> Bool) -> [a] -> [[a]]
 linesBy f [] = []
 linesBy f s = cons $ case break f s of
@@ -262,10 +298,22 @@ linesBy f s = cons $ case break f s of
   where
     cons ~(h, t) = h : t -- to fix a space leak, see the GHC defn of lines
 
+-- | Find the first element of a list for which the operation returns 'Just', along
+--   with the result of the operation. Like 'find' but useful where the function also
+--   computes some expensive information that can be reused. Particular useful
+--   when the function is monadic, see 'firstJustM'.
+--
+-- > firstJust id [Nothing,Just 3]  == Just 3
+-- > firstJust id [Nothing,Nothing] == Nothing
 firstJust :: (a -> Maybe b) -> [a] -> Maybe b
-firstJust p [] = Nothing
-firstJust p (x:xs) = maybe (firstJust p xs) Just (p x)
+firstJust f = listToMaybe . mapMaybe f
 
+
+-- | Equivalent to @drop 1@, but likely to be faster and a single lexeme.
+--
+-- > drop1 ""         == ""
+-- > drop1 "test"     == "est"
+-- > \xs -> drop 1 xs == drop1 xs
 drop1 :: [a] -> [a]
 drop1 [] = []
 drop1 (x:xs) = xs
@@ -276,13 +324,8 @@ drop1 (x:xs) = xs
 -- is the prefix of @haystack@ before @needle@ is matched.  The second
 -- is the remainder of @haystack@, starting with the match.
 --
--- Examples:
---
 -- > breakOn "::" "a::b::c" == ("a", "::b::c")
 -- > breakOn "/" "foobar"   == ("foobar", "")
---
--- Laws:
---
 -- > \needle haystack -> let (prefix,match) = breakOn needle haystack in prefix ++ match == haystack
 breakOn :: Eq a => [a] -> [a] -> ([a], [a])
 breakOn needle haystack | needle `isPrefixOf` haystack = ([], haystack)
@@ -305,15 +348,10 @@ breakOnEnd needle haystack = (reverse *** reverse) $ swap $ breakOn (reverse nee
 -- list argument, consuming the delimiter. An empty delimiter is
 -- invalid, and will cause an error to be raised.
 --
--- Examples:
---
 -- > splitOn "\r\n" "a\r\nb\r\nd\r\ne" == ["a","b","d","e"]
 -- > splitOn "aaa"  "aaaXaaaXaaaXaaa"  == ["","X","X","X",""]
 -- > splitOn "x"    "x"                == ["",""]
 -- > splitOn "x"    ""                 == [""]
---
--- and
---
 -- > \s x -> s /= "" ==> intercalate s (splitOn s x) == x
 -- > \c x -> splitOn [c] x                           == split (==c) x
 splitOn :: Eq a => [a] -> [a] -> [[a]]
@@ -326,10 +364,12 @@ splitOn needle haystack = a : if null b then [] else splitOn needle $ drop (leng
 -- | Splits a list into components delimited by separators,
 -- where the predicate returns True for a separator element.  The
 -- resulting components do not contain the separators.  Two adjacent
--- separators result in an empty component in the output.  eg.
+-- separators result in an empty component in the output.
 --
--- > split (=='a') "aabbaca" == ["","","bb","c",""]
--- > split (=='a') ""        == [""]
+-- > split (== 'a') "aabbaca" == ["","","bb","c",""]
+-- > split (== 'a') ""        == [""]
+-- > split (== ':') "::xyz:abc::123::" == ["","","xyz","abc","","123","",""]
+-- > split (== ',') "my,list,here" == ["my","list","here"]
 split :: (a -> Bool) -> [a] -> [[a]]
 split f [] = [[]]
 split f (x:xs) | f x = [] : split f xs

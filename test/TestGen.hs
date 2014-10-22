@@ -94,12 +94,32 @@ tests = do
     testGen "lower \"\" == \"\"" $ lower "" == ""
     testGen "upper \"This is A TEST\" == \"THIS IS A TEST\"" $ upper "This is A TEST" == "THIS IS A TEST"
     testGen "upper \"\" == \"\"" $ upper "" == ""
+    testGen "sortOn fst [(3,\"z\"),(1,\"\"),(3,\"a\")] == [(1,\"\"),(3,\"z\"),(3,\"a\")]" $ sortOn fst [(3,"z"),(1,""),(3,"a")] == [(1,""),(3,"z"),(3,"a")]
+    testGen "groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,\"t\"),(2,\"es\"),(3,\"t\")]" $ groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,"t"),(2,"es"),(3,"t")]
+    testGen "\\xs -> map fst (groupSort xs) == sort (nub (map fst xs))" $ \xs -> map fst (groupSort xs) == sort (nub (map fst xs))
+    testGen "\\xs -> concatMap snd (groupSort xs) == map snd (sortOn fst xs)" $ \xs -> concatMap snd (groupSort xs) == map snd (sortOn fst xs)
+    testGen "merge \"ace\" \"bd\" == \"abcde\"" $ merge "ace" "bd" == "abcde"
+    testGen "\\xs ys -> merge (sort xs) (sort ys) == sort (xs ++ ys)" $ \xs ys -> merge (sort xs) (sort ys) == sort (xs ++ ys)
+    testGen "replace \"el\" \"_\" \"Hello Bella\" == \"H_lo B_la\"" $ replace "el" "_" "Hello Bella" == "H_lo B_la"
+    testGen "replace \"el\" \"e\" \"Hello\"       == \"Helo\"" $ replace "el" "e" "Hello"       == "Helo"
+    testGen "replace \"\" \"e\" \"Hello\"         == undefined" $ erroneous $ replace "" "e" "Hello"        
+    testGen "\\xs ys -> not (null xs) ==> replace xs xs ys == ys" $ \xs ys -> not (null xs) ==> replace xs xs ys == ys
     testGen "breakEnd isLower \"youRE\" == (\"you\",\"RE\")" $ breakEnd isLower "youRE" == ("you","RE")
     testGen "breakEnd isLower \"youre\" == (\"youre\",\"\")" $ breakEnd isLower "youre" == ("youre","")
     testGen "breakEnd isLower \"YOURE\" == (\"\",\"YOURE\")" $ breakEnd isLower "YOURE" == ("","YOURE")
     testGen "spanEnd isUpper \"youRE\" == (\"you\",\"RE\")" $ spanEnd isUpper "youRE" == ("you","RE")
     testGen "spanEnd (not . isSpace) \"x y z\" == (\"x y \",\"z\")" $ spanEnd (not . isSpace) "x y z" == ("x y ","z")
     testGen "\\f xs-> spanEnd f xs == swap (both reverse (span f (reverse xs)))" $ \f xs-> spanEnd f xs == swap (both reverse (span f (reverse xs)))
+    testGen "wordsBy (== ':') \"::xyz:abc::123::\" == [\"xyz\",\"abc\",\"123\"]" $ wordsBy (== ':') "::xyz:abc::123::" == ["xyz","abc","123"]
+    testGen "\\s -> wordsBy isSpace s == words s" $ \s -> wordsBy isSpace s == words s
+    testGen "linesBy (== ':') \"::xyz:abc::123::\" == [\"\",\"\",\"xyz\",\"abc\",\"\",\"123\",\"\"]" $ linesBy (== ':') "::xyz:abc::123::" == ["","","xyz","abc","","123",""]
+    testGen "\\s -> linesBy (== '\\n') s == lines s" $ \s -> linesBy (== '\n') s == lines s
+    testGen "linesBy (== ';') \"my;list;here;\" == [\"my\",\"list\",\"here\"]" $ linesBy (== ';') "my;list;here;" == ["my","list","here"]
+    testGen "firstJust id [Nothing,Just 3]  == Just 3" $ firstJust id [Nothing,Just 3]  == Just 3
+    testGen "firstJust id [Nothing,Nothing] == Nothing" $ firstJust id [Nothing,Nothing] == Nothing
+    testGen "drop1 \"\"         == \"\"" $ drop1 ""         == ""
+    testGen "drop1 \"test\"     == \"est\"" $ drop1 "test"     == "est"
+    testGen "\\xs -> drop 1 xs == drop1 xs" $ \xs -> drop 1 xs == drop1 xs
     testGen "breakOn \"::\" \"a::b::c\" == (\"a\", \"::b::c\")" $ breakOn "::" "a::b::c" == ("a", "::b::c")
     testGen "breakOn \"/\" \"foobar\"   == (\"foobar\", \"\")" $ breakOn "/" "foobar"   == ("foobar", "")
     testGen "\\needle haystack -> let (prefix,match) = breakOn needle haystack in prefix ++ match == haystack" $ \needle haystack -> let (prefix,match) = breakOn needle haystack in prefix ++ match == haystack
@@ -110,8 +130,10 @@ tests = do
     testGen "splitOn \"x\"    \"\"                 == [\"\"]" $ splitOn "x"    ""                 == [""]
     testGen "\\s x -> s /= \"\" ==> intercalate s (splitOn s x) == x" $ \s x -> s /= "" ==> intercalate s (splitOn s x) == x
     testGen "\\c x -> splitOn [c] x                           == split (==c) x" $ \c x -> splitOn [c] x                           == split (==c) x
-    testGen "split (=='a') \"aabbaca\" == [\"\",\"\",\"bb\",\"c\",\"\"]" $ split (=='a') "aabbaca" == ["","","bb","c",""]
-    testGen "split (=='a') \"\"        == [\"\"]" $ split (=='a') ""        == [""]
+    testGen "split (== 'a') \"aabbaca\" == [\"\",\"\",\"bb\",\"c\",\"\"]" $ split (== 'a') "aabbaca" == ["","","bb","c",""]
+    testGen "split (== 'a') \"\"        == [\"\"]" $ split (== 'a') ""        == [""]
+    testGen "split (== ':') \"::xyz:abc::123::\" == [\"\",\"\",\"xyz\",\"abc\",\"\",\"123\",\"\",\"\"]" $ split (== ':') "::xyz:abc::123::" == ["","","xyz","abc","","123","",""]
+    testGen "split (== ',') \"my,list,here\" == [\"my\",\"list\",\"here\"]" $ split (== ',') "my,list,here" == ["my","list","here"]
     testGen "dropWhileEnd  isSpace \"ab cde  \" == \"ab cde\"" $ dropWhileEnd  isSpace "ab cde  " == "ab cde"
     testGen "dropWhileEnd' isSpace \"ab cde  \" == \"ab cde\"" $ dropWhileEnd' isSpace "ab cde  " == "ab cde"
     testGen "last (dropWhileEnd  even [undefined,3]) == undefined" $ erroneous $ last (dropWhileEnd  even [undefined,3])
