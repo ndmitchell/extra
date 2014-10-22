@@ -8,7 +8,7 @@ module Data.List.Extra(
     module Data.List,
     lower, upper, trim, trimStart, trimEnd, word1, drop1,
     list, uncons, unsnoc, cons, snoc,
-    groupSort, groupSortOn, nubOn, groupOn, sortOn,
+    groupSort, nubOn, groupOn, sortOn,
     repeatedly, for,
     disjoint, allSame, anySame,
     dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, dropWhileEnd', takeWhileEnd, stripSuffix,
@@ -211,10 +211,7 @@ nubOn :: Eq b => (a -> b) -> [a] -> [a]
 nubOn f = nubBy ((==) `on` f)
 
 groupSort :: Ord k => [(k, v)] -> [(k, [v])]
-groupSort = groupSortOn id
-
-groupSortOn :: Ord a => (k -> a) -> [(k, v)] -> [(k, [v])]
-groupSortOn f = map (\x -> (fst $ head x, map snd x)) . groupOn (f . fst) . sortOn (f . fst)
+groupSort = map (\x -> (fst $ head x, map snd x)) . groupOn fst . sortOn fst
 
 
 merge :: Ord a => [a] -> [a] -> [a]

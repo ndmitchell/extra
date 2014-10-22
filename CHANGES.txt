@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Remove groupSortOn
     Remove dropAround
 0.3.2
     Remove use of ===, allows older QuickCheck versions
