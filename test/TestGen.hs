@@ -88,7 +88,7 @@ tests = do
     testGen "takeWhileEnd even [2,3,4,6] == [4,6]" $ takeWhileEnd even [2,3,4,6] == [4,6]
     testGen "trim      \"  hello   \" == \"hello\"" $ trim      "  hello   " == "hello"
     testGen "trimStart \"  hello   \" == \"hello   \"" $ trimStart "  hello   " == "hello   "
-    testGen "trimEnd   \"  hello   \" == \"hello   \"" $ trimEnd   "  hello   " == "hello   "
+    testGen "trimEnd   \"  hello   \" == \"  hello\"" $ trimEnd   "  hello   " == "  hello"
     testGen "\\s -> trim s == trimEnd (trimStart s)" $ \s -> trim s == trimEnd (trimStart s)
     testGen "lower \"This is A TEST\" == \"this is a test\"" $ lower "This is A TEST" == "this is a test"
     testGen "lower \"\" == \"\"" $ lower "" == ""

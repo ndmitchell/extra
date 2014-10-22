@@ -177,7 +177,7 @@ trimEnd = dropWhileEnd isSpace
 --
 -- > trim      "  hello   " == "hello"
 -- > trimStart "  hello   " == "hello   "
--- > trimEnd   "  hello   " == "hello   "
+-- > trimEnd   "  hello   " == "  hello"
 -- > \s -> trim s == trimEnd (trimStart s)
 trim :: String -> String
 trim = trimEnd . trimStart
