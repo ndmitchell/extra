@@ -72,6 +72,16 @@ tests = do
     testGen "\\x xs -> uncons (cons x xs) == Just (x,xs)" $ \x xs -> uncons (cons x xs) == Just (x,xs)
     testGen "snoc \"tes\" 't' == \"test\"" $ snoc "tes" 't' == "test"
     testGen "\\xs x -> unsnoc (snoc xs x) == Just (xs,x)" $ \xs x -> unsnoc (snoc xs x) == Just (xs,x)
+    testGen "takeEnd 3 \"hello\"  == \"llo\"" $ takeEnd 3 "hello"  == "llo"
+    testGen "takeEnd 5 \"bye\"    == \"bye\"" $ takeEnd 5 "bye"    == "bye"
+    testGen "takeEnd (-1) \"bye\" == \"\"" $ takeEnd (-1) "bye" == ""
+    testGen "\\i xs -> takeEnd i xs `isSuffixOf` xs" $ \i xs -> takeEnd i xs `isSuffixOf` xs
+    testGen "\\i xs -> length (takeEnd i xs) == min (max 0 i) (length xs)" $ \i xs -> length (takeEnd i xs) == min (max 0 i) (length xs)
+    testGen "dropEnd 3 \"hello\"  == \"he\"" $ dropEnd 3 "hello"  == "he"
+    testGen "dropEnd 5 \"bye\"    == \"\"" $ dropEnd 5 "bye"    == ""
+    testGen "dropEnd (-1) \"bye\" == \"bye\"" $ dropEnd (-1) "bye" == "bye"
+    testGen "\\i xs -> dropEnd i xs `isPrefixOf` xs" $ \i xs -> dropEnd i xs `isPrefixOf` xs
+    testGen "\\i xs -> length (dropEnd i xs) == max 0 (length xs - max 0 i)" $ \i xs -> length (dropEnd i xs) == max 0 (length xs - max 0 i)
     testGen "lower \"This is A TEST\" == \"this is a test\"" $ lower "This is A TEST" == "this is a test"
     testGen "lower \"\" == \"\"" $ lower "" == ""
     testGen "breakEnd isLower \"youRE\" == (\"you\",\"RE\")" $ breakEnd isLower "youRE" == ("you","RE")
