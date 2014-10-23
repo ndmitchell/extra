@@ -11,6 +11,8 @@ import System.Process
 import System.Exit
 
 
+-- | A version of 'system' that also captures the output, both 'stdout' and 'stderr'.
+--   Returns a pair of the exit code and the output.
 systemOutput :: String -> IO (ExitCode, String)
 systemOutput x = withTempFile $ \file -> do
     exit <- withFile file WriteMode $ \h -> do
@@ -19,12 +21,15 @@ systemOutput x = withTempFile $ \file -> do
     fmap (exit,) $ readFile' file
 
 
+-- | A version of 'system' that throws an error if the 'ExitCode' is not 'ExitSuccess'.
 system_ :: String -> IO ()
 system_ x = do
     res <- system x
     when (res /= ExitSuccess) $
         error $ "Failed when running system command: " ++ x
 
+-- | A version of 'system' that captures the output (both 'stdout' and 'stderr')
+--   and throws an error if the 'ExitCode' is not 'ExitSuccess'.
 systemOutput_ :: String -> IO String
 systemOutput_ x = do
     (res,out) <- systemOutput x
