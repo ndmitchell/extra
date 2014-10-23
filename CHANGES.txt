@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Remove all but the extractors on triples
     Remove groupSortOn
     Remove dropAround
 0.3.2
