@@ -23,7 +23,7 @@ module Extra(
     lower, upper, trim, trimStart, trimEnd, word1, drop1, list, uncons, unsnoc, cons, snoc, groupSort, nubOn, groupOn, sortOn, repeatedly, for, disjoint, allSame, anySame, dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, dropWhileEnd', takeWhileEnd, stripSuffix, concatUnzip, concatUnzip3, merge, mergeBy, replace, wordsBy, linesBy, firstJust, breakOn, breakOnEnd, splitOn, split, chunksOf,
     -- * Data.Tuple.Extra
     -- | Extra functions available in @"Data.Tuple.Extra"@.
-    first, second, (***), (&&&), dupe, both, fst3, snd3, thd3, first3, second3, third3, dupe3, both3,
+    first, second, (***), (&&&), dupe, both, fst3, snd3, thd3,
     -- * Numeric.Extra
     -- | Extra functions available in @"Numeric.Extra"@.
     showDP, intToDouble, intToFloat, floatToDouble, doubleToFloat,
