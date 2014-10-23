@@ -11,7 +11,7 @@ import Control.Arrow
 ---------------------------------------------------------------------
 -- Data.String
 
--- | Show a number to a number of decimal places.
+-- | Show a number to a fixed number of decimal places.
 --
 -- > showDP 4 pi == "3.1416"
 -- > showDP 0 pi == "3"
@@ -24,19 +24,19 @@ showDP n x = a ++ (if n > 0 then "." else "") ++ b ++ replicate (n - length b) '
 ---------------------------------------------------------------------
 -- Numeric
 
--- | Specialised numeric conversion.
+-- | Specialised numeric conversion, type restricted version of 'fromIntegral'.
 intToDouble :: Int -> Double
 intToDouble = fromIntegral
 
--- | Specialised numeric conversion.
+-- | Specialised numeric conversion, type restricted version of 'fromIntegral'.
 intToFloat :: Int -> Float
 intToFloat = fromIntegral
 
--- | Specialised numeric conversion.
+-- | Specialised numeric conversion, type restricted version of 'realToFrac'.
 floatToDouble :: Float -> Double
 floatToDouble = realToFrac
 
--- | Specialised numeric conversion.
+-- | Specialised numeric conversion, type restricted version of 'realToFrac'.
 doubleToFloat :: Double -> Float
 doubleToFloat = realToFrac
 
