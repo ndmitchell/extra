@@ -86,7 +86,7 @@ forkFinally action and_then =
 
 newtype Lock = Lock (MVar ())
 
--- | Create a 'newLock'.
+-- | Create a new 'Lock'.
 newLock :: IO Lock
 newLock = fmap Lock $ newMVar ()
 
