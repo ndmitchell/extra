@@ -25,6 +25,8 @@ withCurrentDirectory dir act =
 
 -- | Find all the files within a directory, including recursively.
 --   Looks through all folders, including those beginning with @.@.
+--
+--   FIXME: need to generalise to avoid certain directories.
 getDirectoryContentsRecursive :: FilePath -> IO [FilePath]
 getDirectoryContentsRecursive dir = do
     xs <- getDirectoryContents dir
