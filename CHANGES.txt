@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Change the signature for newTempFile/newTempDir
     Add a once function
 0.4
     Remove all but the extractors on triples

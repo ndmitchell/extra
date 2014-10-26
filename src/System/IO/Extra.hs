@@ -12,6 +12,7 @@ module System.IO.Extra(
     ) where
 
 import System.IO
+import Control.Concurrent.Extra
 import Control.Exception.Extra as E
 import GHC.IO.Handle(hDuplicate,hDuplicateTo)
 import System.Directory.Extra
@@ -121,8 +122,11 @@ withBuffering h m act = bracket (hGetBuffering h) (hSetBuffering h) $ const $ do
 -- | Provide a function to create a temporary file, and a way to delete a
 --   temporary file. Most users should use 'withTempFile' which
 --   combines these operations.
-newTempFile :: (IO FilePath, FilePath -> IO ())
-newTempFile = (create, ignore . removeFile)
+newTempFile :: IO (FilePath, IO ())
+newTempFile = do
+        file <- create
+        del <- once $ ignore $ removeFile file
+        return (file, del)
     where
         create = do
             tmpdir <- getTemporaryDirectory
@@ -135,14 +139,19 @@ newTempFile = (create, ignore . removeFile)
 --   after the action completes. The 'FilePath' will not have any file extension.
 --   If you require a file with a specific name, use 'withTempDir'.
 withTempFile :: (FilePath -> IO a) -> IO a
-withTempFile = uncurry bracket newTempFile
+withTempFile act = do
+    (file, del) <- newTempFile
+    act file `finally` del
 
 
 -- | Provide a function to create a temporary directory, and a way to delete a
 --   temporary directory. Most users should use 'withTempDir' which
 --   combines these operations.
-newTempDir :: (IO FilePath, FilePath -> IO ())
-newTempDir = (create, ignore . removeDirectoryRecursive)
+newTempDir :: IO (FilePath, IO ())
+newTempDir = do
+        dir <- create
+        del <- once $ ignore $ removeDirectoryRecursive dir
+        return (dir, del)
     where
         create = do
             tmpdir <- getTemporaryDirectory
@@ -160,4 +169,6 @@ newTempDir = (create, ignore . removeDirectoryRecursive)
 -- | Create a temporary directory inside the system temporary directory.
 --   The directory will be deleted after the action completes.
 withTempDir :: (FilePath -> IO a) -> IO a
-withTempDir = uncurry bracket newTempDir
+withTempDir act = do
+    (dir,del) <- newTempDir
+    act dir `finally` del
