@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP #-}
+{-# LANGUAGE CPP, TupleSections #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- | Extra functions for "Control.Concurrent". These fall into a few categories:
@@ -15,7 +15,7 @@
 module Control.Concurrent.Extra(
     module Control.Concurrent,
     withNumCapabilities, setNumCapabilities,
-    forkFinally,
+    forkFinally, once,
     -- * Lock
     Lock, newLock, withLock, withLockTry,
     -- * Var
@@ -25,7 +25,7 @@ module Control.Concurrent.Extra(
     ) where
 
 import Control.Concurrent
-import Control.Exception
+import Control.Exception.Extra
 import Control.Monad.Extra
 
 
@@ -63,6 +63,25 @@ forkFinally action and_then =
   mask $ \restore ->
     forkIO $ try (restore action) >>= and_then
 #endif
+
+
+data Once a = OncePending | OnceRunning (Barrier a) | OnceDone a
+
+
+-- | Given an action, produce a wrapped action that runs at most once.
+once :: IO a -> IO (IO a)
+once act = do
+    var <- newVar OncePending
+    let run = either throw return
+    return $ join $ modifyVar var $ \v -> case v of
+        OnceDone x -> return (v, run x)
+        OnceRunning x -> return (v, run =<< waitBarrier x)
+        OncePending -> do
+            b <- newBarrier
+            return $ (OnceRunning b,) $ do
+                res <- try_ act
+                modifyVar_ var $ \_ -> return $ OnceDone res
+                run res
 
 
 ---------------------------------------------------------------------
