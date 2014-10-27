@@ -94,6 +94,11 @@ tests = do
     testGen "lower \"\" == \"\"" $ lower "" == ""
     testGen "upper \"This is A TEST\" == \"THIS IS A TEST\"" $ upper "This is A TEST" == "THIS IS A TEST"
     testGen "upper \"\" == \"\"" $ upper "" == ""
+    testGen "word1 \"\" == (\"\", \"\")" $ word1 "" == ("", "")
+    testGen "word1 \"keyword rest of string\" == (\"keyword\",\"rest of string\")" $ word1 "keyword rest of string" == ("keyword","rest of string")
+    testGen "word1 \"  keyword\\n  rest of string\" == (\"keyword\",\"rest of string\")" $ word1 "  keyword\n  rest of string" == ("keyword","rest of string")
+    testGen "\\s -> fst (word1 s) == concat (take 1 $ words s)" $ \s -> fst (word1 s) == concat (take 1 $ words s)
+    testGen "\\s -> words (snd $ word1 s) == drop 1 (words s)" $ \s -> words (snd $ word1 s) == drop 1 (words s)
     testGen "sortOn fst [(3,\"z\"),(1,\"\"),(3,\"a\")] == [(1,\"\"),(3,\"z\"),(3,\"a\")]" $ sortOn fst [(3,"z"),(1,""),(3,"a")] == [(1,""),(3,"z"),(3,"a")]
     testGen "groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,\"t\"),(2,\"es\"),(3,\"t\")]" $ groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,"t"),(2,"es"),(3,"t")]
     testGen "\\xs -> map fst (groupSort xs) == sort (nub (map fst xs))" $ \xs -> map fst (groupSort xs) == sort (nub (map fst xs))

@@ -197,6 +197,14 @@ upper :: String -> String
 upper = map toUpper
 
 
+-- | Split the first word off a string. Useful for when starting to parse the beginning
+--   of a string, but you want to accurately perserve whitespace in the rest of the string.
+--
+-- > word1 "" == ("", "")
+-- > word1 "keyword rest of string" == ("keyword","rest of string")
+-- > word1 "  keyword\n  rest of string" == ("keyword","rest of string")
+-- > \s -> fst (word1 s) == concat (take 1 $ words s)
+-- > \s -> words (snd $ word1 s) == drop 1 (words s)
 word1 :: String -> (String, String)
 word1 x = second (dropWhile isSpace) $ break isSpace $ dropWhile isSpace x
 
