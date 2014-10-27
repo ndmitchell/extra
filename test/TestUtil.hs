@@ -13,11 +13,13 @@ import Data.Time.Calendar
 import Text.Show.Functions()
 
 import Extra as X
+import Control.Applicative as X
 import Control.Monad as X
 import Data.List as X
 import Data.Char as X
 import Data.Tuple as X
 import System.Directory as X
+import System.FilePath as X
 import Test.QuickCheck as X((==>))
 
 
