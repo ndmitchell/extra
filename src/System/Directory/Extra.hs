@@ -2,7 +2,8 @@
 
 module System.Directory.Extra(
     module System.Directory,
-    withCurrentDirectory, getDirectoryContentsRecursive, createDirectoryPrivate
+    withCurrentDirectory, createDirectoryPrivate,
+    listContents, listFiles, listFilesInside, listFilesRecursive
     ) where
 
 import System.Directory
@@ -23,16 +24,32 @@ withCurrentDirectory dir act =
     bracket getCurrentDirectory setCurrentDirectory $ const $ do
         setCurrentDirectory dir; act
 
--- | Find all the files within a directory, including recursively.
---   Looks through all folders, including those beginning with @.@.
---
---   FIXME: need to generalise to avoid certain directories.
-getDirectoryContentsRecursive :: FilePath -> IO [FilePath]
-getDirectoryContentsRecursive dir = do
+
+-- | List the files in a directory. Each file will be prefixed by the directory,
+--   and will skip @.@ and @..@ functions. A cleaned up version of 'getDirectoryContents'.
+listContents :: FilePath -> IO [FilePath]
+listContents dir = do
     xs <- getDirectoryContents dir
-    (dirs,files) <- partitionM doesDirectoryExist [dir </> x | x <- xs, not $ all (== '.') x]
-    rest <- concatMapM getDirectoryContentsRecursive $ sort dirs
-    return $ sort files ++ rest
+    return [dir </> x | x <- xs, not $ all (== '.') x]
+
+-- | Like 'listContents', but only returns files, not directories.
+listFiles :: FilePath -> IO [FilePath]
+listFiles dir = filterM doesFileExist =<< listContents dir
+
+
+-- | Like 'listFiles' but ago goes recursively.
+listFilesRecursive :: FilePath -> IO [FilePath]
+listFilesRecursive = listFilesInside (const $ return True)
+
+
+-- | Like 'listFilesRecursive', but chose where to recurse into.
+--   Typically directories starting with @.@ would be ignored.
+listFilesInside :: (FilePath -> IO Bool) -> FilePath -> IO [FilePath]
+listFilesInside test dir = do
+    (dirs,files) <- partitionM doesDirectoryExist =<< listContents dir
+    dirs <- filterM test dirs
+    rest <- concatMapM (listFilesInside test) $ sort dirs
+    return $ sort files ++ dirs
 
 
 -- | Create a directory with permissions so that only the current user can view it.

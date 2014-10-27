@@ -29,7 +29,7 @@ module Extra(
     showDP, intToDouble, intToFloat, floatToDouble, doubleToFloat,
     -- * System.Directory.Extra
     -- | Extra functions available in @"System.Directory.Extra"@.
-    withCurrentDirectory, getDirectoryContentsRecursive, createDirectoryPrivate,
+    withCurrentDirectory, createDirectoryPrivate, listContents, listFiles, listFilesInside, listFilesRecursive,
     -- * System.Environment.Extra
     -- | Extra functions available in @"System.Environment.Extra"@.
     getExecutablePath, lookupEnv,

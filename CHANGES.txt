@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Remove getDirectoryContentsRecursive in favour of listFilesRecursive
     Change the signature for newTempFile/newTempDir
     Add a once function
 0.4
