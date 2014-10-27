@@ -25,31 +25,45 @@ withCurrentDirectory dir act =
         setCurrentDirectory dir; act
 
 
--- | List the files in a directory. Each file will be prefixed by the directory,
---   and will skip @.@ and @..@ functions. A cleaned up version of 'getDirectoryContents'.
+-- | List the files and directories directly within a directory.
+--   Each result will be prefixed by the query directory, and the special directories @.@ and @..@ will be ignored.
+--   Intended as a cleaned up version of 'getDirectoryContents'.
+--
+-- > withTempDir $ \dir -> do writeFile (dir </> "test.txt") ""; (== [dir </> "test.txt"]) <$> listContents dir
+-- > let touch = mapM_ $ \x -> createDirectoryIfMissing True (takeDirectory x) >> writeFile x ""
+-- > let listTest op as bs = withTempDir $ \dir -> do touch $ map (dir </>) as; res <- op dir; return $ map (drop (length dir + 1)) res == bs
+-- > listTest listContents ["bar.txt","foo/baz.txt","zoo"] ["bar.txt","foo","zoo"]
 listContents :: FilePath -> IO [FilePath]
 listContents dir = do
     xs <- getDirectoryContents dir
-    return [dir </> x | x <- xs, not $ all (== '.') x]
+    return $ sort [dir </> x | x <- xs, not $ all (== '.') x]
 
--- | Like 'listContents', but only returns files, not directories.
+-- | Like 'listContents', but only returns the files in a directory, not other directories.
+--   Each file will be prefixed by the query directory.
+--
+-- > listTest listFiles ["bar.txt","foo/baz.txt","zoo"] ["bar.txt","zoo"]
 listFiles :: FilePath -> IO [FilePath]
 listFiles dir = filterM doesFileExist =<< listContents dir
 
 
--- | Like 'listFiles' but ago goes recursively.
+-- | Like 'listFiles', but ago goes recursively through all subdirectories.
+--
+-- > listTest listFilesRecursive ["bar.txt","zoo","foo" </> "baz.txt"] ["bar.txt","zoo","foo" </> "baz.txt"]
 listFilesRecursive :: FilePath -> IO [FilePath]
 listFilesRecursive = listFilesInside (const $ return True)
 
 
--- | Like 'listFilesRecursive', but chose where to recurse into.
---   Typically directories starting with @.@ would be ignored.
+-- | Like 'listFilesRecursive', but with a predicate to decide where to recurse into.
+--   Typically directories starting with @.@ would be ignored. The initial argument directory
+--   will have the test applied to it.
+--
+-- > listTest (listFilesInside $ return . not . isPrefixOf "." . takeFileName) ["bar.txt","foo" </> "baz.txt",".foo" </> "baz2.txt", "zoo"] ["bar.txt","zoo","foo" </> "baz.txt"]
+-- > listTest (listFilesInside $ const $ return False) ["bar.txt"] []
 listFilesInside :: (FilePath -> IO Bool) -> FilePath -> IO [FilePath]
-listFilesInside test dir = do
+listFilesInside test dir = ifM (notM $ test dir) (return []) $ do
     (dirs,files) <- partitionM doesDirectoryExist =<< listContents dir
-    dirs <- filterM test dirs
-    rest <- concatMapM (listFilesInside test) $ sort dirs
-    return $ sort files ++ dirs
+    rest <- concatMapM (listFilesInside test) dirs
+    return $ files ++ rest
 
 
 -- | Create a directory with permissions so that only the current user can view it.
