@@ -136,8 +136,13 @@ newTempFile = do
 
 
 -- | Create a temporary file in the temporary directory. The file will be deleted
---   after the action completes. The 'FilePath' will not have any file extension.
+--   after the action completes (provided the file is not still open).
+--   The 'FilePath' will not have any file extension, will exist, and will be zero bytes long.
 --   If you require a file with a specific name, use 'withTempDir'.
+--
+-- > withTempFile doesFileExist == return True
+-- > (doesFileExist =<< withTempFile return) == return False
+-- > withTempFile readFile' == return ""
 withTempFile :: (FilePath -> IO a) -> IO a
 withTempFile act = do
     (file, del) <- newTempFile
@@ -168,6 +173,10 @@ newTempDir = do
 
 -- | Create a temporary directory inside the system temporary directory.
 --   The directory will be deleted after the action completes.
+--
+-- > withTempDir doesDirectoryExist == return True
+-- > (doesDirectoryExist =<< withTempDir return) == return False
+-- > withTempDir listFiles == return []
 withTempDir :: (FilePath -> IO a) -> IO a
 withTempDir act = do
     (dir,del) <- newTempDir

@@ -157,6 +157,12 @@ tests = do
     testGen "showDP 0 pi == \"3\"" $ showDP 0 pi == "3"
     testGen "showDP 2 3  == \"3.00\"" $ showDP 2 3  == "3.00"
     testGen "captureOutput (print 1) == return (\"1\\n\",())" $ captureOutput (print 1) == return ("1\n",())
+    testGen "withTempFile doesFileExist == return True" $ withTempFile doesFileExist == return True
+    testGen "(doesFileExist =<< withTempFile return) == return False" $ (doesFileExist =<< withTempFile return) == return False
+    testGen "withTempFile readFile' == return \"\"" $ withTempFile readFile' == return ""
+    testGen "withTempDir doesDirectoryExist == return True" $ withTempDir doesDirectoryExist == return True
+    testGen "(doesDirectoryExist =<< withTempDir return) == return False" $ (doesDirectoryExist =<< withTempDir return) == return False
+    testGen "withTempDir listFiles == return []" $ withTempDir listFiles == return []
     testGen "fmap (round . fst) (duration $ sleep 1) == return 1" $ fmap (round . fst) (duration $ sleep 1) == return 1
     testGen "\\a b -> a > b ==> subtractTime a b > 0" $ \a b -> a > b ==> subtractTime a b > 0
     testGen "showDuration 3.435   == \"3.44s\"" $ showDuration 3.435   == "3.44s"
