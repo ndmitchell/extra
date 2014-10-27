@@ -169,6 +169,7 @@ tests = do
     testGen "listTest listFilesRecursive [\"bar.txt\",\"zoo\",\"foo\" </> \"baz.txt\"] [\"bar.txt\",\"zoo\",\"foo\" </> \"baz.txt\"]" $ listTest listFilesRecursive ["bar.txt","zoo","foo" </> "baz.txt"] ["bar.txt","zoo","foo" </> "baz.txt"]
     testGen "listTest (listFilesInside $ return . not . isPrefixOf \".\" . takeFileName) [\"bar.txt\",\"foo\" </> \"baz.txt\",\".foo\" </> \"baz2.txt\", \"zoo\"] [\"bar.txt\",\"zoo\",\"foo\" </> \"baz.txt\"]" $ listTest (listFilesInside $ return . not . isPrefixOf "." . takeFileName) ["bar.txt","foo" </> "baz.txt",".foo" </> "baz2.txt", "zoo"] ["bar.txt","zoo","foo" </> "baz.txt"]
     testGen "listTest (listFilesInside $ const $ return False) [\"bar.txt\"] []" $ listTest (listFilesInside $ const $ return False) ["bar.txt"] []
+    testGen "isWindows == (os == \"mingw32\")" $ isWindows == (os == "mingw32")
     testGen "captureOutput (print 1) == return (\"1\\n\",())" $ captureOutput (print 1) == return ("1\n",())
     testGen "withTempFile doesFileExist == return True" $ withTempFile doesFileExist == return True
     testGen "(doesFileExist =<< withTempFile return) == return False" $ (doesFileExist =<< withTempFile return) == return False
