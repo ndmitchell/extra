@@ -42,7 +42,12 @@ main = do
         ,"default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))"
         ,"tests :: IO ()"
         ,"tests = do"] ++
-        ["    " ++ if "let " `isPrefixOf` t then t else "testGen " ++ show t ++ " $ " ++ tweakTest t | (_,_,ts) <- ifaces, t <- ts]
+        ["    " ++ if "let " `isPrefixOf` t then t else "testGen " ++ show t ++ " $ " ++ tweakTest t | (_,_,ts) <- ifaces, t <- rejoin ts]
+
+rejoin :: [String] -> [String]
+rejoin (x1:x2:xs) | " " `isPrefixOf` x2 = rejoin $ (x1 ++ x2) : xs
+rejoin (x:xs) = x : rejoin xs
+rejoin [] = []
 
 writeFileBinaryChanged :: FilePath -> String -> IO ()
 writeFileBinaryChanged file x = do
