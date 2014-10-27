@@ -4,9 +4,10 @@ import TestUtil
 default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))
 tests :: IO ()
 tests = do
+    testGen "stringException \"test\"                           == return \"test\"" $ stringException "test"                           == return "test"
     testGen "stringException (\"test\" ++ undefined)            == return \"test<Exception>\"" $ stringException ("test" ++ undefined)            == return "test<Exception>"
     testGen "stringException (\"test\" ++ undefined ++ \"hello\") == return \"test<Exception>\"" $ stringException ("test" ++ undefined ++ "hello") == return "test<Exception>"
-    testGen "stringException \"test\"                           == return \"test\"" $ stringException "test"                           == return "test"
+    testGen "stringException ['t','e','s','t',undefined]      == return \"test<Exception>\"" $ stringException ['t','e','s','t',undefined]      == return "test<Exception>"
     testGen "ignore (print 1)    == print 1" $ ignore (print 1)    == print 1
     testGen "ignore (fail \"die\") == return ()" $ ignore (fail "die") == return ()
     testGen "retry 1 (print \"x\")  == print \"x\"" $ retry 1 (print "x")  == print "x"
@@ -161,13 +162,14 @@ tests = do
     testGen "showDP 4 pi == \"3.1416\"" $ showDP 4 pi == "3.1416"
     testGen "showDP 0 pi == \"3\"" $ showDP 0 pi == "3"
     testGen "showDP 2 3  == \"3.00\"" $ showDP 2 3  == "3.00"
+    testGen "withTempDir $ \\dir -> do writeFile (dir </> \"foo.txt\") \"\"; withCurrentDirectory dir $ doesFileExist \"foo.txt\"" $ withTempDir $ \dir -> do writeFile (dir </> "foo.txt") ""; withCurrentDirectory dir $ doesFileExist "foo.txt"
     testGen "withTempDir $ \\dir -> do writeFile (dir </> \"test.txt\") \"\"; (== [dir </> \"test.txt\"]) <$> listContents dir" $ withTempDir $ \dir -> do writeFile (dir </> "test.txt") ""; (== [dir </> "test.txt"]) <$> listContents dir
     let touch = mapM_ $ \x -> createDirectoryIfMissing True (takeDirectory x) >> writeFile x ""
     let listTest op as bs = withTempDir $ \dir -> do touch $ map (dir </>) as; res <- op dir; return $ map (drop (length dir + 1)) res == bs
     testGen "listTest listContents [\"bar.txt\",\"foo/baz.txt\",\"zoo\"] [\"bar.txt\",\"foo\",\"zoo\"]" $ listTest listContents ["bar.txt","foo/baz.txt","zoo"] ["bar.txt","foo","zoo"]
     testGen "listTest listFiles [\"bar.txt\",\"foo/baz.txt\",\"zoo\"] [\"bar.txt\",\"zoo\"]" $ listTest listFiles ["bar.txt","foo/baz.txt","zoo"] ["bar.txt","zoo"]
     testGen "listTest listFilesRecursive [\"bar.txt\",\"zoo\",\"foo\" </> \"baz.txt\"] [\"bar.txt\",\"zoo\",\"foo\" </> \"baz.txt\"]" $ listTest listFilesRecursive ["bar.txt","zoo","foo" </> "baz.txt"] ["bar.txt","zoo","foo" </> "baz.txt"]
-    testGen "listTest (listFilesInside $ return . not . isPrefixOf \".\" . takeFileName) [\"bar.txt\",\"foo\" </> \"baz.txt\",\".foo\" </> \"baz2.txt\", \"zoo\"] [\"bar.txt\",\"zoo\",\"foo\" </> \"baz.txt\"]" $ listTest (listFilesInside $ return . not . isPrefixOf "." . takeFileName) ["bar.txt","foo" </> "baz.txt",".foo" </> "baz2.txt", "zoo"] ["bar.txt","zoo","foo" </> "baz.txt"]
+    testGen "listTest (listFilesInside $ return . not . isPrefixOf \".\" . takeFileName)    [\"bar.txt\",\"foo\" </> \"baz.txt\",\".foo\" </> \"baz2.txt\", \"zoo\"] [\"bar.txt\",\"zoo\",\"foo\" </> \"baz.txt\"]" $ listTest (listFilesInside $ return . not . isPrefixOf "." . takeFileName)    ["bar.txt","foo" </> "baz.txt",".foo" </> "baz2.txt", "zoo"] ["bar.txt","zoo","foo" </> "baz.txt"]
     testGen "listTest (listFilesInside $ const $ return False) [\"bar.txt\"] []" $ listTest (listFilesInside $ const $ return False) ["bar.txt"] []
     testGen "isWindows == (os == \"mingw32\")" $ isWindows == (os == "mingw32")
     testGen "captureOutput (print 1) == return (\"1\\n\",())" $ captureOutput (print 1) == return ("1\n",())

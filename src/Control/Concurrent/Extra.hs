@@ -1,17 +1,17 @@
 {-# LANGUAGE CPP, TupleSections #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
--- | Extra functions for "Control.Concurrent". These fall into a few categories:
+-- | Extra functions for "Control.Concurrent".
 --
--- * Some functions manipulate the number of capabilities.
---
--- * The 'forkFinally' function - if you need greater control of exceptions and threads
---   see the <http://hackage.haskell.org/package/slave-thread slave-thread> package.
---
--- * Three new types of 'MVar', namely 'Lock' (no associated value), 'Var' (never empty)
---   and 'Barrier' (filled at most once). See
+--   This module includes three new types of 'MVar', namely 'Lock' (no associated value),
+--   'Var' (never empty) and 'Barrier' (filled at most once). See
 --   <http://neilmitchell.blogspot.co.uk/2012/06/flavours-of-mvar_04.html this blog post>
---   for more examples.
+--   for examples and justification.
+--
+--   If you need greater control of exceptions and threads
+--   see the <http://hackage.haskell.org/package/slave-thread slave-thread> package.
+--   If you need elaborate relationships between threads
+--   see the <http://hackage.haskell.org/package/async async> package.
 module Control.Concurrent.Extra(
     module Control.Concurrent,
     withNumCapabilities, setNumCapabilities,

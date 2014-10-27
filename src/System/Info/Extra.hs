@@ -1,5 +1,6 @@
 {-# LANGUAGE CPP #-}
 
+-- | Extra functions for the current system info.
 module System.Info.Extra(
     module System.Info,
     isWindows

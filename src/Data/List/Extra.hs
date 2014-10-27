@@ -3,18 +3,25 @@
 
 -- | This module extends "Data.List" with extra functions of a similar nature.
 --   The package also exports the existing "Data.List" functions.
---   Some of the names and semantics were inspired by the @text@ package.
+--   Some of the names and semantics were inspired by the
+--   <http://hackage.haskell.org/package/text text> package.
 module Data.List.Extra(
     module Data.List,
-    lower, upper, trim, trimStart, trimEnd, word1, drop1,
-    list, uncons, unsnoc, cons, snoc,
+    -- * String operations
+    lower, upper, trim, trimStart, trimEnd, word1,
+    -- * Splitting    
+    dropEnd, takeEnd, breakEnd, spanEnd,
+    dropWhileEnd, dropWhileEnd', takeWhileEnd, stripSuffix,
+    wordsBy, linesBy,
+    breakOn, breakOnEnd, splitOn, split, chunksOf,
+    -- * Basics
+    list, uncons, unsnoc, cons, snoc, drop1,
+    -- * List operations
     groupSort, nubOn, groupOn, sortOn,
-    repeatedly, for,
     disjoint, allSame, anySame,
-    dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, dropWhileEnd', takeWhileEnd, stripSuffix,
+    repeatedly, for, firstJust,
     concatUnzip, concatUnzip3,
-    merge, mergeBy, replace, wordsBy, linesBy, firstJust,
-    breakOn, breakOnEnd, splitOn, split, chunksOf
+    replace, merge, mergeBy,
     ) where
 
 import Data.List

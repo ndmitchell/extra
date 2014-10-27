@@ -20,9 +20,10 @@ import Data.List.Extra
 
 -- | Fully evaluate an input String. If the String contains embedded exceptions it will produce @\<Exception\>@.
 --
+-- > stringException "test"                           == return "test"
 -- > stringException ("test" ++ undefined)            == return "test<Exception>"
 -- > stringException ("test" ++ undefined ++ "hello") == return "test<Exception>"
--- > stringException "test"                           == return "test"
+-- > stringException ['t','e','s','t',undefined]      == return "test<Exception>"
 stringException :: String -> IO String
 stringException x = do
     r <- try_ $ evaluate $ list [] (\x xs -> x `seq` x:xs) x
@@ -48,7 +49,8 @@ ignore :: IO () -> IO ()
 ignore = void . try_
 
 
--- | Retry an operation at most N times (N must be positive).
+-- | Retry an operation at most /n/ times (/n/ must be positive).
+--   If the operation fails the /n/th time it will throw that final exception.
 --
 -- > retry 1 (print "x")  == print "x"
 -- > retry 3 (fail "die") == fail "die"

@@ -1,5 +1,7 @@
 {-# LANGUAGE CPP #-}
 
+-- | Extra directory functions. Most of these functions provide cleaned up and generalised versions
+--   of 'getDirectoryContents', see 'listContents' for the differences.
 module System.Directory.Extra(
     module System.Directory,
     withCurrentDirectory, createDirectoryPrivate,
@@ -17,8 +19,11 @@ import qualified System.Posix
 #endif
 
 
--- | Remember that the current directory is a global variable, so calling this function
---   multithreaded is almost certain to go wrong. Avoid changing the dir if you can.
+-- | Set the current directory, perform an operation, then change back.
+--   Remember that the current directory is a global variable, so calling this function
+--   multithreaded is almost certain to go wrong. Avoid changing the current directory if you can.
+--
+-- > withTempDir $ \dir -> do writeFile (dir </> "foo.txt") ""; withCurrentDirectory dir $ doesFileExist "foo.txt"
 withCurrentDirectory :: FilePath -> IO a -> IO a
 withCurrentDirectory dir act =
     bracket getCurrentDirectory setCurrentDirectory $ const $ do
@@ -46,7 +51,7 @@ listFiles :: FilePath -> IO [FilePath]
 listFiles dir = filterM doesFileExist =<< listContents dir
 
 
--- | Like 'listFiles', but ago goes recursively through all subdirectories.
+-- | Like 'listFiles', but goes recursively through all subdirectories.
 --
 -- > listTest listFilesRecursive ["bar.txt","zoo","foo" </> "baz.txt"] ["bar.txt","zoo","foo" </> "baz.txt"]
 listFilesRecursive :: FilePath -> IO [FilePath]
@@ -57,7 +62,8 @@ listFilesRecursive = listFilesInside (const $ return True)
 --   Typically directories starting with @.@ would be ignored. The initial argument directory
 --   will have the test applied to it.
 --
--- > listTest (listFilesInside $ return . not . isPrefixOf "." . takeFileName) ["bar.txt","foo" </> "baz.txt",".foo" </> "baz2.txt", "zoo"] ["bar.txt","zoo","foo" </> "baz.txt"]
+-- > listTest (listFilesInside $ return . not . isPrefixOf "." . takeFileName)
+-- >     ["bar.txt","foo" </> "baz.txt",".foo" </> "baz2.txt", "zoo"] ["bar.txt","zoo","foo" </> "baz.txt"]
 -- > listTest (listFilesInside $ const $ return False) ["bar.txt"] []
 listFilesInside :: (FilePath -> IO Bool) -> FilePath -> IO [FilePath]
 listFilesInside test dir = ifM (notM $ test dir) (return []) $ do

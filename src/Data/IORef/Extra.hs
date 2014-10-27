@@ -10,13 +10,13 @@ import Data.IORef
 import Control.Exception
 
 
--- | Evaluates the value before calling 'writeIORef'
+-- | Evaluates the value before calling 'writeIORef'.
 writeIORef' :: IORef a -> a -> IO ()
 writeIORef' ref x = do
     evaluate x
     writeIORef ref x
 
--- | Evaluates the value before calling 'atomicWriteIORef'
+-- | Evaluates the value before calling 'atomicWriteIORef'.
 atomicWriteIORef' :: IORef a -> a -> IO ()
 atomicWriteIORef' ref x = do
     evaluate x

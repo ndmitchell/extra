@@ -1,7 +1,7 @@
 
--- | Extra functions for working with tuples.
+-- | Extra functions for working with pairs and triples.
 --   Some of these functions are available in the "Control.Arrow" module,
---   but here are available specialised to pairs.
+--   but here are available specialised to pairs. Some operations work on triples.
 module Data.Tuple.Extra(
     module Data.Tuple,
     -- * Specialised 'Arrow' functions
@@ -49,7 +49,7 @@ second = Arrow.second
 dupe :: a -> (a,a)
 dupe x = (x,x)
 
--- | Apply a single function to both componenets of a pair.
+-- | Apply a single function to both components of a pair.
 --
 -- > both succ (1,2) == (2,3)
 both :: (a -> b) -> (a, a) -> (b, b)

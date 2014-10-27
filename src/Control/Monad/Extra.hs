@@ -1,17 +1,18 @@
 
--- | Extra functions for "Control.Exception".
+-- | Extra functions for "Control.Monad".
 --   These functions provide looping, list operations and booleans.
 -- If you need a wider selection of monad loops and list generalisations,
--- see <http://hackage.haskell.org/package/monad-loops>
+-- see <http://hackage.haskell.org/package/monad-loops monad-loops>.
 module Control.Monad.Extra(
     module Control.Monad,
     whenJust,
     unit,
-    partitionM, concatMapM, mapMaybeM,
+    -- * Loops
     loopM, whileM,
-    whenM, unlessM,
-    ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
-    findM, firstJustM
+    -- * Lists
+    partitionM, concatMapM, mapMaybeM, findM, firstJustM,
+    -- * Booleans
+    whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
     ) where
 
 import Control.Monad
@@ -27,7 +28,7 @@ import Data.Maybe
 whenJust :: Applicative m => Maybe a -> (a -> m ()) -> m ()
 whenJust mg f = maybe (pure ()) f mg
 
--- | The identity function which requires the inner argument to be '()'. Useful for functions
+-- | The identity function which requires the inner argument to be @()@. Useful for functions
 --   with overloaded return times.
 --
 -- > \(x :: Maybe ()) -> unit x == x

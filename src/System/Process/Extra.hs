@@ -1,5 +1,7 @@
 {-# LANGUAGE TupleSections #-}
 
+-- | Extra functions for creating processes. Specifically variants that automatically check
+--   the 'ExitCode' and capture the 'stdout'\/'stderr' handles.
 module System.Process.Extra(
     module System.Process,
     system_, systemOutput, systemOutput_
@@ -12,7 +14,7 @@ import System.Exit
 
 
 -- | A version of 'system' that also captures the output, both 'stdout' and 'stderr'.
---   Returns a pair of the exit code and the output.
+--   Returns a pair of the 'ExitCode' and the output.
 systemOutput :: String -> IO (ExitCode, String)
 systemOutput x = withTempFile $ \file -> do
     exit <- withFile file WriteMode $ \h -> do

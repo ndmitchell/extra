@@ -1,4 +1,5 @@
 
+-- | Extra numeric functions - formatting and specialised conversions.
 module Numeric.Extra(
     module Numeric,
     showDP,

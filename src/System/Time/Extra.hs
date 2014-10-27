@@ -1,4 +1,9 @@
 
+-- | Extra functions for working with times. Unlike the other modules in this package, there is no
+--   corresponding @System.Time@ module. This module enhances the functionality
+--   from "Data.Time.Clock", but in quite different ways.
+--
+--   Throughout, time is measured in 'Seconds', which is a type alias for 'Double'.
 module System.Time.Extra(
     Seconds,
     sleep,
