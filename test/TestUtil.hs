@@ -1,5 +1,5 @@
 
-module TestUtil(runTests, testGen, erroneous, module X) where
+module TestUtil(runTests, testGen, erroneous, (====), module X) where
 
 import Test.QuickCheck
 import Test.QuickCheck.Test
@@ -38,6 +38,8 @@ testGen msg prop = do
 erroneous :: a -> Bool
 erroneous x = unsafePerformIO $ fmap isLeft $ try_ $ evaluate x
 
+(====) :: (Show a, Eq a) => a -> a -> Bool
+a ==== b = if a == b then True else error $ "Not equal!\n" ++ show a ++ "\n" ++ show b
 
 runTests :: IO () -> IO ()
 runTests t = do
