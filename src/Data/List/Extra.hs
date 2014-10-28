@@ -216,11 +216,17 @@ word1 :: String -> (String, String)
 word1 x = second (dropWhile isSpace) $ break isSpace $ dropWhile isSpace x
 
 
--- | A version of 'sort' where the comparison is done on some extracted value.
+#if __GLASGOW_HASKELL__ >= 709
+-- | Sort a list by comparing the results of a key function applied to each
+-- element.  @sortOn f@ is equivalent to @sortBy (comparing f)@, but has the
+-- performance advantage of only evaluating @f@ once for each element in the
+-- input list.  This is called the decorate-sort-undecorate paradigm, or
+-- Schwartzian transform.
 --
 -- > sortOn fst [(3,"z"),(1,""),(3,"a")] == [(1,""),(3,"z"),(3,"a")]
 sortOn :: Ord b => (a -> b) -> [a] -> [a]
-sortOn f = sortBy (compare `on` f)
+sortOn f = map snd . sortBy (compare `on` fst) . map (\x -> let y = f x in y `seq` (y, x))
+#endif
 
 -- | A version of 'group' where the equality is done on some extracted value.
 groupOn :: Eq b => (a -> b) -> [a] -> [[a]]
