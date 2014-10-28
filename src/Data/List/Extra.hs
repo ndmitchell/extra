@@ -230,11 +230,17 @@ sortOn f = map snd . sortBy (compare `on` fst) . map (\x -> let y = f x in y `se
 
 -- | A version of 'group' where the equality is done on some extracted value.
 groupOn :: Eq b => (a -> b) -> [a] -> [[a]]
-groupOn f = groupBy ((==) `on` f)
+groupOn f = groupBy ((==) `on2` f)
+    -- redefine on so we avoid duplicate computation for most values.
+    where (.*.) `on2` f = \x -> let fx = f x in \y -> fx .*. f y
+
 
 -- | A version of 'nub' where the equality is done on some extracted value.
+--   @nubOn f@ is equivalent to @nubBy ((==) `on` f)@, but has the
+--   performance advantage of only evaluating @f@ once for each element in the
+--   input list.
 nubOn :: Eq b => (a -> b) -> [a] -> [a]
-nubOn f = nubBy ((==) `on` f)
+nubOn f = map snd . nubBy ((==) `on` fst) . map (\x -> let y = f x in y `seq` (y, x))
 
 -- | A combination of 'group' and 'sort'.
 --
