@@ -216,7 +216,7 @@ word1 :: String -> (String, String)
 word1 x = second (dropWhile isSpace) $ break isSpace $ dropWhile isSpace x
 
 
-#if __GLASGOW_HASKELL__ >= 709
+#if __GLASGOW_HASKELL__ < 709
 -- | Sort a list by comparing the results of a key function applied to each
 -- element.  @sortOn f@ is equivalent to @sortBy (comparing f)@, but has the
 -- performance advantage of only evaluating @f@ once for each element in the
