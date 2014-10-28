@@ -14,7 +14,7 @@
 --   see the <http://hackage.haskell.org/package/async async> package.
 module Control.Concurrent.Extra(
     module Control.Concurrent,
-    withNumCapabilities, setNumCapabilities,
+    getNumCapabilities, setNumCapabilities, withNumCapabilities,
     forkFinally, once,
     -- * Lock
     Lock, newLock, withLock, withLockTry,
@@ -37,6 +37,12 @@ withNumCapabilities new act | rtsSupportsBoundThreads = do
     if old == new then act else
         bracket_ (setNumCapabilities new) (setNumCapabilities old) act
 
+
+#if __GLASGOW_HASKELL__ < 702
+-- | A version of 'getNumCapabilities' that works on all versions of GHC, but returns 1 before GHC 7.2.
+getNumCapabilities :: IO Int
+getNumCapabilities = return 1
+#endif
 
 #if __GLASGOW_HASKELL__ < 706
 -- | A version of 'setNumCapabilities' that works on all versions of GHC, but has no effect before GHC 7.6.
