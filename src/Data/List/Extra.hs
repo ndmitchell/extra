@@ -90,6 +90,7 @@ list :: b -> (a -> [a] -> b) -> [a] -> b
 list nil cons [] = nil
 list nil cons (x:xs) = cons x xs
 
+#if __GLASGOW_HASKELL__ < 709
 -- | If the list is empty returns 'Nothing', otherwise returns the 'head' and the 'tail'.
 --
 -- > uncons "test" == Just ('t',"est")
@@ -98,6 +99,7 @@ list nil cons (x:xs) = cons x xs
 uncons :: [a] -> Maybe (a, [a])
 uncons [] = Nothing
 uncons (x:xs) = Just (x,xs)
+#endif
 
 -- | If the list is empty returns 'Nothing', otherwise returns the 'init' and the 'last'.
 --
