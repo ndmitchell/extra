@@ -191,34 +191,37 @@ withVar (Var x) f = withMVar x f
 --   for it to complete. A barrier has similarities to a future or promise
 --   from other languages, has been known as an IVar in other Haskell work,
 --   and in some ways is like a manually managed thunk.
-data Barrier a = Barrier
-    (MVar ()) -- always empty until Var is Just, then only empty for brief periods of time
-    (Var (Maybe a)) -- Just = filled, Nothing = empty
+newtype Barrier a = Barrier (Var (Either (MVar ()) a))
+    -- Either a Left empty MVar you should wait or a Right result
 
 -- | Create a new 'Barrier'.
 newBarrier :: IO (Barrier a)
-newBarrier = liftM2 Barrier newEmptyMVar (newVar Nothing)
+newBarrier = fmap Barrier $ newVar . Left =<< newEmptyMVar
 
 -- | Write a value into the Barrier, releasing anyone at 'waitBarrier'.
 --   Any subsequent attempts to signal the 'Barrier' will throw an exception.
 signalBarrier :: Barrier a -> a -> IO ()
-signalBarrier (Barrier wait val) v = mask_ $ do
-    modifyVar_ val $ \val -> case val of
-        Nothing -> return $ Just v
-        Just v -> error "Control.Concurrent.Extra.signalBarrier, attempt to signal a barrier that has already been signaled"
-    putMVar wait () -- use mask so we never get inconsistent Just vs wait
+signalBarrier (Barrier var) v = mask_ $ do -- use mask so never in an inconsistent state
+    join $ modifyVar var $ \x -> case x of
+        Left bar -> return (Right v, putMVar bar ())
+        Right res -> error "Control.Concurrent.Extra.signalBarrier, attempt to signal a barrier that has already been signaled"
 
 
 -- | Wait until a barrier has been signaled with 'signalBarrier'.
 waitBarrier :: Barrier a -> IO a
-waitBarrier (Barrier wait val) = do
-    readMVar wait
-    v <- readVar val
-    case v of
-        Just v -> return v
-        Nothing -> error "Cortex.Concurrent.Extra, internal invariant violated in Barrier"
+waitBarrier (Barrier var) = do
+    x <- readVar var
+    case x of
+        Right res -> return res
+        Left bar -> do
+            readMVar bar
+            x <- readVar var
+            case x of
+                Right res -> return res
+                Left bar -> error "Cortex.Concurrent.Extra, internal invariant violated in Barrier"
+
 
 -- | A version of 'waitBarrier' that never blocks, returning 'Nothing'
 --   if the barrier has not yet been signaled.
 waitBarrierMaybe :: Barrier a -> IO (Maybe a)
-waitBarrierMaybe (Barrier wait val) = readVar val
+waitBarrierMaybe (Barrier bar) = fmap (either (const Nothing) Just) $ readVar bar
