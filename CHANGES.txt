@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Add timeout function
     Make sure sleep never wraps round an Int
 0.5.1
     Use uncons from GHC 7.9 and above

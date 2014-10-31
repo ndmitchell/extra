@@ -44,7 +44,7 @@ module Extra(
     system_, systemOutput, systemOutput_,
     -- * System.Time.Extra
     -- | Extra functions available in @"System.Time.Extra"@.
-    Seconds, sleep, subtractTime, showDuration, offsetTime, offsetTimeIncrease, duration,
+    Seconds, sleep, timeout, subtractTime, showDuration, offsetTime, offsetTimeIncrease, duration,
     ) where
 
 import Control.Concurrent.Extra

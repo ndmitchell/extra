@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 
 -- | Extra functions for working with times. Unlike the other modules in this package, there is no
 --   corresponding @System.Time@ module. This module enhances the functionality
@@ -6,7 +7,7 @@
 --   Throughout, time is measured in 'Seconds', which is a type alias for 'Double'.
 module System.Time.Extra(
     Seconds,
-    sleep,
+    sleep, timeout,
     subtractTime,
     showDuration,
     offsetTime, offsetTimeIncrease, duration
@@ -17,6 +18,9 @@ import Data.Time.Clock
 import Numeric.Extra
 import Data.IORef
 import Control.Monad.Extra
+import Control.Exception.Extra
+import Data.Typeable
+import Data.Unique
 
 
 -- | A type alias for seconds, which are stored as 'Double'.
@@ -36,6 +40,36 @@ sleep = loopM $ \s ->
     else do
         threadDelay $ ceiling $ s * 1000000
         return $ Right ()
+
+
+-- An internal type that is thrown as a dynamic exception to
+-- interrupt the running IO computation when the timeout has
+-- expired.
+newtype Timeout = Timeout Unique deriving (Eq,Typeable)
+instance Show Timeout where show _ = "<<timeout>>"
+instance Exception Timeout
+
+
+-- | A version of 'System.Timeout.timeout' that takes 'Seconds' and never
+--   overflows the bounds of an 'Int'. In addition, the bug that negative
+--   timeouts run for ever has been fixed.
+--
+-- > timeout (-3) (print 1) == return Nothing
+-- > timeout 0.1  (print 1) == fmap Just (print 1)
+-- > timeout 0.1  (sleep 2 >> print 1) == return Nothing
+-- > do (t, _) <- duration $ timeout 0.1 $ sleep 1000; return $ t < 1
+timeout :: Seconds -> IO a -> IO (Maybe a)
+-- Copied from GHC with a few tweaks.
+timeout n f
+    | n <= 0 = return Nothing
+    | otherwise = do
+        pid <- myThreadId
+        ex  <- fmap Timeout newUnique
+        handleBool (== ex) 
+                   (const $ return Nothing)
+                   (bracket (forkIOWithUnmask $ \unmask -> unmask $ sleep n >> throwTo pid ex)
+                            (killThread)
+                            (\_ -> fmap Just f))
 
 
 -- | Calculate the difference between two times in seconds.
