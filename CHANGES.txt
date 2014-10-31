@@ -1,5 +1,7 @@
 Changelog for Extra
 
+    Ensure barrier is thread-safe
+    Make subsequent signalBarrier calls throw an exception
     Add timeout function
     Make sure sleep never wraps round an Int
 0.5.1

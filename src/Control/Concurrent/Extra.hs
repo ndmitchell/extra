@@ -191,25 +191,34 @@ withVar (Var x) f = withMVar x f
 --   for it to complete. A barrier has similarities to a future or promise
 --   from other languages, has been known as an IVar in other Haskell work,
 --   and in some ways is like a manually managed thunk.
-newtype Barrier a = Barrier (MVar a)
+data Barrier a = Barrier
+    (MVar ()) -- always empty until Var is Just, then only empty for brief periods of time
+    (Var (Maybe a)) -- Just = filled, Nothing = empty
 
 -- | Create a new 'Barrier'.
 newBarrier :: IO (Barrier a)
-newBarrier = fmap Barrier newEmptyMVar
+newBarrier = liftM2 Barrier newEmptyMVar (newVar Nothing)
 
 -- | Write a value into the Barrier, releasing anyone at 'waitBarrier'.
---   Any subsequent attempts to signal the 'Barrier' will be silently ignored.
+--   Any subsequent attempts to signal the 'Barrier' will throw an exception.
 signalBarrier :: Barrier a -> a -> IO ()
-signalBarrier (Barrier x) = void . tryPutMVar x
+signalBarrier (Barrier wait val) v = mask_ $ do
+    modifyVar_ val $ \val -> case val of
+        Nothing -> return $ Just v
+        Just v -> error "Control.Concurrent.Extra.signalBarrier, attempt to signal a barrier that has already been signaled"
+    putMVar wait () -- use mask so we never get inconsistent Just vs wait
+
 
 -- | Wait until a barrier has been signaled with 'signalBarrier'.
 waitBarrier :: Barrier a -> IO a
-waitBarrier (Barrier x) = readMVar x
+waitBarrier (Barrier wait val) = do
+    readMVar wait
+    v <- readVar val
+    case v of
+        Just v -> return v
+        Nothing -> error "Cortex.Concurrent.Extra, internal invariant violated in Barrier"
 
 -- | A version of 'waitBarrier' that never blocks, returning 'Nothing'
 --   if the barrier has not yet been signaled.
 waitBarrierMaybe :: Barrier a -> IO (Maybe a)
-waitBarrierMaybe (Barrier x) = do
-    res <- tryTakeMVar x
-    whenJust res $ void . tryPutMVar x
-    return res
+waitBarrierMaybe (Barrier wait val) = readVar val
