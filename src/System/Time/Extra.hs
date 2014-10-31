@@ -16,6 +16,8 @@ import Control.Concurrent
 import Data.Time.Clock
 import Numeric.Extra
 import Data.IORef
+import Control.Monad.Extra
+
 
 -- | A type alias for seconds, which are stored as 'Double'.
 type Seconds = Double
@@ -24,7 +26,16 @@ type Seconds = Double
 --
 -- > fmap (round . fst) (duration $ sleep 1) == return 1
 sleep :: Seconds -> IO ()
-sleep x = threadDelay $ ceiling $ x * 1000000
+sleep = loopM $ \s ->
+    -- important to handle both overflow and underflow vs Int
+    if s < 0 then
+        return $ Right ()
+    else if s > 2000 then do
+        threadDelay 2000000000 -- 2000 * 1e6
+        return $ Left $ s - 2000
+    else do
+        threadDelay $ ceiling $ s * 1000000
+        return $ Right ()
 
 
 -- | Calculate the difference between two times in seconds.
