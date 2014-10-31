@@ -27,6 +27,7 @@ module Control.Concurrent.Extra(
 import Control.Concurrent
 import Control.Exception.Extra
 import Control.Monad.Extra
+import Data.Maybe
 
 
 -- | On GHC 7.6 and above with the @-threaded@ flag, brackets a call to 'setNumCapabilities'.
@@ -124,12 +125,10 @@ withLock (Lock x) = withMVar x . const
 -- | Like 'withLock' but will never block. If the operation cannot be executed
 --   immediately it will return 'Nothing'.
 withLockTry :: Lock -> IO a -> IO (Maybe a)
-withLockTry (Lock m) act =
-    mask $ \restore -> do
-        a <- tryTakeMVar m
-        case a of
-            Nothing -> return Nothing
-            Just _ -> restore (fmap Just act) `finally` putMVar m ()
+withLockTry (Lock m) act = bracket
+    (tryTakeMVar m)
+    (\v -> when (isJust v) $ putMVar m ())
+    (\v -> if isJust v then fmap Just act else return Nothing)
 
 
 ---------------------------------------------------------------------
