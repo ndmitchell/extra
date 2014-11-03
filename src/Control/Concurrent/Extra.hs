@@ -37,6 +37,7 @@ withNumCapabilities new act | rtsSupportsBoundThreads = do
     old <- getNumCapabilities
     if old == new then act else
         bracket_ (setNumCapabilities new) (setNumCapabilities old) act
+withNumCapabilities _ act = act
 
 
 #if __GLASGOW_HASKELL__ < 702
