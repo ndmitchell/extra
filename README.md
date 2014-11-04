@@ -7,7 +7,7 @@ A library of extra functions for the standard Haskell libraries. Most functions 
 * `Control.Exception.Extra.retry` provides a function that retries an `IO` action a number of times.
 * `System.Environment.Extra.lookupEnv` is a functional available in GHC 7.6 and above. On GHC 7.6 and above this package reexports the version from `System.Environment` while on GHC 7.4 and below it defines an equivalent version.
 
-The module "Extra" documents all functions provided by this library. Modules such as "Data.List.Extra" provide extra functions over "Data.List" and also reexport "Data.List". Users are recommended to replace "Data.List" imports with "Data.List.Extra" if they need the extra functionality.
+The module `Extra` documents all functions provided by this library. Modules such as `Data.List.Extra` provide extra functions over `Data.List` and also reexport `Data.List`. Users are recommended to replace `Data.List` imports with `Data.List.Extra` if they need the extra functionality.
 
 ## Which functions?
 
