@@ -82,7 +82,7 @@ readFileBinary' file = withBinaryFile file ReadMode $ \h -> do
 
 -- | Write a file with a particular encoding.
 writeFileEncoding :: TextEncoding -> FilePath -> String -> IO ()
-writeFileEncoding enc file x = withFile x WriteMode $ \h -> do
+writeFileEncoding enc file x = withFile file WriteMode $ \h -> do
     hSetEncoding h enc
     hPutStr h x
 
