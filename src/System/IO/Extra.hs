@@ -53,6 +53,8 @@ readFileBinary file = do
 -- | A strict version of 'readFile'. When the string is produced, the entire
 --   file will have been read into memory and the file handle will have been closed.
 --   Closing the file handle does not rely on the garbage collector.
+--
+-- > \(filter isHexDigit -> s) -> fmap (== s) $ withTempFile $ \file -> do writeFile file s; readFile' file
 readFile' :: FilePath -> IO String
 readFile' file = withFile file ReadMode $ \h -> do
     s <- hGetContents h
@@ -87,10 +89,14 @@ writeFileEncoding enc file x = withFile file WriteMode $ \h -> do
     hPutStr h x
 
 -- | Write a file with the 'utf8' encoding.
+--
+-- > \s -> withTempFile $ \file -> do writeFileUTF8 file s; fmap (== s) $ readFileUTF8' file
 writeFileUTF8 :: FilePath -> String -> IO ()
 writeFileUTF8 = writeFileEncoding utf8
 
 -- | Write a binary file.
+--
+-- > \s -> withTempFile $ \file -> do writeFileBinary file s; fmap (== s) $ readFileBinary' file
 writeFileBinary :: FilePath -> String -> IO ()
 writeFileBinary file x = withBinaryFile file WriteMode $ \h -> hPutStr h x
 
