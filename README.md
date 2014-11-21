@@ -1,4 +1,4 @@
-# Extra [![Hackage version](https://img.shields.io/hackage/v/extra.svg?style=flat)](http://hackage.haskell.org/package/extra) [![Build Status](http://img.shields.io/travis/ndmitchell/extra.svg?style=flat)](https://travis-ci.org/ndmitchell/extra)
+# Extra [![Hackage version](https://img.shields.io/hackage/v/extra.svg?style=flat)](https://hackage.haskell.org/package/extra) [![Build Status](https://img.shields.io/travis/ndmitchell/extra.svg?style=flat)](https://travis-ci.org/ndmitchell/extra)
 
 A library of extra functions for the standard Haskell libraries. Most functions are simple additions, filling out missing functionality. A few functions are available in later versions of GHC, but this package makes them available back to GHC 7.2. A few examples:
 
