@@ -1,5 +1,7 @@
 Changelog for Extra
 
+1.0
+    No changes
 0.8
     Fix a bug in writeFileEncoding/writeFileUTF8
 0.7
