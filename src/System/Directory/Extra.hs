@@ -66,7 +66,7 @@ listFilesRecursive = listFilesInside (const $ return True)
 -- >     ["bar.txt","foo" </> "baz.txt",".foo" </> "baz2.txt", "zoo"] ["bar.txt","zoo","foo" </> "baz.txt"]
 -- > listTest (listFilesInside $ const $ return False) ["bar.txt"] []
 listFilesInside :: (FilePath -> IO Bool) -> FilePath -> IO [FilePath]
-listFilesInside test dir = ifM (notM $ test dir) (return []) $ do
+listFilesInside test dir = ifM (notM $ test $ dropTrailingPathSeparator dir) (return []) $ do
     (dirs,files) <- partitionM doesDirectoryExist =<< listContents dir
     rest <- concatMapM (listFilesInside test) dirs
     return $ files ++ rest
