@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #3, add a constraint base >= 4.4
 1.0
     No changes
 0.8
