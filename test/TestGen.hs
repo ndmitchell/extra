@@ -159,6 +159,11 @@ tests = do
     testGen "chunksOf 3 \"mytest\"  == [\"myt\",\"est\"]" $ chunksOf 3 "mytest"  == ["myt","est"]
     testGen "chunksOf 8 \"\"        == []" $ chunksOf 8 ""        == []
     testGen "chunksOf 0 \"test\"    == undefined" $ erroneous $ chunksOf 0 "test"
+    testGen "nubOrd \"this is a test\" == \"this ae\"" $ nubOrd "this is a test" == "this ae"
+    testGen "nubOrd (take 4 (\"this\" ++ undefined)) == \"this\"" $ nubOrd (take 4 ("this" ++ undefined)) == "this"
+    testGen "\\xs -> nubOrd xs == nub xs" $ \xs -> nubOrd xs == nub xs
+    testGen "nubOrdOn length [\"a\",\"test\",\"of\",\"this\"] == [\"a\",\"test\",\"of\"]" $ nubOrdOn length ["a","test","of","this"] == ["a","test","of"]
+    testGen "nubOrdBy (compare `on` length) [\"a\",\"test\",\"of\",\"this\"] == [\"a\",\"test\",\"of\"]" $ nubOrdBy (compare `on` length) ["a","test","of","this"] == ["a","test","of"]
     testGen "first succ (1,\"test\") == (2,\"test\")" $ first succ (1,"test") == (2,"test")
     testGen "second reverse (1,\"test\") == (1,\"tset\")" $ second reverse (1,"test") == (1,"tset")
     testGen "(succ *** reverse) (1,\"test\") == (2,\"tset\")" $ (succ *** reverse) (1,"test") == (2,"tset")
