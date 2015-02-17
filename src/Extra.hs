@@ -20,7 +20,7 @@ module Extra(
     modifyIORef', writeIORef', atomicModifyIORef', atomicWriteIORef, atomicWriteIORef',
     -- * Data.List.Extra
     -- | Extra functions available in @"Data.List.Extra"@.
-    lower, upper, trim, trimStart, trimEnd, word1, dropEnd, takeEnd, breakEnd, spanEnd, dropWhileEnd, dropWhileEnd', takeWhileEnd, stripSuffix, wordsBy, linesBy, breakOn, breakOnEnd, splitOn, split, chunksOf, list, uncons, unsnoc, cons, snoc, drop1, groupSort, nubOn, groupOn, sortOn, disjoint, allSame, anySame, repeatedly, for, firstJust, concatUnzip, concatUnzip3, replace, merge, mergeBy,
+    lower, upper, trim, trimStart, trimEnd, word1, dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd, dropWhileEnd, dropWhileEnd', takeWhileEnd, stripSuffix, wordsBy, linesBy, breakOn, breakOnEnd, splitOn, split, chunksOf, list, uncons, unsnoc, cons, snoc, drop1, groupSort, nubOn, groupOn, sortOn, disjoint, allSame, anySame, repeatedly, for, firstJust, concatUnzip, concatUnzip3, replace, merge, mergeBy,
     -- * Data.Tuple.Extra
     -- | Extra functions available in @"Data.Tuple.Extra"@.
     first, second, (***), (&&&), dupe, both, fst3, snd3, thd3,

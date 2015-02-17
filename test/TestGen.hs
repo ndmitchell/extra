@@ -84,6 +84,10 @@ tests = do
     testGen "\\i xs -> dropEnd i xs `isPrefixOf` xs" $ \i xs -> dropEnd i xs `isPrefixOf` xs
     testGen "\\i xs -> length (dropEnd i xs) == max 0 (length xs - max 0 i)" $ \i xs -> length (dropEnd i xs) == max 0 (length xs - max 0 i)
     testGen "\\i -> take 3 (dropEnd 5 [i..]) == take 3 [i..]" $ \i -> take 3 (dropEnd 5 [i..]) == take 3 [i..]
+    testGen "splitAtEnd 3 \"hello\" == (\"he\",\"llo\")" $ splitAtEnd 3 "hello" == ("he","llo")
+    testGen "splitAtEnd 3 \"he\"    == (\"\", \"he\")" $ splitAtEnd 3 "he"    == ("", "he")
+    testGen "\\i xs -> uncurry (++) (splitAt i xs) == xs" $ \i xs -> uncurry (++) (splitAt i xs) == xs
+    testGen "\\i xs -> splitAtEnd i xs == (dropEnd i xs, takeEnd i xs)" $ \i xs -> splitAtEnd i xs == (dropEnd i xs, takeEnd i xs)
     testGen "concatUnzip [(\"a\",\"AB\"),(\"bc\",\"C\")] == (\"abc\",\"ABC\")" $ concatUnzip [("a","AB"),("bc","C")] == ("abc","ABC")
     testGen "concatUnzip3 [(\"a\",\"AB\",\"\"),(\"bc\",\"C\",\"123\")] == (\"abc\",\"ABC\",\"123\")" $ concatUnzip3 [("a","AB",""),("bc","C","123")] == ("abc","ABC","123")
     testGen "takeWhileEnd even [2,3,4,6] == [4,6]" $ takeWhileEnd even [2,3,4,6] == [4,6]

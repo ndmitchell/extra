@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #5, add splitAtEnd
 1.0.1
     Make listFilesAvoid drop trailing path separators before testing
     #3, add a constraint base >= 4.4

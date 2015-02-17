@@ -10,7 +10,7 @@ module Data.List.Extra(
     -- * String operations
     lower, upper, trim, trimStart, trimEnd, word1,
     -- * Splitting    
-    dropEnd, takeEnd, breakEnd, spanEnd,
+    dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd,
     dropWhileEnd, dropWhileEnd', takeWhileEnd, stripSuffix,
     wordsBy, linesBy,
     breakOn, breakOnEnd, splitOn, split, chunksOf,
@@ -151,6 +151,19 @@ dropEnd :: Int -> [a] -> [a]
 dropEnd i xs = f xs (drop i xs)
     where f (x:xs) (y:ys) = x : f xs ys
           f _ _ = []
+
+
+-- | @'splitAtEnd' n xs@ returns a split where the second element tries to
+--   contain @n@ elements.
+--
+-- > splitAtEnd 3 "hello" == ("he","llo")
+-- > splitAtEnd 3 "he"    == ("", "he")
+-- > \i xs -> uncurry (++) (splitAt i xs) == xs
+-- > \i xs -> splitAtEnd i xs == (dropEnd i xs, takeEnd i xs)
+splitAtEnd :: Int -> [a] -> ([a], [a])
+splitAtEnd i xs = f xs (drop i xs)
+    where f (x:xs) (y:ys) = first (x:) $ f xs ys
+          f xs _ = ([], xs)
 
 
 -- | A merging of 'unzip' and 'concat'.
