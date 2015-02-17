@@ -32,7 +32,7 @@ whenJust :: Applicative m => Maybe a -> (a -> m ()) -> m ()
 whenJust mg f = maybe (pure ()) f mg
 
 -- | The identity function which requires the inner argument to be @()@. Useful for functions
---   with overloaded return times.
+--   with overloaded return types.
 --
 -- > \(x :: Maybe ()) -> unit x == x
 unit :: m () -> m ()
