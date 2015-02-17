@@ -15,6 +15,7 @@ import Text.Show.Functions()
 import Extra as X
 import Control.Applicative as X
 import Control.Monad as X
+import Data.Function as X
 import Data.List as X
 import Data.Char as X
 import Data.Tuple as X

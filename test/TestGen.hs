@@ -108,6 +108,8 @@ tests = do
     testGen "groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,\"t\"),(2,\"es\"),(3,\"t\")]" $ groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,"t"),(2,"es"),(3,"t")]
     testGen "\\xs -> map fst (groupSort xs) == sort (nub (map fst xs))" $ \xs -> map fst (groupSort xs) == sort (nub (map fst xs))
     testGen "\\xs -> concatMap snd (groupSort xs) == map snd (sortOn fst xs)" $ \xs -> concatMap snd (groupSort xs) == map snd (sortOn fst xs)
+    testGen "groupSortOn length [\"test\",\"of\",\"sized\",\"item\"] == [[\"of\"],[\"test\",\"item\"],[\"sized\"]]" $ groupSortOn length ["test","of","sized","item"] == [["of"],["test","item"],["sized"]]
+    testGen "groupSortBy (compare `on` length) [\"test\",\"of\",\"sized\",\"item\"] == [[\"of\"],[\"test\",\"item\"],[\"sized\"]]" $ groupSortBy (compare `on` length) ["test","of","sized","item"] == [["of"],["test","item"],["sized"]]
     testGen "merge \"ace\" \"bd\" == \"abcde\"" $ merge "ace" "bd" == "abcde"
     testGen "\\xs ys -> merge (sort xs) (sort ys) == sort (xs ++ ys)" $ \xs ys -> merge (sort xs) (sort ys) == sort (xs ++ ys)
     testGen "replace \"el\" \"_\" \"Hello Bella\" == \"H_lo B_la\"" $ replace "el" "_" "Hello Bella" == "H_lo B_la"

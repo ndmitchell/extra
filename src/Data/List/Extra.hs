@@ -17,7 +17,8 @@ module Data.List.Extra(
     -- * Basics
     list, uncons, unsnoc, cons, snoc, drop1,
     -- * List operations
-    groupSort, nubOn, groupOn, sortOn,
+    groupSort, groupSortOn, groupSortBy,
+    nubOn, groupOn, sortOn,
     disjoint, allSame, anySame,
     repeatedly, for, firstJust,
     concatUnzip, concatUnzip3,
@@ -264,6 +265,18 @@ nubOn f = map snd . nubBy ((==) `on` fst) . map (\x -> let y = f x in y `seq` (y
 -- > \xs -> concatMap snd (groupSort xs) == map snd (sortOn fst xs)
 groupSort :: Ord k => [(k, v)] -> [(k, [v])]
 groupSort = map (\x -> (fst $ head x, map snd x)) . groupOn fst . sortOn fst
+
+-- | A combination of 'group' and 'sort', using a part of the value to compare on.
+--
+-- > groupSortOn length ["test","of","sized","item"] == [["of"],["test","item"],["sized"]]
+groupSortOn :: Ord b => (a -> b) -> [a] -> [[a]]
+groupSortOn f = map (map snd) . groupBy ((==) `on` fst) . sortBy (compare `on` fst) . map (f &&& id)
+
+-- | A combination of 'group' and 'sort', using a predicate to compare on.
+--
+-- > groupSortBy (compare `on` length) ["test","of","sized","item"] == [["of"],["test","item"],["sized"]]
+groupSortBy :: (a -> a -> Ordering) -> [a] -> [[a]]
+groupSortBy f = groupBy (\a b -> f a b == EQ) . sortBy f
 
 
 -- | Merge two lists which are assumed to be ordered.
