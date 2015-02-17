@@ -1,5 +1,6 @@
 Changelog for Extra
 
+1.1
     #7, add nubOrd, nubOrdOn, nubOrdBy
     #6, add groupSortOn and groupSortBy
     #5, add splitAtEnd
