@@ -120,6 +120,7 @@ captureOutput act = withTempFile $ \file -> do
             hDuplicateTo h out
             act `finally` do
                 hDuplicateTo out2 out
+                hClose out2
                 hSetBuffering out buf
 
 
