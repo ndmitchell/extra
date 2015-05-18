@@ -15,7 +15,7 @@
 module Control.Concurrent.Extra(
     module Control.Concurrent,
     getNumCapabilities, setNumCapabilities, withNumCapabilities,
-    forkFinally, once,
+    forkFinally, once, onceFork,
     -- * Lock
     Lock, newLock, withLock, withLockTry,
     -- * Var
@@ -92,6 +92,13 @@ once act = do
 
 data Once a = OncePending | OnceRunning (Barrier a) | OnceDone a
 
+
+-- | Like 'once', but immediately starts running the computation on a background thread.
+onceFork :: IO a -> IO (IO a)
+onceFork act = do
+    bar <- newBarrier
+    forkFinally act $ signalBarrier bar
+    return $ either throwIO return =<< waitBarrier bar
 
 
 ---------------------------------------------------------------------
