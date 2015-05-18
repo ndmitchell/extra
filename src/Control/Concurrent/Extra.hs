@@ -86,6 +86,7 @@ once act = do
             b <- newBarrier
             return $ (OnceRunning b,) $ do
                 res <- try_ act
+                signalBarrier b res
                 modifyVar_ var $ \_ -> return $ OnceDone res
                 run res
 
