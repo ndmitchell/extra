@@ -81,7 +81,7 @@ data Once a = OncePending | OnceRunning (Barrier a) | OnceDone a
 once :: IO a -> IO (IO a)
 once act = do
     var <- newVar OncePending
-    let run = either throw return
+    let run = either throwIO return
     return $ join $ modifyVar var $ \v -> case v of
         OnceDone x -> return (v, run x)
         OnceRunning x -> return (v, run =<< waitBarrier x)
