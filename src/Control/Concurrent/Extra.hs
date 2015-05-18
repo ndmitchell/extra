@@ -73,9 +73,6 @@ forkFinally action and_then =
 #endif
 
 
-data Once a = OncePending | OnceRunning (Barrier a) | OnceDone a
-
-
 -- | Given an action, produce a wrapped action that runs at most once.
 --   If the function raises an exception, the same exception will be reraised each time.
 once :: IO a -> IO (IO a)
@@ -91,6 +88,9 @@ once act = do
                 res <- try_ act
                 modifyVar_ var $ \_ -> return $ OnceDone res
                 run res
+
+data Once a = OncePending | OnceRunning (Barrier a) | OnceDone a
+
 
 
 ---------------------------------------------------------------------
