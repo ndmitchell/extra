@@ -9,6 +9,7 @@ import System.FilePath
 import System.Directory
 import Data.Char
 import Data.Maybe
+import Prelude
 
 
 main :: IO ()
