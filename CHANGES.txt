@@ -1,5 +1,6 @@
 Changelog for Extra
 
+1.2
     Add onceFork
     Make once async exception safe
     Fix a deadlock in once when two people request in parallel
