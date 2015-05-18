@@ -79,13 +79,13 @@ once :: IO a -> IO (IO a)
 once act = do
     var <- newVar OncePending
     let run = either throwIO return
-    return $ join $ modifyVar var $ \v -> case v of
-        OnceDone x -> return (v, run x)
-        OnceRunning x -> return (v, run =<< waitBarrier x)
+    return $ mask $ \unmask -> join $ modifyVar var $ \v -> case v of
+        OnceDone x -> return (v, unmask $ run x)
+        OnceRunning x -> return (v, unmask $ run =<< waitBarrier x)
         OncePending -> do
             b <- newBarrier
             return $ (OnceRunning b,) $ do
-                res <- try_ act
+                res <- try_ $ unmask act
                 signalBarrier b res
                 modifyVar_ var $ \_ -> return $ OnceDone res
                 run res

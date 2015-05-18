@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Make once async exception safe
     Fix a deadlock in once when two people request in parallel
     Fix a missing hClose in captureOutput
 1.1
