@@ -1,3 +1,4 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module TestUtil(runTests, testGen, erroneous, (====), module X) where
 
@@ -59,6 +60,17 @@ instance Eq a => Eq (IO a) where
         a <- try_ $ captureOutput a
         b <- try_ $ captureOutput b
         return $ a == b
+
+instance Show (IO a) where
+    show _ = "<<IO>>"
+
+instance Arbitrary a => Arbitrary (IO a) where
+    arbitrary = do
+        (prnt :: Maybe Int, thrw :: Maybe Int, res) <- arbitrary
+        return $ do
+            whenJust prnt print
+            whenJust thrw (fail . show)
+            return res
 
 instance Eq SomeException where
     a == b = show a == show b
