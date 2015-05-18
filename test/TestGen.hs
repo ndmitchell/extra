@@ -4,6 +4,13 @@ import TestUtil
 default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))
 tests :: IO ()
 tests = do
+    let x ||| y = do t1 <- onceFork x; t2 <- onceFork y; t1; t2
+    testGen "\\(x :: IO Int) -> void (once x) == return ()" $ \(x :: IO Int) -> void (once x) == return ()
+    testGen "\\(x :: IO Int) -> join (once x) == x" $ \(x :: IO Int) -> join (once x) == x
+    testGen "\\(x :: IO Int) -> (do y <- once x; y; y) == x" $ \(x :: IO Int) -> (do y <- once x; y; y) == x
+    testGen "\\(x :: IO Int) -> (do y <- once x; y ||| y) == x" $ \(x :: IO Int) -> (do y <- once x; y ||| y) == x
+    testGen "\\(x :: IO Int) -> join (onceFork x) == x" $ \(x :: IO Int) -> join (onceFork x) == x
+    testGen "\\(x :: IO Int) -> (do a <- onceFork x; a; a) == x" $ \(x :: IO Int) -> (do a <- onceFork x; a; a) == x
     testGen "stringException \"test\"                           == return \"test\"" $ stringException "test"                           == return "test"
     testGen "stringException (\"test\" ++ undefined)            == return \"test<Exception>\"" $ stringException ("test" ++ undefined)            == return "test<Exception>"
     testGen "stringException (\"test\" ++ undefined ++ \"hello\") == return \"test<Exception>\"" $ stringException ("test" ++ undefined ++ "hello") == return "test<Exception>"

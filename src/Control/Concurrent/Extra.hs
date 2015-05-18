@@ -75,6 +75,12 @@ forkFinally action and_then =
 
 -- | Given an action, produce a wrapped action that runs at most once.
 --   If the function raises an exception, the same exception will be reraised each time.
+--
+-- > let x ||| y = do t1 <- onceFork x; t2 <- onceFork y; t1; t2
+-- > \(x :: IO Int) -> void (once x) == return ()
+-- > \(x :: IO Int) -> join (once x) == x
+-- > \(x :: IO Int) -> (do y <- once x; y; y) == x
+-- > \(x :: IO Int) -> (do y <- once x; y ||| y) == x
 once :: IO a -> IO (IO a)
 once act = do
     var <- newVar OncePending
@@ -94,6 +100,9 @@ data Once a = OncePending | OnceRunning (Barrier a) | OnceDone a
 
 
 -- | Like 'once', but immediately starts running the computation on a background thread.
+--
+-- > \(x :: IO Int) -> join (onceFork x) == x
+-- > \(x :: IO Int) -> (do a <- onceFork x; a; a) == x
 onceFork :: IO a -> IO (IO a)
 onceFork act = do
     bar <- newBarrier
