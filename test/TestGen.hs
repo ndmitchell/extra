@@ -126,9 +126,11 @@ tests = do
     testGen "breakEnd isLower \"youRE\" == (\"you\",\"RE\")" $ breakEnd isLower "youRE" == ("you","RE")
     testGen "breakEnd isLower \"youre\" == (\"youre\",\"\")" $ breakEnd isLower "youre" == ("youre","")
     testGen "breakEnd isLower \"YOURE\" == (\"\",\"YOURE\")" $ breakEnd isLower "YOURE" == ("","YOURE")
+    testGen "\\f xs -> breakEnd (not . f) xs == spanEnd f  xs" $ \f xs -> breakEnd (not . f) xs == spanEnd f  xs
     testGen "spanEnd isUpper \"youRE\" == (\"you\",\"RE\")" $ spanEnd isUpper "youRE" == ("you","RE")
     testGen "spanEnd (not . isSpace) \"x y z\" == (\"x y \",\"z\")" $ spanEnd (not . isSpace) "x y z" == ("x y ","z")
-    testGen "\\f xs-> spanEnd f xs == swap (both reverse (span f (reverse xs)))" $ \f xs-> spanEnd f xs == swap (both reverse (span f (reverse xs)))
+    testGen "\\f xs -> uncurry (++) (spanEnd f xs) == xs" $ \f xs -> uncurry (++) (spanEnd f xs) == xs
+    testGen "\\f xs -> spanEnd f xs == swap (both reverse (span f (reverse xs)))" $ \f xs -> spanEnd f xs == swap (both reverse (span f (reverse xs)))
     testGen "wordsBy (== ':') \"::xyz:abc::123::\" == [\"xyz\",\"abc\",\"123\"]" $ wordsBy (== ':') "::xyz:abc::123::" == ["xyz","abc","123"]
     testGen "\\s -> wordsBy isSpace s == words s" $ \s -> wordsBy isSpace s == words s
     testGen "linesBy (== ':') \"::xyz:abc::123::\" == [\"\",\"\",\"xyz\",\"abc\",\"\",\"123\",\"\"]" $ linesBy (== ':') "::xyz:abc::123::" == ["","","xyz","abc","","123",""]

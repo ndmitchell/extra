@@ -317,6 +317,7 @@ replace from to [] = []
 -- > breakEnd isLower "youRE" == ("you","RE")
 -- > breakEnd isLower "youre" == ("youre","")
 -- > breakEnd isLower "YOURE" == ("","YOURE")
+-- > \f xs -> breakEnd (not . f) xs == spanEnd f  xs
 breakEnd :: (a -> Bool) -> [a] -> ([a], [a])
 breakEnd f = swap . both reverse . break f . reverse
 
@@ -324,7 +325,8 @@ breakEnd f = swap . both reverse . break f . reverse
 --
 -- > spanEnd isUpper "youRE" == ("you","RE")
 -- > spanEnd (not . isSpace) "x y z" == ("x y ","z")
--- > \f xs-> spanEnd f xs == swap (both reverse (span f (reverse xs)))
+-- > \f xs -> uncurry (++) (spanEnd f xs) == xs
+-- > \f xs -> spanEnd f xs == swap (both reverse (span f (reverse xs)))
 spanEnd :: (a -> Bool) -> [a] -> ([a], [a])
 spanEnd f = breakEnd (not . f)
 
