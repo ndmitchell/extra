@@ -211,6 +211,7 @@ withVar (Var x) f = withMVar x f
 --   and in some ways is like a manually managed thunk.
 newtype Barrier a = Barrier (Var (Either (MVar ()) a))
     -- Either a Left empty MVar you should wait or a Right result
+    -- With base 4.7 and above readMVar is atomic so you probably can implement Barrier directly on MVar a
 
 -- | Create a new 'Barrier'.
 newBarrier :: IO (Barrier a)
