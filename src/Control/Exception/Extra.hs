@@ -6,6 +6,7 @@ module Control.Exception.Extra(
     module Control.Exception,
     retry,
     showException, stringException,
+    errorIO,
     -- * Exception catching/ignoring
     ignore,
     catch_, handle_, try_,
@@ -47,6 +48,14 @@ showException = stringException . show
 -- > ignore (fail "die") == return ()
 ignore :: IO () -> IO ()
 ignore = void . try_
+
+
+-- | Like error, but in the 'IO' monad.
+--   Note that while 'fail' in 'IO' raises an 'IOException', this function raises an 'ErrorCall' exception.
+--
+-- > try (errorIO "Hello") == return (Left (ErrorCall "Hello"))
+errorIO :: String -> IO a
+errorIO = throwIO . ErrorCall
 
 
 -- | Retry an operation at most /n/ times (/n/ must be positive).

@@ -8,7 +8,7 @@ module Extra(
     getNumCapabilities, setNumCapabilities, withNumCapabilities, forkFinally, once, onceFork, Lock, newLock, withLock, withLockTry, Var, newVar, readVar, modifyVar, modifyVar_, withVar, Barrier, newBarrier, signalBarrier, waitBarrier, waitBarrierMaybe,
     -- * Control.Exception.Extra
     -- | Extra functions available in @"Control.Exception.Extra"@.
-    retry, showException, stringException, ignore, catch_, handle_, try_, catchJust_, handleJust_, tryJust_, catchBool, handleBool, tryBool,
+    retry, showException, stringException, errorIO, ignore, catch_, handle_, try_, catchJust_, handleJust_, tryJust_, catchBool, handleBool, tryBool,
     -- * Control.Monad.Extra
     -- | Extra functions available in @"Control.Monad.Extra"@.
     whenJust, unit, loopM, whileM, partitionM, concatMapM, mapMaybeM, findM, firstJustM, whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM,

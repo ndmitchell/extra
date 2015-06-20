@@ -17,6 +17,7 @@ tests = do
     testGen "stringException ['t','e','s','t',undefined]      == return \"test<Exception>\"" $ stringException ['t','e','s','t',undefined]      == return "test<Exception>"
     testGen "ignore (print 1)    == print 1" $ ignore (print 1)    == print 1
     testGen "ignore (fail \"die\") == return ()" $ ignore (fail "die") == return ()
+    testGen "try (errorIO \"Hello\") == return (Left (ErrorCall \"Hello\"))" $ try (errorIO "Hello") == return (Left (ErrorCall "Hello"))
     testGen "retry 1 (print \"x\")  == print \"x\"" $ retry 1 (print "x")  == print "x"
     testGen "retry 3 (fail \"die\") == fail \"die\"" $ retry 3 (fail "die") == fail "die"
     testGen "whenJust Nothing  print == return ()" $ whenJust Nothing  print == return ()

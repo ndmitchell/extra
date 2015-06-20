@@ -23,6 +23,7 @@ import Data.Tuple as X
 import System.Directory as X
 import System.FilePath as X
 import System.Info as X
+import Control.Exception as X
 import Test.QuickCheck as X((==>))
 
 
