@@ -1,4 +1,4 @@
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE ScopedTypeVariables, CPP #-}
 
 module TestUtil(runTests, testGen, erroneous, (====), module X) where
 
@@ -44,6 +44,11 @@ erroneous x = unsafePerformIO $ fmap isLeft $ try_ $ evaluate x
 
 (====) :: (Show a, Eq a) => a -> a -> Bool
 a ==== b = if a == b then True else error $ "Not equal!\n" ++ show a ++ "\n" ++ show b
+
+#if __GLASGOW_HASKELL__ < 707
+instance Eq ErrorCall where
+    ErrorCall x == ErrorCall y = x == y
+#endif
 
 runTests :: IO () -> IO ()
 runTests t = do
