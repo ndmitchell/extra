@@ -126,7 +126,7 @@ notM = fmap not
 (&&^) :: Monad m => m Bool -> m Bool -> m Bool
 (&&^) a b = ifM a b (return False)
 
--- | A version of 'any' lifted to a moand. Retains the short-circuiting behaviour.
+-- | A version of 'any' lifted to a monad. Retains the short-circuiting behaviour.
 --
 -- > anyM Just [False,True ,undefined] == Just True
 -- > anyM Just [False,False,undefined] == undefined
@@ -135,7 +135,7 @@ anyM :: Monad m => (a -> m Bool) -> [a] -> m Bool
 anyM p [] = return False
 anyM p (x:xs) = ifM (p x) (return True) (anyM p xs)
 
--- | A version of 'all' lifted to a moand. Retains the short-circuiting behaviour.
+-- | A version of 'all' lifted to a monad. Retains the short-circuiting behaviour.
 --
 -- > allM Just [True,False,undefined] == Just False
 -- > allM Just [True,True ,undefined] == undefined
@@ -144,7 +144,7 @@ allM :: Monad m => (a -> m Bool) -> [a] -> m Bool
 allM p [] = return True
 allM p (x:xs) = ifM (p x) (allM p xs) (return False)
 
--- | A version of 'or' lifted to a moand. Retains the short-circuiting behaviour.
+-- | A version of 'or' lifted to a monad. Retains the short-circuiting behaviour.
 --
 -- > orM [Just False,Just True ,undefined] == Just True
 -- > orM [Just False,Just False,undefined] == undefined
@@ -152,7 +152,7 @@ allM p (x:xs) = ifM (p x) (allM p xs) (return False)
 orM :: Monad m => [m Bool] -> m Bool
 orM = anyM id
 
--- | A version of 'and' lifted to a moand. Retains the short-circuiting behaviour.
+-- | A version of 'and' lifted to a monad. Retains the short-circuiting behaviour.
 --
 -- > andM [Just True,Just False,undefined] == Just False
 -- > andM [Just True,Just True ,undefined] == undefined
