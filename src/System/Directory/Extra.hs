@@ -4,7 +4,8 @@
 --   of 'getDirectoryContents', see 'listContents' for the differences.
 module System.Directory.Extra(
     module System.Directory,
-    withCurrentDirectory, createDirectoryPrivate,
+    withCurrentDirectory,
+    createDirectoryPrivate,
     listContents, listFiles, listFilesInside, listFilesRecursive
     ) where
 
