@@ -1,10 +1,21 @@
 {-# LANGUAGE CPP #-}
 
+#ifndef MIN_VERSION_directory
+#if __GLASGOW_HASKELL__ >= 711
+#define MIN_VERSION_directory(a,b,c) 1
+#else
+#define MIN_VERSION_directory(a,b,c) 0
+#endif
+#endif
+
+
 -- | Extra directory functions. Most of these functions provide cleaned up and generalised versions
 --   of 'getDirectoryContents', see 'listContents' for the differences.
 module System.Directory.Extra(
     module System.Directory,
+#if !MIN_VERSION_directory(1,2,3)
     withCurrentDirectory,
+#endif
     createDirectoryPrivate,
     listContents, listFiles, listFilesInside, listFilesRecursive
     ) where
@@ -20,6 +31,7 @@ import qualified System.Posix
 #endif
 
 
+#if !MIN_VERSION_directory(1,2,3)
 -- | Set the current directory, perform an operation, then change back.
 --   Remember that the current directory is a global variable, so calling this function
 --   multithreaded is almost certain to go wrong. Avoid changing the current directory if you can.
@@ -29,6 +41,7 @@ withCurrentDirectory :: FilePath -> IO a -> IO a
 withCurrentDirectory dir act =
     bracket getCurrentDirectory setCurrentDirectory $ const $ do
         setCurrentDirectory dir; act
+#endif
 
 
 -- | List the files and directories directly within a directory.
