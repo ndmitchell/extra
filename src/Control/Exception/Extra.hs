@@ -115,5 +115,5 @@ handleBool f a b = handleJust (bool f) a b
 tryBool :: Exception e => (e -> Bool) -> IO a -> IO (Either e a)
 tryBool f a = tryJust (bool f) a
 
-bool :: Exception e => (e -> Bool) -> (e -> Maybe e)
+bool :: (e -> Bool) -> (e -> Maybe e)
 bool f x = if f x then Just x else Nothing
