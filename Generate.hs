@@ -20,7 +20,7 @@ main = do
         src <- readFile $ joinPath ("src" : split (== '.') mod) <.> "hs"
         let funcs = filter validIdentifier $ takeWhile (/= "where") $
                     words $ replace "," " " $ drop1 $ dropWhile (/= '(') $
-                    unlines $ filter (not . isPrefixOf "--" . trim) $ lines src
+                    unlines $ filter (\x -> not $ any (`isPrefixOf` trim x) ["--","#"]) $ lines src
         let tests = mapMaybe (stripPrefix "-- > ") $ lines src
         return (mod, funcs, tests)
     writeFileBinaryChanged "src/Extra.hs" $ unlines $
