@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #9, support directory-1.2.3
 1.3
     Add whenJustM
     Add errorIO
