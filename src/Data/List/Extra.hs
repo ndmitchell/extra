@@ -11,7 +11,8 @@ module Data.List.Extra(
     lower, upper, trim, trimStart, trimEnd, word1,
     -- * Splitting    
     dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd,
-    dropWhileEnd, dropWhileEnd', takeWhileEnd, stripSuffix,
+    dropWhileEnd, dropWhileEnd', takeWhileEnd,
+    stripSuffix, stripInfix,
     wordsBy, linesBy,
     breakOn, breakOnEnd, splitOn, split, chunksOf,
     -- * Basics
@@ -26,11 +27,13 @@ module Data.List.Extra(
     replace, merge, mergeBy,
     ) where
 
+import Control.Applicative
 import Data.List
 import Data.Maybe
 import Data.Function
 import Data.Char
 import Data.Tuple.Extra
+import Prelude
 
 
 -- | Apply some operation repeatedly, producing an element of output
@@ -382,6 +385,7 @@ drop1 (x:xs) = xs
 -- The first element of the returned tuple
 -- is the prefix of @haystack@ before @needle@ is matched.  The second
 -- is the remainder of @haystack@, starting with the match.
+-- If you want the remainder /without/ the patch, use 'stripInfix'.
 --
 -- > breakOn "::" "a::b::c" == ("a", "::b::c")
 -- > breakOn "/" "foobar"   == ("foobar", "")
@@ -467,6 +471,19 @@ dropWhileEnd' p = foldr (\x xs -> if null xs && p x then [] else x : xs) []
 -- > stripSuffix "foo" "quux"   == Nothing
 stripSuffix :: Eq a => [a] -> [a] -> Maybe [a]
 stripSuffix a b = fmap reverse $ stripPrefix (reverse a) (reverse b)
+
+
+-- | Return the prefix of the second string if its suffix
+-- matches the entire first string.
+--
+-- Examples:
+--
+-- > stripInfix "::" "a::b::c" == Just ("a", "b::c")
+-- > stripInfix "/" "foobar"   == Nothing
+stripInfix :: Eq a => [a] -> [a] -> Maybe ([a], [a])
+stripInfix needle haystack | Just rest <- stripPrefix needle haystack = Just ([], rest)
+stripInfix needle [] = Nothing
+stripInfix needle (x:xs) = first (x:) <$> stripInfix needle xs
 
 
 -- | Split a list into chunks of a given size. The last chunk may contain
