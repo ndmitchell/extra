@@ -473,8 +473,8 @@ stripSuffix :: Eq a => [a] -> [a] -> Maybe [a]
 stripSuffix a b = fmap reverse $ stripPrefix (reverse a) (reverse b)
 
 
--- | Return the prefix of the second string if its suffix
--- matches the entire first string.
+-- | Return the the string before and after the search string,
+--   or 'Nothing' if the search string is not present.
 --
 -- Examples:
 --
