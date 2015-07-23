@@ -167,6 +167,7 @@ tests = do
     testGen "stripSuffix \"foo\" \"quux\"   == Nothing" $ stripSuffix "foo" "quux"   == Nothing
     testGen "stripInfix \"::\" \"a::b::c\" == Just (\"a\", \"b::c\")" $ stripInfix "::" "a::b::c" == Just ("a", "b::c")
     testGen "stripInfix \"/\" \"foobar\"   == Nothing" $ stripInfix "/" "foobar"   == Nothing
+    testGen "stripInfixEnd \"::\" \"a::b::c\" == Just (\"a::b\", \"c\")" $ stripInfixEnd "::" "a::b::c" == Just ("a::b", "c")
     testGen "chunksOf 3 \"my test\" == [\"my \",\"tes\",\"t\"]" $ chunksOf 3 "my test" == ["my ","tes","t"]
     testGen "chunksOf 3 \"mytest\"  == [\"myt\",\"est\"]" $ chunksOf 3 "mytest"  == ["myt","est"]
     testGen "chunksOf 8 \"\"        == []" $ chunksOf 8 ""        == []

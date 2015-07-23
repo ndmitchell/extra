@@ -12,7 +12,7 @@ module Data.List.Extra(
     -- * Splitting    
     dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd,
     dropWhileEnd, dropWhileEnd', takeWhileEnd,
-    stripSuffix, stripInfix,
+    stripSuffix, stripInfix, stripInfixEnd,
     wordsBy, linesBy,
     breakOn, breakOnEnd, splitOn, split, chunksOf,
     -- * Basics
@@ -484,6 +484,14 @@ stripInfix :: Eq a => [a] -> [a] -> Maybe ([a], [a])
 stripInfix needle haystack | Just rest <- stripPrefix needle haystack = Just ([], rest)
 stripInfix needle [] = Nothing
 stripInfix needle (x:xs) = first (x:) <$> stripInfix needle xs
+
+
+-- | Similar to 'stripInfix', but searches from the end of the
+-- string.
+--
+-- > stripInfixEnd "::" "a::b::c" == Just ("a::b", "c")
+stripInfixEnd :: Eq a => [a] -> [a] -> Maybe ([a], [a])
+stripInfixEnd needle haystack = both reverse . swap <$> stripInfix (reverse needle) (reverse haystack)
 
 
 -- | Split a list into chunks of a given size. The last chunk may contain
