@@ -404,7 +404,7 @@ breakOn needle (x:xs) = first (x:) $ breakOn needle xs
 --
 -- > breakOnEnd "::" "a::b::c" == ("a::b::", "c")
 breakOnEnd :: Eq a => [a] -> [a] -> ([a], [a])
-breakOnEnd needle haystack = (reverse *** reverse) $ swap $ breakOn (reverse needle) (reverse haystack)
+breakOnEnd needle haystack = both reverse $ swap $ breakOn (reverse needle) (reverse haystack)
 
 
 -- | Break a list into pieces separated by the first
