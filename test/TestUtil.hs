@@ -1,6 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables, CPP #-}
 
-module TestUtil(runTests, testGen, erroneous, (====), module X) where
+module TestUtil(runTests, testGen, testOnce, erroneous, (====), module X) where
 
 import Test.QuickCheck
 import Test.QuickCheck.Test
@@ -32,10 +32,14 @@ testCount :: IORef Int
 testCount = unsafePerformIO $ newIORef 0
 
 testGen :: Testable prop => String -> prop -> IO ()
-testGen msg prop = do
-    putStrLn msg
+testGen msg prop = testOnce msg $ do
     r <- quickCheckResult prop
     unless (isSuccess r) $ error "Test failed"
+
+testOnce :: String -> IO () -> IO ()
+testOnce msg test = do
+    putStrLn msg
+    test
     modifyIORef testCount (+1)
 
 
