@@ -160,7 +160,7 @@ newTempFile = do
         create = do
             tmpdir <- getTemporaryDirectory
             val <- tempUnique
-            (file, h) <- openTempFile tmpdir $ "extra-file-" ++ show val ++ "-"
+            (file, h) <- retryBool (\(_ :: IOError) -> True) 5 $ openTempFile tmpdir $ "extra-file-" ++ show val ++ "-"
             hClose h
             return file
 
@@ -185,7 +185,7 @@ withTempFile act = do
 newTempDir :: IO (FilePath, IO ())
 newTempDir = do
         tmpdir <- getTemporaryDirectory
-        dir <- create tmpdir
+        dir <- retryBool (\(_ :: IOError) -> True) 5 $ create tmpdir
         del <- once $ ignore $ removeDirectoryRecursive dir
         return (dir, del)
     where
