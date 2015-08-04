@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Add retryBool
 1.4
     Add stripInfix and stripInfixEnd
 1.3.1
