@@ -57,6 +57,10 @@ runTests t = do
     n <- readIORef testCount
     putStrLn $ "Success (" ++ show n ++ " tests)"
 
+instance Testable () where
+    property = property . (`seq` True)
+    exhaustive _ = True
+
 instance Testable a => Testable (IO a) where
     property = property . unsafePerformIO
     exhaustive = exhaustive . unsafePerformIO
