@@ -72,5 +72,6 @@ test-suite extra-test
     ghc-options: -main-is Test -threaded -with-rtsopts=-N4
     main-is:        Test.hs
     other-modules:
+        TestCustom
         TestGen
         TestUtil

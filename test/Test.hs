@@ -3,6 +3,7 @@ module Test(main) where
 
 import TestGen
 import TestUtil
+import TestCustom
 
 -- Check that we managed to export everything
 _unused1 x = whenJust
@@ -14,4 +15,6 @@ _unused6 x = x :: Seconds
 
 
 main :: IO ()
-main = runTests $ tests
+main = runTests $ do
+    tests
+    testCustom
