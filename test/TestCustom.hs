@@ -9,12 +9,12 @@ import TestUtil
 
 testCustom :: IO ()
 testCustom = do
-    testGen "withTempFile" $ do
+    testRaw "withTempFile" $ do
         xs <- replicateM 4 $ onceFork $ do
             replicateM_ 100 $ withTempFile (const $ return ())
         sequence_ xs
 
-    testGen "withTempDir" $ do
+    testRaw "withTempDir" $ do
         xs <- replicateM 4 $ onceFork $ do
             replicateM_ 100 $ withTempDir (const $ return ())
         sequence_ xs
