@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Make temp file functions workaround GHC bug #10731
     Add retryBool
 1.4
     Add stripInfix and stripInfixEnd

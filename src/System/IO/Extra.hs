@@ -24,9 +24,12 @@ import Control.Exception.Extra as E
 import GHC.IO.Handle(hDuplicate,hDuplicateTo)
 import System.Directory.Extra
 import System.IO.Error
+import System.IO.Unsafe
 import System.FilePath
 import Data.Char
 import Data.Time.Clock
+import Data.Tuple.Extra
+import Data.IORef
 
 
 -- File reading
@@ -135,6 +138,15 @@ withBuffering h m act = bracket (hGetBuffering h) (hSetBuffering h) $ const $ do
 ---------------------------------------------------------------------
 -- TEMPORARY FILE
 
+{-# NOINLINE tempRef #-}
+tempRef :: IORef Int
+tempRef = unsafePerformIO $ do
+    rand :: Integer <- fmap (read . take 50 . filter isDigit . show . utctDayTime) getCurrentTime
+    newIORef $ fromIntegral rand
+
+tempUnique :: IO Int
+tempUnique = atomicModifyIORef tempRef $ succ &&& succ
+
 
 -- | Provide a function to create a temporary file, and a way to delete a
 --   temporary file. Most users should use 'withTempFile' which
@@ -147,7 +159,8 @@ newTempFile = do
     where
         create = do
             tmpdir <- getTemporaryDirectory
-            (file, h) <- openTempFile tmpdir "extra"
+            val <- tempUnique
+            (file, h) <- openTempFile tmpdir $ "extra-file-" ++ show val ++ "-"
             hClose h
             return file
 
@@ -171,21 +184,17 @@ withTempFile act = do
 --   combines these operations.
 newTempDir :: IO (FilePath, IO ())
 newTempDir = do
-        dir <- create
+        tmpdir <- getTemporaryDirectory
+        dir <- create tmpdir
         del <- once $ ignore $ removeDirectoryRecursive dir
         return (dir, del)
     where
-        create = do
-            tmpdir <- getTemporaryDirectory
-            -- get the number of seconds during today (including floating point), and grab some interesting digits
-            rand :: Integer <- fmap (read . take 20 . filter isDigit . show . utctDayTime) getCurrentTime
-            find tmpdir rand
-
-        find tmpdir x = do
-            let dir = tmpdir </> "extra" ++ show x
+        create tmpdir = do
+            v <- tempUnique
+            let dir = tmpdir </> "extra-dir-" ++ show v
             catchBool isAlreadyExistsError
                 (createDirectoryPrivate dir >> return dir) $
-                \e -> find tmpdir (x+1)
+                \e -> create tmpdir
 
 
 -- | Create a temporary directory inside the system temporary directory.
