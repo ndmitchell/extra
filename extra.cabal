@@ -69,7 +69,7 @@ test-suite extra-test
     if !os(windows)
         build-depends: unix
     hs-source-dirs: test
-    ghc-options: -main-is Test
+    ghc-options: -main-is Test -threaded -with-rtsopts=-N4
     main-is:        Test.hs
     other-modules:
         TestGen
