@@ -131,7 +131,10 @@ withBuffering h m act = bracket (hGetBuffering h) (hSetBuffering h) $ const $ do
     hSetBuffering h m
     act
 
--- Temporary file
+
+---------------------------------------------------------------------
+-- TEMPORARY FILE
+
 
 -- | Provide a function to create a temporary file, and a way to delete a
 --   temporary file. Most users should use 'withTempFile' which
