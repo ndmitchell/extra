@@ -141,7 +141,7 @@ withBuffering h m act = bracket (hGetBuffering h) (hSetBuffering h) $ const $ do
 {-# NOINLINE tempRef #-}
 tempRef :: IORef Int
 tempRef = unsafePerformIO $ do
-    rand :: Integer <- fmap (read . take 50 . reverse . filter isDigit . show . utctDayTime) getCurrentTime
+    rand :: Integer <- fmap (read . reverse . filter isDigit . show . utctDayTime) getCurrentTime
     newIORef $ fromIntegral rand
 
 tempUnique :: IO Int
