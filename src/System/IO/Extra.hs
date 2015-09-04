@@ -127,7 +127,7 @@ captureOutput act = withTempFile $ \file -> do
                 hSetBuffering out buf
 
 
--- | Execute an action with a custom 'BufferMode', a warpper around
+-- | Execute an action with a custom 'BufferMode', a wrapper around
 --   'hSetBuffering'.
 withBuffering :: Handle -> BufferMode -> IO a -> IO a
 withBuffering h m act = bracket (hGetBuffering h) (hSetBuffering h) $ const $ do
