@@ -1,4 +1,3 @@
-{-# LANGUAGE CPP #-}
 
 -- | Extra functions for "Control.Monad".
 --   These functions provide looping, list operations and booleans.
@@ -17,10 +16,9 @@ module Control.Monad.Extra(
     ) where
 
 import Control.Monad
-#if __GLASGOW_HASKELL__ < 709
 import Control.Applicative
-#endif
 import Data.Maybe
+import Prelude
 
 -- General utilities
 
