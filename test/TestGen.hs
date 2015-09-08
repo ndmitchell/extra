@@ -46,6 +46,8 @@ tests = do
     testGen "findM (Just . isUpper) \"teST\"             == Just (Just 'S')" $ findM (Just . isUpper) "teST"             == Just (Just 'S')
     testGen "findM (Just . isUpper) \"test\"             == Just Nothing" $ findM (Just . isUpper) "test"             == Just Nothing
     testGen "findM (Just . const True) [\"x\",undefined] == Just (Just \"x\")" $ findM (Just . const True) ["x",undefined] == Just (Just "x")
+    testGen "\\xs -> sequenceIO xs == sequence xs" $ \xs -> sequenceIO xs == sequence xs
+    testGen "(sequenceIO [putChar 'x', putChar 'y'] >> putChar 'z') == putStr \"xyz\"" $ (sequenceIO [putChar 'x', putChar 'y'] >> putChar 'z') == putStr "xyz"
     testGen "\\x -> fromLeft (Left  x) == x" $ \x -> fromLeft (Left  x) == x
     testGen "\\x -> fromLeft (Right x) == undefined" $ \x -> erroneous $  fromLeft (Right x)
     testGen "\\x -> fromRight (Right x) == x" $ \x -> fromRight (Right x) == x
