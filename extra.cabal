@@ -32,7 +32,6 @@ library
     hs-source-dirs: src
     build-depends:
         base >= 4.4 && < 5,
-        ghc-prim,
         directory,
         filepath,
         process,
@@ -62,7 +61,6 @@ test-suite extra-test
     default-language: Haskell2010
     build-depends:
         base == 4.*,
-        ghc-prim,
         directory,
         filepath,
         extra,

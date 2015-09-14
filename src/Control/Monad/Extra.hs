@@ -13,16 +13,12 @@ module Control.Monad.Extra(
     -- * Lists
     partitionM, concatMapM, mapMaybeM, findM, firstJustM,
     -- * Booleans
-    whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
-    -- * IO
-    sequenceIO, mapIO, forIO
+    whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM
     ) where
 
 import Control.Monad
 import Control.Applicative
-import Control.Exception
 import Data.Maybe
-import GHC.Types(IO(..))
 import Prelude
 
 -- General utilities
@@ -178,41 +174,3 @@ findM p (x:xs) = ifM (p x) (return $ Just x) (findM p xs)
 firstJustM :: Monad m => (a -> m (Maybe b)) -> [a] -> m (Maybe b)
 firstJustM p [] = return Nothing
 firstJustM p (x:xs) = maybe (firstJustM p xs) (return . Just) =<< p x
-
-
--- | A version of 'sequence' specialized to 'IO'.
---
--- > \xs -> sequenceIO xs == sequence xs
--- > (sequenceIO [putChar 'x', putChar 'y'] >> putChar 'z') == putStr "xyz"
-sequenceIO :: [IO a] -> IO [a]
-sequenceIO xs = do
-        ys <- IO $ \r -> (# r, apply r xs #)
-        evaluate $ demand ys
-        return ys
-    where
-        apply r [] = []
-        apply r (IO x:xs) = case x r of
-            (# r, y #) -> y : apply r xs
-
-        demand [] = ()
-        demand (x:xs) = demand xs
-
--- | A version of 'mapM' specialized to 'IO'.
-mapIO :: (a -> IO b) -> [a] -> IO [b]
--- Explicitly deforest the list from the sequenceIO/map implementation
-mapIO f xs = do
-        ys <- IO $ \r -> (# r, apply r xs #)
-        evaluate $ demand ys
-        return ys
-    where
-        unIO (IO x) = x
-        apply r [] = []
-        apply r (x:xs) = case unIO (f x) r of
-            (# r, y #) -> y : apply r xs
-
-        demand [] = ()
-        demand (x:xs) = demand xs
-
--- | A version of 'forM' specialised to 'IO'.
-forIO :: [a] -> (a -> IO b) -> IO [b]
-forIO = flip mapIO

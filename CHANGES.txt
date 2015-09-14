@@ -1,6 +1,5 @@
 Changelog for Extra
 
-    Add sequenceIO, mapIO, forIO
 1.4.1
     Make temp file functions workaround GHC bug #10731
     Add retryBool
