@@ -57,11 +57,15 @@ partitionM f (x:xs) = do
 
 -- | A version of 'concatMap' that works with a monadic predicate.
 concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
-concatMapM f = liftM concat . mapM f
+{-# INLINE concatMapM #-}
+concatMapM op = foldr f (return [])
+    where f x xs = do x <- op x; if null x then xs else do xs <- xs; return $ x++xs
 
 -- | A version of 'mapMaybe' that works with a monadic predicate.
 mapMaybeM :: Monad m => (a -> m (Maybe b)) -> [a] -> m [b]
-mapMaybeM f = liftM catMaybes . mapM f
+{-# INLINE mapMaybeM #-}
+mapMaybeM op = foldr f (return [])
+    where f x xs = do x <- op x; case x of Nothing -> xs; Just x -> do xs <- xs; return $ x:xs
 
 -- Looping
 
