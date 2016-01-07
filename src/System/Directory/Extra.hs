@@ -24,7 +24,9 @@ import System.Directory
 import Control.Monad.Extra
 import System.FilePath
 import Data.List
+#if !MIN_VERSION_directory(1,2,3)
 import Control.Exception
+#endif
 
 #ifndef mingw32_HOST_OS
 import qualified System.Posix
