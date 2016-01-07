@@ -13,7 +13,7 @@ import Data.List.Extra
 import Text.ParserCombinators.ReadP
 
 
-#if __GLASGOW_HASKELL__ < 708
+#if __GLASGOW_HASKELL__ < 710
 
 -- | Construct tag-less 'Version'
 --
