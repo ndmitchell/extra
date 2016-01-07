@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Add Data.Version.Extra
 1.4.2
     Make concatMapM/mapMaybeM faster
 1.4.1

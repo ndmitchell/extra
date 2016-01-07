@@ -7,6 +7,7 @@ import Test.QuickCheck.Test
 import Control.Exception.Extra
 import Data.Either.Extra
 import System.IO.Extra
+import Data.Version.Extra
 import Data.IORef
 import System.IO.Unsafe
 import Data.Time.Clock
@@ -20,6 +21,7 @@ import Data.Function as X
 import Data.List as X
 import Data.Char as X
 import Data.Tuple as X
+import Data.Version as X
 import System.Directory as X
 import System.FilePath as X
 import System.Info as X
@@ -97,3 +99,6 @@ instance Arbitrary Day where
 
 instance Arbitrary DiffTime where
     arbitrary = fmap realToFrac $ choose (0 :: Double, 86401)
+
+instance Arbitrary Version where
+    arbitrary = makeVersion . map abs <$> listOf1 arbitrary

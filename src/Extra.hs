@@ -24,6 +24,9 @@ module Extra(
     -- * Data.Tuple.Extra
     -- | Extra functions available in @"Data.Tuple.Extra"@.
     first, second, (***), (&&&), dupe, both, fst3, snd3, thd3,
+    -- * Data.Version.Extra
+    -- | Extra functions available in @"Data.Version.Extra"@.
+    makeVersion, readVersion,
     -- * Numeric.Extra
     -- | Extra functions available in @"Numeric.Extra"@.
     showDP, intToDouble, intToFloat, floatToDouble, doubleToFloat,
@@ -54,6 +57,7 @@ import Data.Either.Extra
 import Data.IORef.Extra
 import Data.List.Extra
 import Data.Tuple.Extra
+import Data.Version.Extra
 import Numeric.Extra
 import System.Directory.Extra
 import System.Environment.Extra

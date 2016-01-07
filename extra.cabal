@@ -48,6 +48,7 @@ library
         Data.IORef.Extra
         Data.List.Extra
         Data.Tuple.Extra
+        Data.Version.Extra
         Numeric.Extra
         System.Directory.Extra
         System.Environment.Extra

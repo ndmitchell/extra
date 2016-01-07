@@ -183,6 +183,9 @@ tests = do
     testGen "(succ &&& pred) 1 == (2,0)" $ (succ &&& pred) 1 == (2,0)
     testGen "dupe 12 == (12, 12)" $ dupe 12 == (12, 12)
     testGen "both succ (1,2) == (2,3)" $ both succ (1,2) == (2,3)
+    testGen "showVersion (makeVersion [1,2,3]) == \"1.2.3\"" $ showVersion (makeVersion [1,2,3]) == "1.2.3"
+    testGen "\\x -> readVersion (showVersion x) == x" $ \x -> readVersion (showVersion x) == x
+    testGen "readVersion \"hello\" == undefined" $ erroneous $ readVersion "hello"
     testGen "showDP 4 pi == \"3.1416\"" $ showDP 4 pi == "3.1416"
     testGen "showDP 0 pi == \"3\"" $ showDP 0 pi == "3"
     testGen "showDP 2 3  == \"3.00\"" $ showDP 2 3  == "3.00"
