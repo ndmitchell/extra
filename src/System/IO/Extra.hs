@@ -137,6 +137,8 @@ withBuffering h m act = bracket (hGetBuffering h) (hSetBuffering h) $ const $ do
 
 ---------------------------------------------------------------------
 -- TEMPORARY FILE
+-- We don't use GHC's temp file code, because its buggy, see:
+-- https://ghc.haskell.org/trac/ghc/ticket/10731
 
 {-# NOINLINE tempRef #-}
 tempRef :: IORef Int
