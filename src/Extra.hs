@@ -38,7 +38,7 @@ module Extra(
     getExecutablePath, lookupEnv,
     -- * System.Info.Extra
     -- | Extra functions available in @"System.Info.Extra"@.
-    isWindows, isMacOSX,
+    isWindows, isMac,
     -- * System.IO.Extra
     -- | Extra functions available in @"System.IO.Extra"@.
     captureOutput, withBuffering, readFileEncoding, readFileUTF8, readFileBinary, readFile', readFileEncoding', readFileUTF8', readFileBinary', writeFileEncoding, writeFileUTF8, writeFileBinary, withTempFile, withTempDir, newTempFile, newTempDir,

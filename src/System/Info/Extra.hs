@@ -4,7 +4,7 @@
 module System.Info.Extra(
     module System.Info,
     isWindows,
-    isMacOSX,
+    isMac,
     ) where
 
 import System.Info
@@ -26,9 +26,9 @@ isWindows = False
 #endif
 
 -- | Return 'True' on Mac OS X and 'False' otherwise.
-isMacOSX :: Bool
+isMac :: Bool
 #if defined(darwin_HOST_OS)
-isMacOSX = True
+isMac = True
 #else
-isMacOSX = False
+isMac = False
 #endif
