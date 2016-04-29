@@ -3,7 +3,8 @@
 -- | Extra functions for the current system info.
 module System.Info.Extra(
     module System.Info,
-    isWindows
+    isWindows,
+    isMac,
     ) where
 
 import System.Info
@@ -22,4 +23,12 @@ isWindows :: Bool
 isWindows = True
 #else
 isWindows = False
+#endif
+
+-- | Return 'True' on Mac OS X and 'False' otherwise.
+isMac :: Bool
+#if defined(darwin_HOST_OS)
+isMac = True
+#else
+isMac = False
 #endif
