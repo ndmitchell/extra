@@ -1,3 +1,6 @@
+-- GENERATED CODE - DO NOT MODIFY
+-- See Generate.hs for details of how to run
+
 {-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables, ViewPatterns #-}
 module TestGen(tests) where
 import TestUtil

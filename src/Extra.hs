@@ -1,3 +1,6 @@
+-- GENERATED CODE - DO NOT MODIFY
+-- See Generate.hs for details of how to run
+
 -- | This module documents all the functions available in this package.
 --
 --   Most users should import the specific modules (e.g. @"Data.List.Extra"@), which

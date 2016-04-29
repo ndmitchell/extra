@@ -1,3 +1,5 @@
+-- This module generates the files src/Extra.hs and test/TestGen.hs.
+-- Either call "runhaskell Generate" or start "ghci" and use ":generate".
 
 module Generate(main) where
 
@@ -24,7 +26,10 @@ main = do
         let tests = mapMaybe (stripPrefix "-- > ") $ lines src
         return (mod, funcs, tests)
     writeFileBinaryChanged "src/Extra.hs" $ unlines $
-        ["-- | This module documents all the functions available in this package."
+        ["-- GENERATED CODE - DO NOT MODIFY"
+        ,"-- See Generate.hs for details of how to run"
+        ,""
+        ,"-- | This module documents all the functions available in this package."
         ,"--"
         ,"--   Most users should import the specific modules (e.g. @\"Data.List.Extra\"@), which"
         ,"--   also reexport their non-@Extra@ modules (e.g. @\"Data.List\"@)."
@@ -37,7 +42,10 @@ main = do
         ,""] ++
         ["import " ++ x | x <- mods]
     writeFileBinaryChanged "test/TestGen.hs" $ unlines $
-        ["{-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables, ViewPatterns #-}"
+        ["-- GENERATED CODE - DO NOT MODIFY"
+        ,"-- See Generate.hs for details of how to run"
+        ,""
+        ,"{-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables, ViewPatterns #-}"
         ,"module TestGen(tests) where"
         ,"import TestUtil"
         ,"default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))"
