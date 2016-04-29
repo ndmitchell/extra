@@ -11,7 +11,7 @@ module Control.Monad.Extra(
     -- * Loops
     loopM, whileM,
     -- * Lists
-    partitionM, concatMapM, mapMaybeM, findM, firstJustM,
+    partitionM, concatMapM, mconcatMapM, mapMaybeM, findM, firstJustM,
     -- * Booleans
     whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM
     ) where
@@ -60,6 +60,10 @@ concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
 {-# INLINE concatMapM #-}
 concatMapM op = foldr f (return [])
     where f x xs = do x <- op x; if null x then xs else do xs <- xs; return $ x++xs
+
+-- | A version of 'mconcatMapM' that works with a monadic predicate.
+mconcatMapM :: (Monad m, Monoid b) => (a -> m b) -> [a] -> m b
+mconcatMapM f = liftM mconcat . mapM f
 
 -- | A version of 'mapMaybe' that works with a monadic predicate.
 mapMaybeM :: Monad m => (a -> m (Maybe b)) -> [a] -> m [b]
