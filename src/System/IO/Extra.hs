@@ -36,6 +36,8 @@ import Data.IORef
 import Foreign.Ptr
 import Foreign.Marshal.Alloc
 import Foreign.C.Types
+import Data.Functor
+import Prelude
 
 -- File reading
 
