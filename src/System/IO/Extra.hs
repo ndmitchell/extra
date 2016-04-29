@@ -119,11 +119,11 @@ captureOutput act = withTempFile $ \file ->
         out <- readFile' file
         return (out, res)
     where
-        clone out h act' = do
+        clone out h act = do
             buf <- hGetBuffering out
             out2 <- hDuplicate out
             hDuplicateTo h out
-            act' `finally` do
+            act `finally` do
                 hDuplicateTo out2 out
                 hClose out2
                 hSetBuffering out buf
