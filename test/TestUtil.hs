@@ -1,6 +1,6 @@
-{-# LANGUAGE ScopedTypeVariables, CPP #-}
+{-# LANGUAGE ScopedTypeVariables, CPP, FlexibleInstances #-}
 
-module TestUtil(runTests, testGen, testRaw, erroneous, (====), module X) where
+module TestUtil(runTests, testGen, testRaw, erroneous, erroneousIO, (====), module X) where
 
 import Test.QuickCheck
 import Test.QuickCheck.Test
@@ -48,6 +48,9 @@ testRaw msg test = do
 
 erroneous :: a -> Bool
 erroneous x = unsafePerformIO $ fmap isLeft $ try_ $ evaluate x
+
+erroneousIO :: IO a -> Bool
+erroneousIO x = unsafePerformIO $ fmap isLeft $ try_ $ evaluate =<< x
 
 (====) :: (Show a, Eq a) => a -> a -> Bool
 a ==== b = if a == b then True else error $ "Not equal!\n" ++ show a ++ "\n" ++ show b
