@@ -78,5 +78,5 @@ tweakTest x
             "erroneous $ " ++ trim x
         else
             let (a,b) = breakOn "->" $ trim x
-            in a ++ "-> erroneous $ " ++ drop 2 b
+            in a ++ "-> erroneous $ " ++ trim (drop 2 b)
     | otherwise = x
