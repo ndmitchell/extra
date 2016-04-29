@@ -234,15 +234,15 @@ sameContent h1 h2 = sameSize h1 h2 &&^ withb (\b1 -> withb $ \b2 -> eq b1 b2)
           withb = allocaBytesAligned bufsz 4096
           bufsz = 64*1024
 
--- | Returs 'True' when both files exist and have the same content.
+-- | Returns 'True' if both files have the same content.
+--   Raises an error if either file is missing.
 --
--- > notM $ fileEq "does_not_exist" "does_not_exist"
+-- > fileEq "does_not_exist1" "does_not_exist2" == undefined
+-- > fileEq "does_not_exist" "does_not_exist" == undefined
+-- > withTempFile $ \f1 -> fileEq "does_not_exist" f1 == undefined
 -- > withTempFile $ \f1 -> withTempFile $ \f2 -> fileEq f1 f2
 -- > withTempFile $ \f1 -> withTempFile $ \f2 -> writeFile f1 "a" >> writeFile f2 "a" >> fileEq f1 f2
 -- > withTempFile $ \f1 -> withTempFile $ \f2 -> writeFile f1 "a" >> writeFile f2 "b" >> notM (fileEq f1 f2)
 fileEq :: FilePath -> FilePath -> IO Bool
-fileEq p1 p2 =
-    doesFileExist p1
-    &&^ doesFileExist p2
-    &&^ withH p1 (\h1 -> withH p2 $ \h2 -> sameContent h1 h2)
+fileEq p1 p2 = withH p1 $ \h1 -> withH p2 $ \h2 -> sameContent h1 h2
     where withH p = withBinaryFile p ReadMode

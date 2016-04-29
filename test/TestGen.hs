@@ -214,7 +214,9 @@ tests = do
     testGen "withTempDir doesDirectoryExist == return True" $ withTempDir doesDirectoryExist == return True
     testGen "(doesDirectoryExist =<< withTempDir return) == return False" $ (doesDirectoryExist =<< withTempDir return) == return False
     testGen "withTempDir listFiles == return []" $ withTempDir listFiles == return []
-    testGen "notM $ fileEq \"does_not_exist\" \"does_not_exist\"" $ notM $ fileEq "does_not_exist" "does_not_exist"
+    testGen "fileEq \"does_not_exist1\" \"does_not_exist2\" == undefined" $ erroneousIO $ fileEq "does_not_exist1" "does_not_exist2"
+    testGen "fileEq \"does_not_exist\" \"does_not_exist\" == undefined" $ erroneousIO $ fileEq "does_not_exist" "does_not_exist"
+    testGen "withTempFile $ \\f1 -> fileEq \"does_not_exist\" f1 == undefined" $ erroneousIO $ withTempFile $ \f1 -> fileEq "does_not_exist" f1
     testGen "withTempFile $ \\f1 -> withTempFile $ \\f2 -> fileEq f1 f2" $ withTempFile $ \f1 -> withTempFile $ \f2 -> fileEq f1 f2
     testGen "withTempFile $ \\f1 -> withTempFile $ \\f2 -> writeFile f1 \"a\" >> writeFile f2 \"a\" >> fileEq f1 f2" $ withTempFile $ \f1 -> withTempFile $ \f2 -> writeFile f1 "a" >> writeFile f2 "a" >> fileEq f1 f2
     testGen "withTempFile $ \\f1 -> withTempFile $ \\f2 -> writeFile f1 \"a\" >> writeFile f2 \"b\" >> notM (fileEq f1 f2)" $ withTempFile $ \f1 -> withTempFile $ \f2 -> writeFile f1 "a" >> writeFile f2 "b" >> notM (fileEq f1 f2)
