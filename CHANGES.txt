@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #15, add isMac
 1.4.3
     Add Data.Version.Extra
 1.4.2
