@@ -19,6 +19,7 @@ module Control.Monad.Extra(
 import Control.Monad
 import Control.Applicative
 import Data.Maybe
+import Data.Monoid
 import Prelude
 
 -- General utilities
