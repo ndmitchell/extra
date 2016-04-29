@@ -56,8 +56,8 @@ instance Exception Timeout
 --
 -- > timeout (-3) (print 1) == return Nothing
 -- > timeout 0.1  (print 1) == fmap Just (print 1)
+-- > do (t, _) <- duration $ timeout 0.1 $ sleep 1000; print t; return $ t < 1
 -- > timeout 0.1  (sleep 2 >> print 1) == return Nothing
--- > do (t, _) <- duration $ timeout 0.1 $ sleep 1000; return $ t < 1
 timeout :: Seconds -> IO a -> IO (Maybe a)
 -- Copied from GHC with a few tweaks.
 timeout n f

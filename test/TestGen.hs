@@ -212,8 +212,8 @@ tests = do
     testGen "fmap (round . fst) (duration $ sleep 1) == return 1" $ fmap (round . fst) (duration $ sleep 1) == return 1
     testGen "timeout (-3) (print 1) == return Nothing" $ timeout (-3) (print 1) == return Nothing
     testGen "timeout 0.1  (print 1) == fmap Just (print 1)" $ timeout 0.1  (print 1) == fmap Just (print 1)
+    testGen "do (t, _) <- duration $ timeout 0.1 $ sleep 1000; print t; return $ t < 1" $ do (t, _) <- duration $ timeout 0.1 $ sleep 1000; print t; return $ t < 1
     testGen "timeout 0.1  (sleep 2 >> print 1) == return Nothing" $ timeout 0.1  (sleep 2 >> print 1) == return Nothing
-    testGen "do (t, _) <- duration $ timeout 0.1 $ sleep 1000; return $ t < 1" $ do (t, _) <- duration $ timeout 0.1 $ sleep 1000; return $ t < 1
     testGen "\\a b -> a > b ==> subtractTime a b > 0" $ \a b -> a > b ==> subtractTime a b > 0
     testGen "showDuration 3.435   == \"3.44s\"" $ showDuration 3.435   == "3.44s"
     testGen "showDuration 623.8   == \"10m24s\"" $ showDuration 623.8   == "10m24s"
