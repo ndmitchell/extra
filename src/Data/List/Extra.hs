@@ -16,7 +16,7 @@ module Data.List.Extra(
     wordsBy, linesBy,
     breakOn, breakOnEnd, splitOn, split, chunksOf,
     -- * Basics
-    list, uncons, unsnoc, cons, snoc, drop1,
+    list, uncons, unsnoc, cons, snoc, drop1, mconcatMap,
     -- * List operations
     groupSort, groupSortOn, groupSortBy,
     nubOrd, nubOrdBy, nubOrdOn,
@@ -379,6 +379,14 @@ firstJust f = listToMaybe . mapMaybe f
 drop1 :: [a] -> [a]
 drop1 [] = []
 drop1 (x:xs) = xs
+
+
+-- | Version on `concatMap` generalised to a `Monoid` rather than just a list.
+--
+-- > mconcatMap Sum [1,2,3] == 6
+-- > \f xs -> mconcatMap f xs == concatMap f xs
+mconcatMap :: Monoid b => (a -> b) -> [a] -> b
+mconcatMap f = mconcat . map f
 
 
 -- | Find the first instance of @needle@ in @haystack@.

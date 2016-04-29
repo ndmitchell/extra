@@ -20,6 +20,7 @@ import Control.Monad as X
 import Data.Function as X
 import Data.List as X
 import Data.Char as X
+import Data.Monoid as X
 import Data.Tuple as X
 import Data.Version as X
 import System.Directory as X

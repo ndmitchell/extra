@@ -145,6 +145,8 @@ tests = do
     testGen "drop1 \"\"         == \"\"" $ drop1 ""         == ""
     testGen "drop1 \"test\"     == \"est\"" $ drop1 "test"     == "est"
     testGen "\\xs -> drop 1 xs == drop1 xs" $ \xs -> drop 1 xs == drop1 xs
+    testGen "mconcatMap Sum [1,2,3] == 6" $ mconcatMap Sum [1,2,3] == 6
+    testGen "\\f xs -> mconcatMap f xs == concatMap f xs" $ \f xs -> mconcatMap f xs == concatMap f xs
     testGen "breakOn \"::\" \"a::b::c\" == (\"a\", \"::b::c\")" $ breakOn "::" "a::b::c" == ("a", "::b::c")
     testGen "breakOn \"/\" \"foobar\"   == (\"foobar\", \"\")" $ breakOn "/" "foobar"   == ("foobar", "")
     testGen "\\needle haystack -> let (prefix,match) = breakOn needle haystack in prefix ++ match == haystack" $ \needle haystack -> let (prefix,match) = breakOn needle haystack in prefix ++ match == haystack
