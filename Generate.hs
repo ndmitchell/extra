@@ -75,7 +75,7 @@ isName _ = False
 tweakTest x
     | Just x <- stripSuffix " == undefined" x =
         if not $ "\\" `isPrefixOf` x then
-            "erroneous $ " ++ trim x
+            (if "fileEq" `isInfixOf` x then "erroneousIO $ " else "erroneous $ ") ++ trim x
         else
             let (a,b) = breakOn "->" $ trim x
             in a ++ "-> erroneous $ " ++ trim (drop 2 b)
