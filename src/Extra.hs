@@ -41,7 +41,7 @@ module Extra(
     isWindows, isMac,
     -- * System.IO.Extra
     -- | Extra functions available in @"System.IO.Extra"@.
-    captureOutput, withBuffering, readFileEncoding, readFileUTF8, readFileBinary, readFile', readFileEncoding', readFileUTF8', readFileBinary', writeFileEncoding, writeFileUTF8, writeFileBinary, withTempFile, withTempDir, newTempFile, newTempDir,
+    captureOutput, withBuffering, readFileEncoding, readFileUTF8, readFileBinary, readFile', readFileEncoding', readFileUTF8', readFileBinary', writeFileEncoding, writeFileUTF8, writeFileBinary, withTempFile, withTempDir, newTempFile, newTempDir, fileEq,
     -- * System.Process.Extra
     -- | Extra functions available in @"System.Process.Extra"@.
     system_, systemOutput, systemOutput_,

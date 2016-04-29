@@ -16,10 +16,13 @@ module System.IO.Extra(
     writeFileEncoding, writeFileUTF8, writeFileBinary,
     -- * Temporary files
     withTempFile, withTempDir, newTempFile, newTempDir,
+    -- * File comparison
+    fileEq,
     ) where
 
 import System.IO
 import Control.Concurrent.Extra
+import Control.Monad.Extra
 import Control.Exception.Extra as E
 import GHC.IO.Handle(hDuplicate,hDuplicateTo)
 import System.Directory.Extra
@@ -30,7 +33,9 @@ import Data.Char
 import Data.Time.Clock
 import Data.Tuple.Extra
 import Data.IORef
-
+import Foreign.Ptr
+import Foreign.Marshal.Alloc
+import Foreign.C.Types
 
 -- File reading
 
@@ -53,24 +58,24 @@ readFileBinary file = do
 
 -- Strict file reading
 
+-- | A strict version of 'hGetContents'.
+hGetContents' :: Handle -> IO String
+hGetContents' h = do
+    s <- hGetContents h
+    void $ evaluate $ length s
+    return s
+
 -- | A strict version of 'readFile'. When the string is produced, the entire
 --   file will have been read into memory and the file handle will have been closed.
 --   Closing the file handle does not rely on the garbage collector.
 --
 -- > \(filter isHexDigit -> s) -> fmap (== s) $ withTempFile $ \file -> do writeFile file s; readFile' file
 readFile' :: FilePath -> IO String
-readFile' file = withFile file ReadMode $ \h -> do
-    s <- hGetContents h
-    evaluate $ length s
-    return s
+readFile' file = withFile file ReadMode hGetContents'
 
 -- | A strict version of 'readFileEncoding', see 'readFile'' for details.
 readFileEncoding' :: TextEncoding -> FilePath -> IO String
-readFileEncoding' e file = withFile file ReadMode $ \h -> do
-    hSetEncoding h e
-    s <- hGetContents h
-    evaluate $ length s
-    return s
+readFileEncoding' e file = withFile file ReadMode $ \h -> hSetEncoding h e >> hGetContents' h
 
 -- | A strict version of 'readFileUTF8', see 'readFile'' for details.
 readFileUTF8' :: FilePath -> IO String
@@ -78,10 +83,7 @@ readFileUTF8' = readFileEncoding' utf8
 
 -- | A strict version of 'readFileBinary', see 'readFile'' for details.
 readFileBinary' :: FilePath -> IO String
-readFileBinary' file = withBinaryFile file ReadMode $ \h -> do
-    s <- hGetContents h
-    evaluate $ length s
-    return s
+readFileBinary' file = withBinaryFile file ReadMode hGetContents'
 
 -- File writing
 
@@ -109,7 +111,7 @@ writeFileBinary file x = withBinaryFile file WriteMode $ \h -> hPutStr h x
 --
 -- > captureOutput (print 1) == return ("1\n",())
 captureOutput :: IO a -> IO (String, a)
-captureOutput act = withTempFile $ \file -> do
+captureOutput act = withTempFile $ \file ->
     withFile file ReadWriteMode $ \h -> do
         res <- clone stdout h $ clone stderr h $ do
             hClose h
@@ -117,11 +119,11 @@ captureOutput act = withTempFile $ \file -> do
         out <- readFile' file
         return (out, res)
     where
-        clone out h act = do
+        clone out h act' = do
             buf <- hGetBuffering out
             out2 <- hDuplicate out
             hDuplicateTo h out
-            act `finally` do
+            act' `finally` do
                 hDuplicateTo out2 out
                 hClose out2
                 hSetBuffering out buf
@@ -196,7 +198,7 @@ newTempDir = do
             let dir = tmpdir </> "extra-dir-" ++ show v
             catchBool isAlreadyExistsError
                 (createDirectoryPrivate dir >> return dir) $
-                \e -> create tmpdir
+                \_ -> create tmpdir
 
 
 -- | Create a temporary directory inside the system temporary directory.
@@ -209,3 +211,31 @@ withTempDir :: (FilePath -> IO a) -> IO a
 withTempDir act = do
     (dir,del) <- newTempDir
     act dir `finally` del
+
+-- | Returns 'True' when both files have the same size.
+sameSize :: Handle -> Handle -> IO Bool
+sameSize h1 h2 = liftM2 (==) (hFileSize h1) (hFileSize h2)
+
+foreign import ccall unsafe "string.h memcmp" memcmp
+    :: Ptr CUChar -> Ptr CUChar -> CSize -> IO CInt
+
+-- | Returs 'True' when the contents of both files is the same.
+sameContent :: Handle -> Handle -> IO Bool
+sameContent h1 h2 = sameSize h1 h2 &&^ withb (\b1 -> withb $ \b2 -> eq b1 b2)
+    where eq b1 b2 = do
+            r1 <- hGetBuf h1 b1 bufsz
+            r2 <- hGetBuf h2 b2 bufsz
+            if r1 == 0
+                then return $ r2 == 0
+                else return (r1 == r2) &&^ bufeq b1 b2 r1 &&^ eq b1 b2
+          bufeq b1 b2 s = (==0) <$> memcmp b1 b2 (fromIntegral s)
+          withb = allocaBytesAligned bufsz 4096
+          bufsz = 64*1024
+
+-- | Returs 'True' when both files exist and have the same content.
+fileEq :: FilePath -> FilePath -> IO Bool
+fileEq p1 p2 =
+    doesFileExist p1
+    &&^ doesFileExist p2
+    &&^ withH p1 (\h1 -> withH p2 $ \h2 -> sameContent h1 h2)
+    where withH p = withBinaryFile p ReadMode

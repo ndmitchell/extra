@@ -5,6 +5,10 @@ default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))
 tests :: IO ()
 tests = do
     let x ||| y = do t1 <- onceFork x; t2 <- onceFork y; t1; t2
+    testGen "withTempFile $ \\f1 -> withTempFile $ \\f2 -> fileEq f1 f2" $ withTempFile $ \f1 -> withTempFile $ \f2 -> fileEq f1 f2
+    testGen "withTempFile $ \\f -> copyFile \"test/TestGen.hs\" f >> fileEq \"test/TestGen.hs\" f" $ withTempFile $ \f -> copyFile "test/TestGen.hs" f >> fileEq "test/TestGen.hs" f
+    testGen "withTempFile $ \\f1 -> withTempFile $ \\f2 -> writeFile f1 \"a\" >> writeFile f2 \"a\" >> fileEq f1 f2" $ withTempFile $ \f1 -> withTempFile $ \f2 -> writeFile f1 "a" >> writeFile f2 "a" >> fileEq f1 f2
+    testGen "withTempFile $ \\f1 -> withTempFile $ \\f2 -> writeFile f1 \"a\" >> writeFile f2 \"b\" >> fmap not (fileEq f1 f2)" $ withTempFile $ \f1 -> withTempFile $ \f2 -> writeFile f1 "a" >> writeFile f2 "b" >> fmap not (fileEq f1 f2)
     testGen "\\(x :: IO Int) -> void (once x) == return ()" $ \(x :: IO Int) -> void (once x) == return ()
     testGen "\\(x :: IO Int) -> join (once x) == x" $ \(x :: IO Int) -> join (once x) == x
     testGen "\\(x :: IO Int) -> (do y <- once x; y; y) == x" $ \(x :: IO Int) -> (do y <- once x; y; y) == x
