@@ -233,6 +233,11 @@ sameContent h1 h2 = sameSize h1 h2 &&^ withb (\b1 -> withb $ \b2 -> eq b1 b2)
           bufsz = 64*1024
 
 -- | Returs 'True' when both files exist and have the same content.
+--
+-- > withTempFile $ \f1 -> withTempFile $ \f2 -> fileEq f1 f2
+-- > withTempFile $ \f -> copyFile "test/TestGen.hs" f >> fileEq "test/TestGen.hs" f
+-- > withTempFile $ \f1 -> withTempFile $ \f2 -> writeFile f1 "a" >> writeFile f2 "a" >> fileEq f1 f2
+-- > withTempFile $ \f1 -> withTempFile $ \f2 -> writeFile f1 "a" >> writeFile f2 "b" >> fmap not (fileEq f1 f2)
 fileEq :: FilePath -> FilePath -> IO Bool
 fileEq p1 p2 =
     doesFileExist p1
