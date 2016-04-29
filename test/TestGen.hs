@@ -212,10 +212,10 @@ tests = do
     testGen "withTempDir doesDirectoryExist == return True" $ withTempDir doesDirectoryExist == return True
     testGen "(doesDirectoryExist =<< withTempDir return) == return False" $ (doesDirectoryExist =<< withTempDir return) == return False
     testGen "withTempDir listFiles == return []" $ withTempDir listFiles == return []
+    testGen "notM $ fileEq \"does_not_exist\" \"does_not_exist\"" $ notM $ fileEq "does_not_exist" "does_not_exist"
     testGen "withTempFile $ \\f1 -> withTempFile $ \\f2 -> fileEq f1 f2" $ withTempFile $ \f1 -> withTempFile $ \f2 -> fileEq f1 f2
-    testGen "withTempFile $ \\f -> copyFile \"test/TestGen.hs\" f >> fileEq \"test/TestGen.hs\" f" $ withTempFile $ \f -> copyFile "test/TestGen.hs" f >> fileEq "test/TestGen.hs" f
     testGen "withTempFile $ \\f1 -> withTempFile $ \\f2 -> writeFile f1 \"a\" >> writeFile f2 \"a\" >> fileEq f1 f2" $ withTempFile $ \f1 -> withTempFile $ \f2 -> writeFile f1 "a" >> writeFile f2 "a" >> fileEq f1 f2
-    testGen "withTempFile $ \\f1 -> withTempFile $ \\f2 -> writeFile f1 \"a\" >> writeFile f2 \"b\" >> fmap not (fileEq f1 f2)" $ withTempFile $ \f1 -> withTempFile $ \f2 -> writeFile f1 "a" >> writeFile f2 "b" >> fmap not (fileEq f1 f2)
+    testGen "withTempFile $ \\f1 -> withTempFile $ \\f2 -> writeFile f1 \"a\" >> writeFile f2 \"b\" >> notM (fileEq f1 f2)" $ withTempFile $ \f1 -> withTempFile $ \f2 -> writeFile f1 "a" >> writeFile f2 "b" >> notM (fileEq f1 f2)
     testGen "fmap (round . fst) (duration $ sleep 1) == return 1" $ fmap (round . fst) (duration $ sleep 1) == return 1
     testGen "timeout (-3) (print 1) == return Nothing" $ timeout (-3) (print 1) == return Nothing
     testGen "timeout 0.1  (print 1) == fmap Just (print 1)" $ timeout 0.1  (print 1) == fmap Just (print 1)
