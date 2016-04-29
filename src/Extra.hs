@@ -1,5 +1,5 @@
 -- GENERATED CODE - DO NOT MODIFY
--- See Generate.hs for details of how to run
+-- See Generate.hs for details of how to generate
 
 -- | This module documents all the functions available in this package.
 --

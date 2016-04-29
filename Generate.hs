@@ -27,7 +27,7 @@ main = do
         return (mod, funcs, tests)
     writeFileBinaryChanged "src/Extra.hs" $ unlines $
         ["-- GENERATED CODE - DO NOT MODIFY"
-        ,"-- See Generate.hs for details of how to run"
+        ,"-- See Generate.hs for details of how to generate"
         ,""
         ,"-- | This module documents all the functions available in this package."
         ,"--"
@@ -43,7 +43,7 @@ main = do
         ["import " ++ x | x <- mods]
     writeFileBinaryChanged "test/TestGen.hs" $ unlines $
         ["-- GENERATED CODE - DO NOT MODIFY"
-        ,"-- See Generate.hs for details of how to run"
+        ,"-- See Generate.hs for details of how to generate"
         ,""
         ,"{-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables, ViewPatterns #-}"
         ,"module TestGen(tests) where"
