@@ -32,11 +32,11 @@ whenJust mg f = maybe (pure ()) f mg
 
 -- | Like 'whenJust', but where the test can be monadic.
 whenJustM :: Monad m => m (Maybe a) -> (a -> m ()) -> m ()
-whenJustM mg f = whenJustM' mg () f
+whenJustM mg f = maybe (return ()) f =<< mg
 
--- | Like 'whenJustM', but yielding a default value when the 'Maybe' is 'Nothing'.
-whenJustM' :: Monad m => m (Maybe a) -> r -> (a -> m r) -> m r
-whenJustM' mg r f = maybe (return r) f =<< mg
+-- | Monadic `maybe`.
+maybeM :: Monad m => m b -> (a -> m b) -> m (Maybe a) -> m b
+maybeM e f v = v >>= maybe e f
 
 -- | The identity function which requires the inner argument to be @()@. Useful for functions
 --   with overloaded return types.
