@@ -6,7 +6,7 @@
 -- see <http://hackage.haskell.org/package/monad-loops monad-loops>.
 module Control.Monad.Extra(
     module Control.Monad,
-    whenJust, whenJustM,
+    whenJust, whenJustM, maybeM,
     unit,
     -- * Loops
     loopM, whileM,
@@ -34,6 +34,10 @@ whenJust mg f = maybe (pure ()) f mg
 -- | Like 'whenJust', but where the test can be monadic.
 whenJustM :: Monad m => m (Maybe a) -> (a -> m ()) -> m ()
 whenJustM mg f = maybe (return ()) f =<< mg
+
+-- | Monadic `maybe`.
+maybeM :: Monad m => m b -> (a -> m b) -> m (Maybe a) -> m b
+maybeM e f v = v >>= maybe e f
 
 -- | The identity function which requires the inner argument to be @()@. Useful for functions
 --   with overloaded return types.
