@@ -6,7 +6,7 @@
 -- see <http://hackage.haskell.org/package/monad-loops monad-loops>.
 module Control.Monad.Extra(
     module Control.Monad,
-    whenJust, whenJustM,
+    whenJust, whenJustM, maybeM,
     unit,
     -- * Loops
     loopM, whileM,
