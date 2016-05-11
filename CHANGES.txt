@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #11, add maybeM and eitherM
 1.4.5
     #17, change fileEq on files that do not exist to be an error
 1.4.4

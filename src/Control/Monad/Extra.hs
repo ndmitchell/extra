@@ -8,6 +8,7 @@ module Control.Monad.Extra(
     module Control.Monad,
     whenJust, whenJustM,
     unit,
+    maybeM, eitherM,
     -- * Loops
     loopM, whileM,
     -- * Lists
@@ -41,6 +42,16 @@ whenJustM mg f = maybe (return ()) f =<< mg
 -- > \(x :: Maybe ()) -> unit x == x
 unit :: m () -> m ()
 unit = id
+
+
+-- | Monadic generalisation of 'maybe'.
+maybeM :: Monad m => m b -> (a -> m b) -> m (Maybe a) -> m b
+maybeM n j x = maybe n j =<< x
+
+
+-- | Monadic generalisation of 'either'.
+eitherM :: Monad m => (a -> m c) -> (b -> m c) -> m (Either a b) -> m c
+eitherM l r x = either l r =<< x
 
 -- Data.List for Monad
 
