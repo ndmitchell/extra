@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #21, add concatForM
 1.4.6
     #11, add maybeM and eitherM
 1.4.5
