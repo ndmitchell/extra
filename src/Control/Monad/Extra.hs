@@ -73,7 +73,7 @@ concatMapM :: Monad m => (a -> m [b]) -> [a] -> m [b]
 concatMapM op = foldr f (return [])
     where f x xs = do x <- op x; if null x then xs else do xs <- xs; return $ x++xs
 
--- | A version of 'mconcatMapM' that works with a monadic predicate.
+-- | A version of 'mconcatMap' that works with a monadic predicate.
 mconcatMapM :: (Monad m, Monoid b) => (a -> m b) -> [a] -> m b
 mconcatMapM f = liftM mconcat . mapM f
 
