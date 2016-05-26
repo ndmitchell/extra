@@ -9,6 +9,7 @@ A library of extra functions for the standard Haskell libraries. Most functions 
 
 The module `Extra` documents all functions provided by this library. Modules such as `Data.List.Extra` provide extra functions over `Data.List` and also reexport `Data.List`. Users are recommended to replace `Data.List` imports with `Data.List.Extra` if they need the extra functionality.
 
+
 ## Which functions?
 
 When producing a library of extra functions I have been guided by a few principles. I encourage others with small useful utility functions contribute them here, perhaps as a temporary stop before proposing they join the standard libraries.
