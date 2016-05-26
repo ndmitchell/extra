@@ -18,3 +18,15 @@ When producing a library of extra functions I have been guided by a few principl
 * The functions follow the spirit of the original Prelude/base libraries. I am happy to provide partial functions (e.g. `fromRight`), and functions which are specialisations of more generic functions (`whenJust`).
 * Most of the functions have trivial implementations. If a beginner couldn't write the function, it probably doesn't belong here.
 * I have defined only a few new data types or type aliases. It's a package for defining new utilities on existing types, not new types or concepts.
+
+
+## Base versions
+
+The following GHC versions correspond to the following base library versions:
+
+* base 4.9 == GHC 8.0
+* base 4.8 == GHC 7.10
+* base 4.7 == GHC 7.8
+* base 4.6 == GHC 7.6
+* base 4.5 == GHC 7.4
+* base 4.4 == GHC 7.2
