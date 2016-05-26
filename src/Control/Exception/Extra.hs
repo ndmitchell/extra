@@ -1,4 +1,5 @@
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE ScopedTypeVariables, CPP #-}
+{-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- | Extra functions for "Control.Exception".
 --   These functions provide retrying, showing in the presence of exceptions,
@@ -7,7 +8,7 @@ module Control.Exception.Extra(
     module Control.Exception,
     retry, retryBool,
     showException, stringException,
-    errorIO,
+    errorIO, displayException,
     -- * Exception catching/ignoring
     ignore,
     catch_, handle_, try_,
@@ -41,6 +42,14 @@ stringException x = do
 --   can themselves contain undefined values.
 showException :: Show e => e -> IO String
 showException = stringException . show
+
+
+#if __GLASGOW_HASKELL__ < 710
+-- | Render this exception value in a human-friendly manner.
+--   Part of the 'Exception' class in GHC 7.10 onwards.
+displayException :: Exception e => e -> String
+displayException = show
+#endif
 
 
 -- | Ignore any exceptions thrown by the action.
