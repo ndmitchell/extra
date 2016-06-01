@@ -57,6 +57,7 @@ tests = do
     testGen "\\x -> fromEither (Right x) == x" $ \x -> fromEither (Right x) == x
     testGen "\\xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs" $ \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
     testGen "\\xs -> repeatedly word1 (trim xs) == words xs" $ \xs -> repeatedly word1 (trim xs) == words xs
+    testGen "\\xs -> repeatedly line1 xs == lines xs" $ \xs -> repeatedly line1 xs == lines xs
     testGen "for [1,2,3] (+1) == [2,3,4]" $ for [1,2,3] (+1) == [2,3,4]
     testGen "disjoint [1,2,3] [4,5] == True" $ disjoint [1,2,3] [4,5] == True
     testGen "disjoint [1,2,3] [4,1] == False" $ disjoint [1,2,3] [4,1] == False
@@ -115,6 +116,11 @@ tests = do
     testGen "word1 \"  keyword\\n  rest of string\" == (\"keyword\",\"rest of string\")" $ word1 "  keyword\n  rest of string" == ("keyword","rest of string")
     testGen "\\s -> fst (word1 s) == concat (take 1 $ words s)" $ \s -> fst (word1 s) == concat (take 1 $ words s)
     testGen "\\s -> words (snd $ word1 s) == drop 1 (words s)" $ \s -> words (snd $ word1 s) == drop 1 (words s)
+    testGen "line1 \"\" == (\"\", \"\")" $ line1 "" == ("", "")
+    testGen "line1 \"test\" == (\"test\",\"\")" $ line1 "test" == ("test","")
+    testGen "line1 \"test\\n\" == (\"test\",\"\")" $ line1 "test\n" == ("test","")
+    testGen "line1 \"test\\nrest\" == (\"test\",\"rest\")" $ line1 "test\nrest" == ("test","rest")
+    testGen "line1 \"test\\nrest\\nmore\" == (\"test\",\"rest\\nmore\")" $ line1 "test\nrest\nmore" == ("test","rest\nmore")
     testGen "sortOn fst [(3,\"z\"),(1,\"\"),(3,\"a\")] == [(1,\"\"),(3,\"z\"),(3,\"a\")]" $ sortOn fst [(3,"z"),(1,""),(3,"a")] == [(1,""),(3,"z"),(3,"a")]
     testGen "groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,\"t\"),(2,\"es\"),(3,\"t\")]" $ groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,"t"),(2,"es"),(3,"t")]
     testGen "\\xs -> map fst (groupSort xs) == sort (nub (map fst xs))" $ \xs -> map fst (groupSort xs) == sort (nub (map fst xs))

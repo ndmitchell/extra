@@ -8,7 +8,7 @@
 module Data.List.Extra(
     module Data.List,
     -- * String operations
-    lower, upper, trim, trimStart, trimEnd, word1,
+    lower, upper, trim, trimStart, trimEnd, word1, line1,
     -- * Splitting    
     dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd,
     dropWhileEnd, dropWhileEnd', takeWhileEnd,
@@ -42,6 +42,7 @@ import Prelude
 --
 -- > \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
 -- > \xs -> repeatedly word1 (trim xs) == words xs
+-- > \xs -> repeatedly line1 xs == lines xs
 repeatedly :: ([a] -> (b, [a])) -> [a] -> [b]
 repeatedly f [] = []
 repeatedly f as = b : repeatedly f as'
@@ -234,7 +235,17 @@ upper = map toUpper
 -- > \s -> fst (word1 s) == concat (take 1 $ words s)
 -- > \s -> words (snd $ word1 s) == drop 1 (words s)
 word1 :: String -> (String, String)
-word1 x = second (dropWhile isSpace) $ break isSpace $ dropWhile isSpace x
+word1 = second (dropWhile isSpace) . break isSpace . dropWhile isSpace
+
+-- | Split the first line off a string.
+--
+-- > line1 "" == ("", "")
+-- > line1 "test" == ("test","")
+-- > line1 "test\n" == ("test","")
+-- > line1 "test\nrest" == ("test","rest")
+-- > line1 "test\nrest\nmore" == ("test","rest\nmore")
+line1 :: String -> (String, String)
+line1 = second drop1 . break (== '\n')
 
 
 #if __GLASGOW_HASKELL__ < 709
