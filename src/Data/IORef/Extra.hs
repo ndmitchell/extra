@@ -1,6 +1,8 @@
 {-# LANGUAGE CPP #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
+-- | This module extends "Data.IORef" with operations forcing the value written to the IORef.
+--   Some of these functions are available in later versions of GHC, but not all.
 module Data.IORef.Extra(
     module Data.IORef,
     modifyIORef', writeIORef', atomicModifyIORef', atomicWriteIORef, atomicWriteIORef'

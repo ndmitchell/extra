@@ -1,6 +1,9 @@
 {-# LANGUAGE CPP #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
+-- | This module extends "Data.Either" with extra operations, particularly
+--   to quickly extract from inside an 'Either'. Some of these operations are
+--   partial, and should be used with care in production-quality code.
 module Data.Either.Extra(
     module Data.Either,
     isLeft, isRight, fromLeft, fromRight, fromEither
