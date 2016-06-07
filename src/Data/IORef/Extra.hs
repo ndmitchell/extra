@@ -33,6 +33,8 @@ modifyIORef' ref f = do
     x <- readIORef ref
     writeIORef' ref $ f x
 
+-- | Strict version of 'atomicModifyIORef'.  This forces both the value stored
+-- in the 'IORef' as well as the value returned.
 atomicModifyIORef' :: IORef a -> (a -> (a,b)) -> IO b
 atomicModifyIORef' ref f = do
     b <- atomicModifyIORef ref
@@ -40,6 +42,8 @@ atomicModifyIORef' ref f = do
                     in (a, a `seq` b))
     b `seq` return b
 
+-- | Variant of 'writeIORef' with the \"barrier to reordering\" property that
+-- 'atomicModifyIORef' has.
 atomicWriteIORef :: IORef a -> a -> IO ()
 atomicWriteIORef ref a = do
     x <- atomicModifyIORef ref (\_ -> (a, ()))

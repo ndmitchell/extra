@@ -14,9 +14,12 @@ import System.Environment
 import Control.Exception.Extra
 import System.IO.Error
 
+-- | Alias for 'getProgName' in GHC 7.4 and below, otherwise
+--   returns the absolute pathname of the current executable.
 getExecutablePath :: IO FilePath
 getExecutablePath = getProgName
 
+-- | Return the value of the environment variable var, or Nothing if there is no such value.
 lookupEnv :: String -> IO (Maybe String)
 lookupEnv x = catchBool isDoesNotExistError (fmap Just $ getEnv x) (const $ return Nothing)
 #endif
