@@ -118,9 +118,12 @@ instance Alternative Proxy where
     {-# INLINE (<|>) #-}
 
 instance Monad Proxy where
+    return = pure
     _ >>= _ = Proxy
     {-# INLINE (>>=) #-}
 
-instance MonadPlus Proxy
+instance MonadPlus Proxy where
+    mzero = empty
+    mplus = (<|>)
 
 #endif
