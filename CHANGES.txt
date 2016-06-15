@@ -1,6 +1,6 @@
 Changelog for Extra
 
-    Add Typeable.Extra containing typeRep, Proxy, (:~:)
+    Add Data.Typeable.Extra containing typeRep, Proxy, (:~:)
 1.4.9
     Add line1
 1.4.8
