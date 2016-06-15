@@ -194,6 +194,7 @@ tests = do
     testGen "(succ &&& pred) 1 == (2,0)" $ (succ &&& pred) 1 == (2,0)
     testGen "dupe 12 == (12, 12)" $ dupe 12 == (12, 12)
     testGen "both succ (1,2) == (2,3)" $ both succ (1,2) == (2,3)
+    testGen "typeRep (Proxy :: Proxy Int) == typeOf (1 :: Int)" $ typeRep (Proxy :: Proxy Int) == typeOf (1 :: Int)
     testGen "showVersion (makeVersion [1,2,3]) == \"1.2.3\"" $ showVersion (makeVersion [1,2,3]) == "1.2.3"
     testGen "\\x -> readVersion (showVersion x) == x" $ \x -> readVersion (showVersion x) == x
     testGen "readVersion \"hello\" == undefined" $ erroneous $ readVersion "hello"

@@ -27,6 +27,9 @@ module Extra(
     -- * Data.Tuple.Extra
     -- | Extra functions available in @"Data.Tuple.Extra"@.
     first, second, (***), (&&&), dupe, both, fst3, snd3, thd3,
+    -- * Data.Typeable.Extra
+    -- | Extra functions available in @"Data.Typeable.Extra"@.
+    typeRep, (:~:)(..), Proxy(..),
     -- * Data.Version.Extra
     -- | Extra functions available in @"Data.Version.Extra"@.
     makeVersion, readVersion,
@@ -60,6 +63,7 @@ import Data.Either.Extra
 import Data.IORef.Extra
 import Data.List.Extra
 import Data.Tuple.Extra
+import Data.Typeable.Extra
 import Data.Version.Extra
 import Numeric.Extra
 import System.Directory.Extra

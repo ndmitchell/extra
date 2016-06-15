@@ -22,6 +22,7 @@ import Data.List as X
 import Data.Char as X
 import Data.Monoid as X
 import Data.Tuple as X
+import Data.Typeable as X
 import Data.Version as X
 import System.Directory as X
 import System.FilePath as X
