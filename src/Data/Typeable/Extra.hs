@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP #-}
+{-# LANGUAGE CPP, ScopedTypeVariables, TypeOperators, GADTs #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- | This module extends "Data.Typeable" with extra functions available in later GHC versions.
@@ -9,7 +9,6 @@ module Data.Typeable.Extra(
     ) where
 
 import Data.Typeable
-
 
 #if __GLASGOW_HASKELL__ < 708
 
