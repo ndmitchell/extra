@@ -66,7 +66,7 @@ writeFileBinaryChanged file x = do
 
 
 validIdentifier xs =
-    (take 1 xs == "(" || isName xs) &&
+    (take 1 xs == "(" || isName (takeWhile (/= '(') xs)) &&
     xs `notElem` ["module","Numeric"]
 
 isName (x:xs) = isAlpha x && all (\x -> isAlphaNum x || x `elem` "_'") xs
