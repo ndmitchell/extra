@@ -13,6 +13,7 @@ import Data.Typeable
 #if __GLASGOW_HASKELL__ < 708
 
 import Data.Ix
+import Data.Monoid
 import Control.Monad
 import Control.Applicative
 
