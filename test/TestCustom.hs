@@ -7,9 +7,14 @@ import System.IO.Extra
 import Data.IORef
 import TestUtil
 
+import Extra as X
+
 
 testCustom :: IO ()
 testCustom = do
+    -- check that Extra really does export these things
+    testGen "Extra export" $ Proxy == (X.Proxy :: Proxy ())
+
     testRaw "withTempFile" $ do
         xs <- replicateM 4 $ onceFork $ do
             replicateM_ 100 $ withTempFile (const $ return ())
