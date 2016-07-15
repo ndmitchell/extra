@@ -73,11 +73,11 @@ timeout n f
                             (\_ -> fmap Just f))
 
 
+{-# DEPRECATED subtractTime "Function is being retired - use diffUTCTime directly." #-}
+
 -- | Calculate the difference between two times in seconds.
 --   Usually the first time will be the end of an event, and the
 --   second time will be the beginning.
---
--- > \a b -> a > b ==> subtractTime a b > 0
 subtractTime :: UTCTime -> UTCTime -> Seconds
 subtractTime end start = fromRational $ toRational $ end `diffUTCTime` start
 
@@ -111,9 +111,9 @@ offsetTime = do
         return $ 1e-9 * fromIntegral (toNanoSecs $ end - start)
     where time = getTime Monotonic
 
--- | Like 'offsetTime', but results will never decrease (though they may stay the same).
---
--- > do f <- offsetTimeIncrease; xs <- replicateM 10 f; return $ xs == sort xs
+{-# DEPRECATED offsetTimeIncrease "Use offsetTime instead, which is guaranteed to always increase." #-}
+
+-- | A synonym for 'offsetTime'.
 offsetTimeIncrease :: IO (IO Seconds)
 offsetTimeIncrease = do
     t <- offsetTime
