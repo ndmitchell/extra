@@ -69,7 +69,7 @@ test-suite extra-test
         extra,
         clock >= 0.7,
         time,
-        QuickCheck
+        QuickCheck >= 2.9
     if !os(windows)
         build-depends: unix
     hs-source-dirs: test

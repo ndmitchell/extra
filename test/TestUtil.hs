@@ -102,6 +102,3 @@ instance Arbitrary Day where
 
 instance Arbitrary DiffTime where
     arbitrary = fmap realToFrac $ choose (0 :: Double, 86401)
-
-instance Arbitrary Version where
-    arbitrary = makeVersion . map abs <$> listOf1 arbitrary
