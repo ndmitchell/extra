@@ -30,3 +30,5 @@ The following GHC versions correspond to the following base library versions:
 * base 4.6 == GHC 7.6
 * base 4.5 == GHC 7.4
 * base 4.4 == GHC 7.2
+
+A more complete list can be found [here](https://wiki.haskell.org/Base_package#Versions).
