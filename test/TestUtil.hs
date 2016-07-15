@@ -70,11 +70,9 @@ runTests t = do
 
 instance Testable () where
     property = property . (`seq` True)
-    exhaustive _ = True
 
 instance Testable a => Testable (IO a) where
     property = property . unsafePerformIO
-    exhaustive = exhaustive . unsafePerformIO
 
 instance Eq a => Eq (IO a) where
     a == b = unsafePerformIO $ do
