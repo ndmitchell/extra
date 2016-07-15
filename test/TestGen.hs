@@ -237,5 +237,6 @@ tests = do
     testGen "showDuration 623.8   == \"10m24s\"" $ showDuration 623.8   == "10m24s"
     testGen "showDuration 62003.8 == \"17h13m\"" $ showDuration 62003.8 == "17h13m"
     testGen "showDuration 1e8     == \"27777h47m\"" $ showDuration 1e8     == "27777h47m"
+    testGen "do f <- offsetTime; xs <- replicateM 10 f; return $ xs == sort xs" $ do f <- offsetTime; xs <- replicateM 10 f; return $ xs == sort xs
     testGen "do (a,_) <- duration $ sleep 1; return $ a >= 1 && a <= 1.1" $ do (a,_) <- duration $ sleep 1; return $ a >= 1 && a <= 1.1
     testGen "do f <- offsetTimeIncrease; xs <- replicateM 10 f; return $ xs == sort xs" $ do f <- offsetTimeIncrease; xs <- replicateM 10 f; return $ xs == sort xs

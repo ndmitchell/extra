@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #22, improve offsetTime to give reliable measurements
     Depend on the clock library
 1.4.10
     Add Data.Typeable.Extra containing typeRep, Proxy, (:~:)

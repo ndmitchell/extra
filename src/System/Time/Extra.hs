@@ -15,6 +15,7 @@ module System.Time.Extra(
 
 import Control.Concurrent
 import Data.Time.Clock
+import System.Clock
 import Numeric.Extra
 import Data.IORef
 import Control.Monad.Extra
@@ -98,15 +99,17 @@ showDuration x
             where (ms,ss) = round x `divMod` 60
 
 
--- | Call once to start, then call repeatedly to get the elapsed time since the first
---   call. Values will usually increase, unless the system clock is updated
---   (if you need the guarantee, see 'offsetTimeIncrease').
+-- | Call once to start, then call repeatedly to get the elapsed time since the first call.
+--   The time is guaranteed to be monotonic. This function is robust to system time changes.
+--
+-- > do f <- offsetTime; xs <- replicateM 10 f; return $ xs == sort xs
 offsetTime :: IO (IO Seconds)
 offsetTime = do
-    start <- getCurrentTime
+    start <- time
     return $ do
-        end <- getCurrentTime
-        return $ end `subtractTime` start
+        end <- time
+        return $ 1e-9 * fromIntegral (toNanoSecs $ end - start)
+    where time = getTime Monotonic
 
 -- | Like 'offsetTime', but results will never decrease (though they may stay the same).
 --
