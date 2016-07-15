@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Require QuickCheck 2.9
     #23, deprecate offsetTimeIncrease and subtract
     #22, improve offsetTime to give reliable measurements
     Depend on the clock library
