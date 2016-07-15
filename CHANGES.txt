@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Depend on the clock library
 1.4.10
     Add Data.Typeable.Extra containing typeRep, Proxy, (:~:)
 1.4.9
