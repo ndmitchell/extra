@@ -1,5 +1,6 @@
 Changelog for Extra
 
+1.4.12
     Add writeVar
 1.4.11
     Require QuickCheck 2.9
