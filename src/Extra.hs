@@ -8,7 +8,7 @@
 module Extra(
     -- * Control.Concurrent.Extra
     -- | Extra functions available in @"Control.Concurrent.Extra"@.
-    getNumCapabilities, setNumCapabilities, withNumCapabilities, forkFinally, once, onceFork, Lock, newLock, withLock, withLockTry, Var, newVar, readVar, modifyVar, modifyVar_, withVar, Barrier, newBarrier, signalBarrier, waitBarrier, waitBarrierMaybe,
+    getNumCapabilities, setNumCapabilities, withNumCapabilities, forkFinally, once, onceFork, Lock, newLock, withLock, withLockTry, Var, newVar, readVar, writeVar, modifyVar, modifyVar_, withVar, Barrier, newBarrier, signalBarrier, waitBarrier, waitBarrierMaybe,
     -- * Control.Exception.Extra
     -- | Extra functions available in @"Control.Exception.Extra"@.
     retry, retryBool, showException, stringException, errorIO, displayException, ignore, catch_, handle_, try_, catchJust_, handleJust_, tryJust_, catchBool, handleBool, tryBool,

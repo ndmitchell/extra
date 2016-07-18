@@ -19,7 +19,7 @@ module Control.Concurrent.Extra(
     -- * Lock
     Lock, newLock, withLock, withLockTry,
     -- * Var
-    Var, newVar, readVar, modifyVar, modifyVar_, withVar,
+    Var, newVar, readVar, writeVar, modifyVar, modifyVar_, withVar,
     -- * Barrier
     Barrier, newBarrier, signalBarrier, waitBarrier, waitBarrierMaybe,
     ) where
@@ -178,6 +178,10 @@ newVar = fmap Var . newMVar
 -- | Read the current value of the 'Var'.
 readVar :: Var a -> IO a
 readVar (Var x) = readMVar x
+
+-- | Write a value to become the new value of 'Var'.
+writeVar :: Var a -> a -> IO ()
+writeVar v x = modifyVar_ v $ const $ return x
 
 -- | Modify a 'Var' producing a new value and a return result.
 modifyVar :: Var a -> (a -> IO (a, b)) -> IO b

@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Add writeVar
 1.4.11
     Require QuickCheck 2.9
     #23, deprecate offsetTimeIncrease and subtract
