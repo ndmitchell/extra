@@ -11,8 +11,6 @@ module Data.Either.Extra(
 
 import Data.Either
 
-__GLASGOW_HASKELL__
-
 #if __GLASGOW_HASKELL__ < 801
 
 -- | Return the contents of a 'Left'-value or a default value otherwise.
