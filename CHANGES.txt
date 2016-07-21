@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Change fromLeft/fromRight signatures to follow the base libraries
 1.4.12
     Add writeVar
 1.4.11

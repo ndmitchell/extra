@@ -11,23 +11,25 @@ module Data.Either.Extra(
 
 import Data.Either
 
--- | The 'fromLeft' function extracts the element out of a 'Left' and
---   throws an error if its argument is 'Right'.
---   Much like 'fromJust', using this function in polished code is usually a bad idea.
---
--- > \x -> fromLeft (Left  x) == x
--- > \x -> fromLeft (Right x) == undefined
-fromLeft :: Either l r -> l
-fromLeft (Left x) = x
+#if __GLASGOW_HASKELL__ < 801
 
--- | The 'fromRight' function extracts the element out of a 'Right' and
---   throws an error if its argument is 'Left'.
---   Much like 'fromJust', using this function in polished code is usually a bad idea.
+-- | Return the contents of a 'Left'-value or a default value otherwise.
 --
--- > \x -> fromRight (Right x) == x
--- > \x -> fromRight (Left  x) == undefined
-fromRight :: Either l r -> r
-fromRight (Right x) = x
+-- > fromLeft 1 (Left 3) == 3
+-- > fromLeft 1 (Right "foo") == 1
+fromLeft :: a -> Either a b -> a
+fromLeft _ (Left a) = a
+fromLeft a _        = a
+
+-- | Return the contents of a 'Right'-value or a default value otherwise.
+--
+-- > fromRight 1 (Right 3) == 3
+-- > fromRight 1 (Left "foo") == 1
+fromRight :: b -> Either a b -> b
+fromRight _ (Right b) = b
+fromRight b _         = b
+
+#endif
 
 #if __GLASGOW_HASKELL__ < 708
 -- | Test if an 'Either' value is the 'Left' constructor.
