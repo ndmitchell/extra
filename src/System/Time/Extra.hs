@@ -73,6 +73,7 @@ timeout n f
                             (\_ -> fmap Just f))
 
 
+-- Once we remove subtractTime we can remove the dependency on the time package entire.
 {-# DEPRECATED subtractTime "Function is being retired - use diffUTCTime directly." #-}
 
 -- | Calculate the difference between two times in seconds.
