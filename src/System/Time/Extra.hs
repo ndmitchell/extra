@@ -17,7 +17,6 @@ import Control.Concurrent
 import Data.Time.Clock
 import System.Clock
 import Numeric.Extra
-import Data.IORef
 import Control.Monad.Extra
 import Control.Exception.Extra
 import Data.Typeable
@@ -116,12 +115,7 @@ offsetTime = do
 
 -- | A synonym for 'offsetTime'.
 offsetTimeIncrease :: IO (IO Seconds)
-offsetTimeIncrease = do
-    t <- offsetTime
-    ref <- newIORef 0
-    return $ do
-        t <- t
-        atomicModifyIORef ref $ \o -> let m = max t o in m `seq` (m, m)
+offsetTimeIncrease = offsetTime
 
 -- | Record how long a computation takes in 'Seconds'.
 --
