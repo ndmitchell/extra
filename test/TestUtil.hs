@@ -47,11 +47,11 @@ testRaw msg test = do
     modifyIORef testCount (+1)
 
 
-erroneous :: a -> Bool
-erroneous x = unsafePerformIO $ fmap isLeft $ try_ $ evaluate x
+erroneous :: Show a => a -> Bool
+erroneous x = unsafePerformIO $ fmap isLeft $ try_ $ evaluate $ length $ show x
 
-erroneousIO :: IO a -> Bool
-erroneousIO x = unsafePerformIO $ fmap isLeft $ try_ $ evaluate =<< x
+erroneousIO :: Show a => IO a -> Bool
+erroneousIO x = unsafePerformIO $ fmap isLeft $ try_ $ evaluate . length . show =<< x
 
 (====) :: (Show a, Eq a) => a -> a -> Bool
 a ==== b = if a == b then True else error $ "Not equal!\n" ++ show a ++ "\n" ++ show b

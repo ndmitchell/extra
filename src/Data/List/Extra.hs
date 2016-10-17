@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, TupleSections #-}
+{-# LANGUAGE CPP, TupleSections, BangPatterns #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- | This module extends "Data.List" with extra functions of a similar nature.
@@ -24,6 +24,7 @@ module Data.List.Extra(
     disjoint, allSame, anySame,
     repeatedly, for, firstJust,
     concatUnzip, concatUnzip3,
+    zipFrom, zipWithFrom,
     replace, merge, mergeBy,
     ) where
 
@@ -171,6 +172,25 @@ splitAtEnd :: Int -> [a] -> ([a], [a])
 splitAtEnd i xs = f xs (drop i xs)
     where f (x:xs) (y:ys) = first (x:) $ f xs ys
           f xs _ = ([], xs)
+
+
+-- | 'zip' against an enumeration.
+--   Never truncates the output - raises an error if the enumeration runs out.
+--
+-- > \i xs -> zip [i..] xs == zipFrom i xs
+-- > zipFrom False [1..3] == undefined
+zipFrom :: Enum a => a -> [b] -> [(a, b)]
+zipFrom = zipWithFrom (,)
+
+-- | 'zipFrom' generalised to any combining operation.
+--
+-- > \i xs -> zipWithFrom (,) i xs == zipFrom i xs
+zipWithFrom :: Enum a => (a -> b -> c) -> a -> [b] -> [c]
+zipWithFrom f a xs = go a xs
+    where
+        -- if we aren't strict in the accumulator, it's highly like to be a space leak
+        go !a [] = []
+        go !a (x:xs) = f a x : go (succ a) xs
 
 
 -- | A merging of 'unzip' and 'concat'.
