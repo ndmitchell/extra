@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #24, add eitherToMaybe and maybeToEither
     Add fromLeft' and fromRight'
 1.5
     Change fromLeft/fromRight signatures to follow the base libraries

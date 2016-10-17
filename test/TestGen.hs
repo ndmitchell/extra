@@ -59,6 +59,10 @@ tests = do
     testGen "\\x -> fromRight' (Left  x) == undefined" $ \x -> erroneous $ fromRight' (Left  x)
     testGen "\\x -> fromEither (Left x ) == x" $ \x -> fromEither (Left x ) == x
     testGen "\\x -> fromEither (Right x) == x" $ \x -> fromEither (Right x) == x
+    testGen "\\a b -> maybeToEither a (Just b) == Right b" $ \a b -> maybeToEither a (Just b) == Right b
+    testGen "\\a -> maybeToEither a Nothing == Left a" $ \a -> maybeToEither a Nothing == Left a
+    testGen "\\x -> eitherToMaybe (Left x) == Nothing" $ \x -> eitherToMaybe (Left x) == Nothing
+    testGen "\\x -> eitherToMaybe (Right x) == Just x" $ \x -> eitherToMaybe (Right x) == Just x
     testGen "\\xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs" $ \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
     testGen "\\xs -> repeatedly word1 (trim xs) == words xs" $ \xs -> repeatedly word1 (trim xs) == words xs
     testGen "\\xs -> repeatedly line1 xs == lines xs" $ \xs -> repeatedly line1 xs == lines xs

@@ -7,7 +7,8 @@
 module Data.Either.Extra(
     module Data.Either,
     isLeft, isRight, fromLeft, fromRight, fromEither,
-    fromLeft', fromRight'
+    fromLeft', fromRight',
+    eitherToMaybe, maybeToEither,
     ) where
 
 import Data.Either
@@ -74,3 +75,20 @@ isRight Right{} = True; isRight _ = False
 -- > \x -> fromEither (Right x) == x
 fromEither :: Either a a -> a
 fromEither = either id id
+
+
+-- | Given a 'Maybe', convert it to an 'Either', providing a suitable
+--   value for the 'Left' should the value be 'Nothing'.
+--
+-- > \a b -> maybeToEither a (Just b) == Right b
+-- > \a -> maybeToEither a Nothing == Left a
+maybeToEither :: a -> Maybe b -> Either a b
+maybeToEither a (Just b) = Right b
+maybeToEither a Nothing = Left a
+
+-- | Given an 'Either', convert it to a 'Maybe', where 'Left' becomes 'Nothing'.
+--
+-- > \x -> eitherToMaybe (Left x) == Nothing
+-- > \x -> eitherToMaybe (Right x) == Just x
+eitherToMaybe :: Either a b -> Maybe b
+eitherToMaybe = either (const Nothing) Just
