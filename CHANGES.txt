@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Add fromLeft' and fromRight'
 1.5
     Change fromLeft/fromRight signatures to follow the base libraries
 1.4.12

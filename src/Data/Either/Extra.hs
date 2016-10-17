@@ -6,7 +6,8 @@
 --   partial, and should be used with care in production-quality code.
 module Data.Either.Extra(
     module Data.Either,
-    isLeft, isRight, fromLeft, fromRight, fromEither
+    isLeft, isRight, fromLeft, fromRight, fromEither,
+    fromLeft', fromRight'
     ) where
 
 import Data.Either
@@ -31,6 +32,28 @@ fromRight _ (Right b) = b
 fromRight b _         = b
 
 #endif
+
+
+-- | The 'fromLeft'' function extracts the element out of a 'Left' and
+--   throws an error if its argument is 'Right'.
+--   Much like 'fromJust', using this function in polished code is usually a bad idea.
+--
+-- > \x -> fromLeft' (Left  x) == x
+-- > \x -> fromLeft' (Right x) == undefined
+fromLeft' :: Either l r -> l
+fromLeft' (Left x) = x
+fromLeft' _ = error "fromLeft', given a Right"
+
+-- | The 'fromRight'' function extracts the element out of a 'Right' and
+--   throws an error if its argument is 'Left'.
+--   Much like 'fromJust', using this function in polished code is usually a bad idea.
+--
+-- > \x -> fromRight' (Right x) == x
+-- > \x -> fromRight' (Left  x) == undefined
+fromRight' :: Either l r -> r
+fromRight' (Right x) = x
+fromRight' _ = error "fromRight', given a Left"
+
 
 #if __GLASGOW_HASKELL__ < 708
 -- | Test if an 'Either' value is the 'Left' constructor.

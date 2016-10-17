@@ -17,7 +17,7 @@ module Extra(
     whenJust, whenJustM, unit, maybeM, eitherM, loopM, whileM, partitionM, concatMapM, concatForM, mconcatMapM, mapMaybeM, findM, firstJustM, whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
     -- * Data.Either.Extra
     -- | Extra functions available in @"Data.Either.Extra"@.
-    isLeft, isRight, fromLeft, fromRight, fromEither,
+    isLeft, isRight, fromLeft, fromRight, fromEither, fromLeft', fromRight',
     -- * Data.IORef.Extra
     -- | Extra functions available in @"Data.IORef.Extra"@.
     modifyIORef', writeIORef', atomicModifyIORef', atomicWriteIORef, atomicWriteIORef',

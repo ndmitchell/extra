@@ -53,6 +53,10 @@ tests = do
     testGen "fromLeft 1 (Right \"foo\") == 1" $ fromLeft 1 (Right "foo") == 1
     testGen "fromRight 1 (Right 3) == 3" $ fromRight 1 (Right 3) == 3
     testGen "fromRight 1 (Left \"foo\") == 1" $ fromRight 1 (Left "foo") == 1
+    testGen "\\x -> fromLeft' (Left  x) == x" $ \x -> fromLeft' (Left  x) == x
+    testGen "\\x -> fromLeft' (Right x) == undefined" $ \x -> erroneous $ fromLeft' (Right x)
+    testGen "\\x -> fromRight' (Right x) == x" $ \x -> fromRight' (Right x) == x
+    testGen "\\x -> fromRight' (Left  x) == undefined" $ \x -> erroneous $ fromRight' (Left  x)
     testGen "\\x -> fromEither (Left x ) == x" $ \x -> fromEither (Left x ) == x
     testGen "\\x -> fromEither (Right x) == x" $ \x -> fromEither (Right x) == x
     testGen "\\xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs" $ \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
