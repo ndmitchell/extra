@@ -1,5 +1,6 @@
 Changelog for Extra
 
+1.5.1
     #25, add zipFrom and zipWithFrom
     #24, add eitherToMaybe and maybeToEither
     Add fromLeft' and fromRight'
