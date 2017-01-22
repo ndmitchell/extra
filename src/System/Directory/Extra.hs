@@ -68,6 +68,7 @@ listFiles dir = filterM doesFileExist =<< listContents dir
 
 
 -- | Like 'listFiles', but goes recursively through all subdirectories.
+--   This function will follow symlinks, and if they form a loop, this function will not terminate.
 --
 -- > listTest listFilesRecursive ["bar.txt","zoo","foo" </> "baz.txt"] ["bar.txt","zoo","foo" </> "baz.txt"]
 listFilesRecursive :: FilePath -> IO [FilePath]
