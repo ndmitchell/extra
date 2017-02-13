@@ -241,7 +241,7 @@ waitBarrier (Barrier var) = do
             x <- readVar var
             case x of
                 Right res -> return res
-                Left bar -> error "Cortex.Concurrent.Extra, internal invariant violated in Barrier"
+                Left bar -> error "Control.Concurrent.Extra, internal invariant violated in Barrier"
 
 
 -- | A version of 'waitBarrier' that never blocks, returning 'Nothing'
