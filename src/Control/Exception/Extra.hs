@@ -19,7 +19,9 @@ module Control.Exception.Extra(
 
 import Control.Exception
 import Control.Monad
+import Data.Functor
 import Data.List.Extra
+import Prelude
 
 
 -- | Fully evaluate an input String. If the String contains embedded exceptions it will produce @\<Exception\>@.
