@@ -68,7 +68,7 @@ timeout n f
         handleBool (== ex) 
                    (const $ return Nothing)
                    (bracket (forkIOWithUnmask $ \unmask -> unmask $ sleep n >> throwTo pid ex)
-                            (killThread)
+                            killThread
                             (\_ -> fmap Just f))
 
 

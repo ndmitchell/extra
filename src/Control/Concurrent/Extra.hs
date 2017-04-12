@@ -28,6 +28,7 @@ import Control.Concurrent
 import Control.Exception.Extra
 import Control.Monad.Extra
 import Data.Maybe
+import Data.Either.Extra
 
 
 -- | On GHC 7.6 and above with the @-threaded@ flag, brackets a call to 'setNumCapabilities'.
@@ -133,7 +134,7 @@ newtype Lock = Lock (MVar ())
 
 -- | Create a new 'Lock'.
 newLock :: IO Lock
-newLock = fmap Lock $ newMVar ()
+newLock = Lock <$> newMVar ()
 
 -- | Perform some operation while holding 'Lock'. Will prevent all other
 --   operations from using the 'Lock' while the action is ongoing.
@@ -224,7 +225,7 @@ newBarrier = fmap Barrier $ newVar . Left =<< newEmptyMVar
 -- | Write a value into the Barrier, releasing anyone at 'waitBarrier'.
 --   Any subsequent attempts to signal the 'Barrier' will throw an exception.
 signalBarrier :: Barrier a -> a -> IO ()
-signalBarrier (Barrier var) v = mask_ $ do -- use mask so never in an inconsistent state
+signalBarrier (Barrier var) v = mask_ $ -- use mask so never in an inconsistent state
     join $ modifyVar var $ \x -> case x of
         Left bar -> return (Right v, putMVar bar ())
         Right res -> error "Control.Concurrent.Extra.signalBarrier, attempt to signal a barrier that has already been signaled"
@@ -247,4 +248,4 @@ waitBarrier (Barrier var) = do
 -- | A version of 'waitBarrier' that never blocks, returning 'Nothing'
 --   if the barrier has not yet been signaled.
 waitBarrierMaybe :: Barrier a -> IO (Maybe a)
-waitBarrierMaybe (Barrier bar) = fmap (either (const Nothing) Just) $ readVar bar
+waitBarrierMaybe (Barrier bar) = eitherToMaybe <$> readVar bar

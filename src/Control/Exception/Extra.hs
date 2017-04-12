@@ -34,7 +34,7 @@ stringException x = do
     case r of
         Left e -> return "<Exception>"
         Right [] -> return []
-        Right (x:xs) -> fmap (x:) $ stringException xs
+        Right (x:xs) -> (x:) <$> stringException xs
 
 
 -- | Show a value, but if the result contains exceptions, produce

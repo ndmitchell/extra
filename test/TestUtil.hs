@@ -54,7 +54,9 @@ erroneousIO :: Show a => IO a -> Bool
 erroneousIO x = unsafePerformIO $ fmap isLeft $ try_ $ evaluate . length . show =<< x
 
 (====) :: (Show a, Eq a) => a -> a -> Bool
-a ==== b = if a == b then True else error $ "Not equal!\n" ++ show a ++ "\n" ++ show b
+a ==== b
+    | a == b = True
+    | otherwise = error $ "Not equal!\n" ++ show a ++ "\n" ++ show b
 
 #if __GLASGOW_HASKELL__ < 707
 instance Eq ErrorCall where
@@ -101,4 +103,4 @@ instance Arbitrary Day where
     arbitrary = fmap ModifiedJulianDay arbitrary
 
 instance Arbitrary DiffTime where
-    arbitrary = fmap realToFrac $ choose (0 :: Double, 86401)
+    arbitrary = realToFrac <$> choose (0 :: Double, 86401)

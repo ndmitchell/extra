@@ -20,7 +20,7 @@ systemOutput x = withTempFile $ \file -> do
     exit <- withFile file WriteMode $ \h -> do
         (_, _, _, pid) <- createProcess (shell x){std_out=UseHandle h, std_err=UseHandle h}
         waitForProcess pid
-    fmap (exit,) $ readFile' file
+    (exit,) <$> readFile' file
 
 
 -- | A version of 'system' that throws an error if the 'ExitCode' is not 'ExitSuccess'.

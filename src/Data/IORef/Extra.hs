@@ -46,7 +46,7 @@ atomicModifyIORef' ref f = do
 -- 'atomicModifyIORef' has.
 atomicWriteIORef :: IORef a -> a -> IO ()
 atomicWriteIORef ref a = do
-    x <- atomicModifyIORef ref (\_ -> (a, ()))
+    x <- atomicModifyIORef ref $ const (a, ())
     x `seq` return ()
 
 #endif

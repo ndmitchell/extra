@@ -510,7 +510,7 @@ dropWhileEnd' p = foldr (\x xs -> if null xs && p x then [] else x : xs) []
 -- > stripSuffix ""    "baz"    == Just "baz"
 -- > stripSuffix "foo" "quux"   == Nothing
 stripSuffix :: Eq a => [a] -> [a] -> Maybe [a]
-stripSuffix a b = fmap reverse $ stripPrefix (reverse a) (reverse b)
+stripSuffix a b = reverse <$> stripPrefix (reverse a) (reverse b)
 
 
 -- | Return the the string before and after the search string,

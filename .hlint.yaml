@@ -1,0 +1,7 @@
+# HLint configuration file
+# https://github.com/ndmitchell/hlint
+##########################
+
+- ignore: {within: TestGen} # Generated code
+- ignore: {name: Eta reduce} # Not sure I agree
+- ignore: {name: Use fmap, within: Control.Monad.Extra.mconcatMapM} # Only a Monad context

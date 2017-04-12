@@ -17,7 +17,7 @@ import Prelude
 main :: IO ()
 main = do
     src <- readFile "extra.cabal"
-    mods <- return $ filter (isSuffixOf ".Extra") $ map trim $ lines src
+    let mods = filter (isSuffixOf ".Extra") $ map trim $ lines src
     ifaces <- forM mods $ \mod -> do
         src <- readFile $ joinPath ("src" : split (== '.') mod) <.> "hs"
         let funcs = filter validIdentifier $ takeWhile (/= "where") $

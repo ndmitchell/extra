@@ -21,5 +21,5 @@ getExecutablePath = getProgName
 
 -- | Return the value of the environment variable var, or Nothing if there is no such value.
 lookupEnv :: String -> IO (Maybe String)
-lookupEnv x = catchBool isDoesNotExistError (fmap Just $ getEnv x) (const $ return Nothing)
+lookupEnv x = catchBool isDoesNotExistError (Just <$> getEnv x) (const $ return Nothing)
 #endif
