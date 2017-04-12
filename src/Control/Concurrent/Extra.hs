@@ -29,7 +29,7 @@ import Control.Exception.Extra
 import Control.Monad.Extra
 import Data.Maybe
 import Data.Either.Extra
-import Data.Functor((<$>))
+import Data.Functor
 import Prelude
 
 

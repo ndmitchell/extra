@@ -11,7 +11,7 @@ import Control.Monad
 import System.IO.Extra
 import System.Process
 import System.Exit
-import Data.Functor((<$>))
+import Data.Functor
 import Prelude
 
 

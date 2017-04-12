@@ -18,8 +18,8 @@ module Control.Monad.Extra(
 
 import Control.Monad
 import Data.Maybe
-import Control.Applicative(Applicative(pure))
-import Data.Monoid(Monoid, mconcat)
+import Control.Applicative
+import Data.Monoid
 import Prelude
 
 -- General utilities
