@@ -11,6 +11,8 @@ import Control.Monad
 import System.IO.Extra
 import System.Process
 import System.Exit
+import Data.Functor((<$>))
+import Prelude
 
 
 -- | A version of 'system' that also captures the output, both 'stdout' and 'stderr'.

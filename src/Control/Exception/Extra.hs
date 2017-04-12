@@ -19,8 +19,8 @@ module Control.Exception.Extra(
 
 import Control.Exception
 import Control.Monad
-import Data.Functor
 import Data.List.Extra
+import Data.Functor((<$>))
 import Prelude
 
 

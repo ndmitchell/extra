@@ -10,7 +10,7 @@ import System.FilePath
 import System.Directory
 import Data.Char
 import Data.Maybe
-import Data.Functor
+import Data.Functor((<$>))
 import Prelude
 
 

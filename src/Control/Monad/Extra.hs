@@ -17,9 +17,9 @@ module Control.Monad.Extra(
     ) where
 
 import Control.Monad
-import Control.Applicative
 import Data.Maybe
-import Data.Monoid
+import Control.Applicative(Applicative(pure))
+import Data.Monoid(Monoid, mconcat)
 import Prelude
 
 -- General utilities
