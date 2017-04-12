@@ -13,6 +13,7 @@ import System.Environment
 #if __GLASGOW_HASKELL__ < 706
 import Control.Exception.Extra
 import System.IO.Error
+import Data.Functor
 
 -- | Alias for 'getProgName' in GHC 7.4 and below, otherwise
 --   returns the absolute pathname of the current executable.
