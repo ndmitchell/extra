@@ -6,11 +6,11 @@ module Generate(main) where
 import Data.List.Extra
 import System.IO.Extra
 import Control.Monad.Extra
-import Control.Applicative
 import System.FilePath
 import System.Directory
 import Data.Char
 import Data.Maybe
+import Data.Functor
 import Prelude
 
 

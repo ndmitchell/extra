@@ -28,13 +28,13 @@ module Data.List.Extra(
     replace, merge, mergeBy,
     ) where
 
-import Control.Applicative
 import Data.List
 import Data.Maybe
 import Data.Function
 import Data.Char
 import Data.Tuple.Extra
 import Data.Monoid
+import Data.Functor
 import Prelude
 
 

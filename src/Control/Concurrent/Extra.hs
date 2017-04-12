@@ -29,6 +29,8 @@ import Control.Exception.Extra
 import Control.Monad.Extra
 import Data.Maybe
 import Data.Either.Extra
+import Data.Functor
+import Prelude
 
 
 -- | On GHC 7.6 and above with the @-threaded@ flag, brackets a call to 'setNumCapabilities'.
