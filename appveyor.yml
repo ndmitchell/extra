@@ -7,6 +7,7 @@ before_test:
 - set PATH=C:\Program Files\Git\mingw64\bin;%PATH% # for curl
 - curl -ostack.zip -L --insecure http://www.stackage.org/stack/windows-i386
 - 7z x stack.zip stack.exe
+- curl -ohlint.bat -L --insecure https://raw.githubusercontent.com/ndmitchell/hlint/master/misc/appveyor.bat
 
 clone_folder: "c:\\project"
 environment:
@@ -18,3 +19,4 @@ test_script:
 - stack setup > nul
 - echo "" | stack --no-terminal build
 - echo "" | stack --no-terminal test
+- hlint src
