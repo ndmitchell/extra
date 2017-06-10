@@ -54,6 +54,9 @@ module Extra(
     -- * System.Time.Extra
     -- | Extra functions available in @"System.Time.Extra"@.
     Seconds, sleep, timeout, subtractTime, showDuration, offsetTime, offsetTimeIncrease, duration,
+    -- * Text.Read.Extra
+    -- | Extra functions available in @"Text.Read.Extra"@.
+    readEither, readMaybe,
     ) where
 
 import Control.Concurrent.Extra
@@ -72,3 +75,4 @@ import System.Info.Extra
 import System.IO.Extra
 import System.Process.Extra
 import System.Time.Extra
+import Text.Read.Extra

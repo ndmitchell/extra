@@ -58,6 +58,7 @@ library
         System.IO.Extra
         System.Process.Extra
         System.Time.Extra
+        Text.Read.Extra
 
 test-suite extra-test
     type:            exitcode-stdio-1.0
