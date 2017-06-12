@@ -1,5 +1,6 @@
 Changelog for Extra
 
+1.5.3
     Add readMaybe, readEither
 1.5.2
     Add errorWithoutStackTrace to Control.Exception.Extra
