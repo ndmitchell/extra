@@ -17,8 +17,6 @@ import System.IO.Extra
 import Data.Version.Extra
 import Data.IORef
 import System.IO.Unsafe
-import Data.Time.Clock
-import Data.Time.Calendar
 import Text.Show.Functions()
 
 import Extra as X
@@ -99,12 +97,3 @@ instance Arbitrary a => Arbitrary (IO a) where
 
 instance Eq SomeException where
     a == b = show a == show b
-
-instance Arbitrary UTCTime where
-    arbitrary = liftM2 UTCTime arbitrary arbitrary
-
-instance Arbitrary Day where
-    arbitrary = fmap ModifiedJulianDay arbitrary
-
-instance Arbitrary DiffTime where
-    arbitrary = realToFrac <$> choose (0 :: Double, 86401)

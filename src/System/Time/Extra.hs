@@ -8,13 +8,11 @@
 module System.Time.Extra(
     Seconds,
     sleep, timeout,
-    subtractTime,
     showDuration,
     offsetTime, offsetTimeIncrease, duration
     ) where
 
 import Control.Concurrent
-import Data.Time.Clock
 import System.Clock
 import Numeric.Extra
 import Control.Monad.Extra
@@ -70,16 +68,6 @@ timeout n f
                    (bracket (forkIOWithUnmask $ \unmask -> unmask $ sleep n >> throwTo pid ex)
                             killThread
                             (\_ -> fmap Just f))
-
-
--- Once we remove subtractTime we can remove the dependency on the time package entire.
-{-# DEPRECATED subtractTime "Function is being retired - use diffUTCTime directly." #-}
-
--- | Calculate the difference between two times in seconds.
---   Usually the first time will be the end of an event, and the
---   second time will be the beginning.
-subtractTime :: UTCTime -> UTCTime -> Seconds
-subtractTime end start = fromRational $ toRational $ end `diffUTCTime` start
 
 
 -- | Show a number of seconds, typically a duration, in a suitable manner with

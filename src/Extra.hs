@@ -53,7 +53,7 @@ module Extra(
     system_, systemOutput, systemOutput_,
     -- * System.Time.Extra
     -- | Extra functions available in @"System.Time.Extra"@.
-    Seconds, sleep, timeout, subtractTime, showDuration, offsetTime, offsetTimeIncrease, duration,
+    Seconds, sleep, timeout, showDuration, offsetTime, offsetTimeIncrease, duration,
     -- * Text.Read.Extra
     -- | Extra functions available in @"Text.Read.Extra"@.
     readEither, readMaybe,

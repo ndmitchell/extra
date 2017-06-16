@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Delete subtractTime
     Require QuickCheck-2.10
 1.5.3
     Add readMaybe, readEither
