@@ -224,7 +224,7 @@ tests = do
     testGen "isWindows == (os == \"mingw32\")" $ isWindows == (os == "mingw32")
     testGen "\\(filter isHexDigit -> s) -> fmap (== s) $ withTempFile $ \\file -> do writeFile file s; readFile' file" $ \(filter isHexDigit -> s) -> fmap (== s) $ withTempFile $ \file -> do writeFile file s; readFile' file
     testGen "\\s -> withTempFile $ \\file -> do writeFileUTF8 file s; fmap (== s) $ readFileUTF8' file" $ \s -> withTempFile $ \file -> do writeFileUTF8 file s; fmap (== s) $ readFileUTF8' file
-    testGen "\\s -> withTempFile $ \\file -> do writeFileBinary file s; fmap (== s) $ readFileBinary' file" $ \s -> withTempFile $ \file -> do writeFileBinary file s; fmap (== s) $ readFileBinary' file
+    testGen "\\(ASCIIString s) -> withTempFile $ \\file -> do writeFileBinary file s; fmap (== s) $ readFileBinary' file" $ \(ASCIIString s) -> withTempFile $ \file -> do writeFileBinary file s; fmap (== s) $ readFileBinary' file
     testGen "captureOutput (print 1) == return (\"1\\n\",())" $ captureOutput (print 1) == return ("1\n",())
     testGen "withTempFile doesFileExist == return True" $ withTempFile doesFileExist == return True
     testGen "(doesFileExist =<< withTempFile return) == return False" $ (doesFileExist =<< withTempFile return) == return False

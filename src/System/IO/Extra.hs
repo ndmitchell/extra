@@ -103,7 +103,7 @@ writeFileUTF8 = writeFileEncoding utf8
 
 -- | Write a binary file.
 --
--- > \s -> withTempFile $ \file -> do writeFileBinary file s; fmap (== s) $ readFileBinary' file
+-- > \(ASCIIString s) -> withTempFile $ \file -> do writeFileBinary file s; fmap (== s) $ readFileBinary' file
 writeFileBinary :: FilePath -> String -> IO ()
 writeFileBinary file x = withBinaryFile file WriteMode $ \h -> hPutStr h x
 

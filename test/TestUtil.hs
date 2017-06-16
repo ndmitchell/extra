@@ -1,6 +1,13 @@
 {-# LANGUAGE ScopedTypeVariables, CPP, FlexibleInstances #-}
 
-module TestUtil(runTests, testGen, testRaw, erroneous, erroneousIO, (====), module X) where
+module TestUtil
+    (runTests
+    ,testGen, testRaw
+    ,erroneous, erroneousIO
+    ,(====)
+    ,ASCIIString(..)
+    ,module X
+    ) where
 
 import Test.QuickCheck
 import Test.QuickCheck.Test
