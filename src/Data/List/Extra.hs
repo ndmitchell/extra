@@ -425,7 +425,7 @@ mconcatMap f = mconcat . map f
 -- The first element of the returned tuple
 -- is the prefix of @haystack@ before @needle@ is matched.  The second
 -- is the remainder of @haystack@, starting with the match.
--- If you want the remainder /without/ the patch, use 'stripInfix'.
+-- If you want the remainder /without/ the match, use 'stripInfix'.
 --
 -- > breakOn "::" "a::b::c" == ("a", "::b::c")
 -- > breakOn "/" "foobar"   == ("foobar", "")
