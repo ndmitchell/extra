@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, TupleSections, LambdaCase #-}
+{-# LANGUAGE CPP, TupleSections #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- | Extra functions for "Control.Concurrent".
@@ -228,7 +228,7 @@ newBarrier = fmap Barrier $ newVar . Left =<< newEmptyMVar
 --   Any subsequent attempts to signal the 'Barrier' will throw an exception.
 signalBarrier :: Barrier a -> a -> IO ()
 signalBarrier (Barrier var) v = mask_ $ -- use mask so never in an inconsistent state
-    join $ modifyVar var $ \case
+    join $ modifyVar var $ \x -> case x of
         Left bar -> return (Right v, putMVar bar ())
         Right res -> error "Control.Concurrent.Extra.signalBarrier, attempt to signal a barrier that has already been signaled"
 
