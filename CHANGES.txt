@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Mark the Extra module as deprecated, used for documentation only
 1.6
     #23, delete subtractTime
     Require QuickCheck-2.10
