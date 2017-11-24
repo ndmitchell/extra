@@ -5,6 +5,7 @@ module Generate(main) where
 
 import Data.List.Extra
 import System.IO.Extra
+import Control.Exception
 import Control.Monad.Extra
 import System.FilePath
 import System.Directory
@@ -60,6 +61,7 @@ rejoin [] = []
 
 writeFileBinaryChanged :: FilePath -> String -> IO ()
 writeFileBinaryChanged file x = do
+    evaluate $ length x -- ensure we don't write out files with _|_ in them
     old <- ifM (doesFileExist file) (Just <$> readFileBinary' file) (return Nothing)
     when (Just x /= old) $
         writeFileBinary file x
