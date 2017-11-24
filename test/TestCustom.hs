@@ -6,8 +6,7 @@ import Control.Monad
 import System.IO.Extra
 import Data.IORef
 import TestUtil
-
-import Extra as X
+import Data.Typeable.Extra as X
 
 
 testCustom :: IO ()
