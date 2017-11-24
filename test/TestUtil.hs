@@ -1,4 +1,5 @@
 {-# LANGUAGE ScopedTypeVariables, CPP, FlexibleInstances #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-} -- OK because a test module
 
 module TestUtil
     (runTests
