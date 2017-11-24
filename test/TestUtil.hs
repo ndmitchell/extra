@@ -5,7 +5,7 @@ module TestUtil
     (runTests
     ,testGen, testRaw
     ,erroneous, erroneousIO
-    ,(====)
+    ,(====), (==>)
     ,ASCIIString(..)
     ,module X
     ) where
@@ -34,7 +34,6 @@ import System.Directory as X
 import System.FilePath as X
 import System.Info as X
 import Control.Exception as X
-import Test.QuickCheck as X((==>))
 
 
 {-# NOINLINE testCount #-}
