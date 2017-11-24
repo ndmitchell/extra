@@ -12,28 +12,29 @@ module TestUtil
 
 import Test.QuickCheck
 import Test.QuickCheck.Test
-import Control.Exception.Extra
-import Data.Either.Extra
-import System.IO.Extra
-import Data.Version.Extra
-import Data.IORef
 import System.IO.Unsafe
 import Text.Show.Functions()
 
-import Extra as X
 import Control.Applicative as X
-import Control.Monad as X
-import Data.Function as X
-import Data.List as X
+import Control.Concurrent.Extra as X
+import Control.Exception.Extra as X
+import Control.Monad.Extra as X
 import Data.Char as X
+import Data.Either.Extra as X
+import Data.Function as X
+import Data.IORef.Extra as X
+import Data.List.Extra as X
 import Data.Monoid as X
-import Data.Tuple as X
+import Data.Tuple.Extra as X
 import Data.Typeable as X
-import Data.Version as X
-import System.Directory as X
+import Data.Version.Extra as X
+import Numeric.Extra as X
+import System.Directory.Extra as X
 import System.FilePath as X
-import System.Info as X
-import Control.Exception as X
+import System.Info.Extra as X
+import System.IO.Extra as X
+import System.Process.Extra as X
+import System.Time.Extra as X
 
 
 {-# NOINLINE testCount #-}
