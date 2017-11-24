@@ -5,7 +5,7 @@
 --
 --   Most users should import the specific modules (e.g. @"Data.List.Extra"@), which
 --   also reexport their non-@Extra@ modules (e.g. @"Data.List"@).
-module Extra {-# DEPRECATED "This module is provided as documentation of all new functions, for use you should import the more specific modules directly." #-} (
+module Extra {-# DEPRECATED "This module is provided as documentation of all new functions, you should import the more specific modules directly." #-} (
     -- * Control.Concurrent.Extra
     -- | Extra functions available in @"Control.Concurrent.Extra"@.
     getNumCapabilities, setNumCapabilities, withNumCapabilities, forkFinally, once, onceFork, Lock, newLock, withLock, withLockTry, Var, newVar, readVar, writeVar, modifyVar, modifyVar_, withVar, Barrier, newBarrier, signalBarrier, waitBarrier, waitBarrierMaybe,
