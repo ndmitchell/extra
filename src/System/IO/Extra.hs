@@ -221,7 +221,7 @@ sameSize h1 h2 = liftM2 (==) (hFileSize h1) (hFileSize h2)
 foreign import ccall unsafe "string.h memcmp" memcmp
     :: Ptr CUChar -> Ptr CUChar -> CSize -> IO CInt
 
--- | Returs 'True' when the contents of both files is the same.
+-- | Returns 'True' when the contents of both files is the same.
 sameContent :: Handle -> Handle -> IO Bool
 sameContent h1 h2 = sameSize h1 h2 &&^ withb (\b1 -> withb $ \b2 -> eq b1 b2)
     where eq b1 b2 = do
