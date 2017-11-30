@@ -1,5 +1,6 @@
 Changelog for Extra
 
+1.6.1
     Add newTempFileWithin and newTempDirWithin
     Mark the Extra module as deprecated, used for documentation only
 1.6
