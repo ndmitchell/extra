@@ -47,7 +47,7 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     isWindows, isMac,
     -- * System.IO.Extra
     -- | Extra functions available in @"System.IO.Extra"@.
-    captureOutput, withBuffering, readFileEncoding, readFileUTF8, readFileBinary, readFile', readFileEncoding', readFileUTF8', readFileBinary', writeFileEncoding, writeFileUTF8, writeFileBinary, withTempFile, withTempDir, newTempFile, newTempDir, fileEq,
+    captureOutput, withBuffering, readFileEncoding, readFileUTF8, readFileBinary, readFile', readFileEncoding', readFileUTF8', readFileBinary', writeFileEncoding, writeFileUTF8, writeFileBinary, withTempFile, withTempDir, newTempFile, newTempDir, newTempFileWithin, newTempDirWithin, fileEq,
     -- * System.Process.Extra
     -- | Extra functions available in @"System.Process.Extra"@.
     system_, systemOutput, systemOutput_,
