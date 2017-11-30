@@ -16,6 +16,7 @@ module System.IO.Extra(
     writeFileEncoding, writeFileUTF8, writeFileBinary,
     -- * Temporary files
     withTempFile, withTempDir, newTempFile, newTempDir,
+    newTempFileWithin, newTempDirWithin,
     -- * File comparison
     fileEq,
     ) where
@@ -158,13 +159,16 @@ tempUnique = atomicModifyIORef tempRef $ succ &&& succ
 --   temporary file. Most users should use 'withTempFile' which
 --   combines these operations.
 newTempFile :: IO (FilePath, IO ())
-newTempFile = do
+newTempFile = newTempFileWithin =<< getTemporaryDirectory
+
+-- | Like 'newTempFile' but using a custom temporary directory.
+newTempFileWithin :: FilePath -> IO (FilePath, IO ())
+newTempFileWithin tmpdir = do
         file <- create
         del <- once $ ignore $ removeFile file
         return (file, del)
     where
         create = do
-            tmpdir <- getTemporaryDirectory
             val <- tempUnique
             (file, h) <- retryBool (\(_ :: IOError) -> True) 5 $ openTempFile tmpdir $ "extra-file-" ++ show val ++ "-"
             hClose h
@@ -189,8 +193,11 @@ withTempFile act = do
 --   temporary directory. Most users should use 'withTempDir' which
 --   combines these operations.
 newTempDir :: IO (FilePath, IO ())
-newTempDir = do
-        tmpdir <- getTemporaryDirectory
+newTempDir = newTempDirWithin =<< getTemporaryDirectory
+
+-- | Like 'newTempDir' but using a custom temporary directory.
+newTempDirWithin :: FilePath -> IO (FilePath, IO ())
+newTempDirWithin tmpdir = do
         dir <- retryBool (\(_ :: IOError) -> True) 5 $ create tmpdir
         del <- once $ ignore $ removeDirectoryRecursive dir
         return (dir, del)

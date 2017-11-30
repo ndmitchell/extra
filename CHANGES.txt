@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Add newTempFileWithin and newTempDirWithin
     Mark the Extra module as deprecated, used for documentation only
 1.6
     #23, delete subtractTime
