@@ -1,98 +1,98 @@
 Changelog for Extra
 
-1.6.1
+1.6.1, released 2017-11-30
     Add newTempFileWithin and newTempDirWithin
     Mark the Extra module as deprecated, used for documentation only
-1.6
+1.6, released 2017-06-16
     #23, delete subtractTime
     Require QuickCheck-2.10
-1.5.3
+1.5.3, released 2017-06-12
     Add readMaybe, readEither
-1.5.2
+1.5.2, released 2017-04-04
     Add errorWithoutStackTrace to Control.Exception.Extra
-1.5.1
+1.5.1, released 2016-10-25
     #25, add zipFrom and zipWithFrom
     #24, add eitherToMaybe and maybeToEither
     Add fromLeft' and fromRight'
-1.5
+1.5, released 2016-07-21
     Change fromLeft/fromRight signatures to follow the base libraries
-1.4.12
+1.4.12, released 2016-07-18
     Add writeVar
-1.4.11
+1.4.11, released 2016-07-15
     Require QuickCheck 2.9
     #23, deprecate offsetTimeIncrease and subtract
     #22, improve offsetTime to give reliable measurements
     Depend on the clock library
-1.4.10
+1.4.10, released 2016-06-15
     Add Data.Typeable.Extra containing typeRep, Proxy, (:~:)
-1.4.9
+1.4.9, released 2016-06-01
     Add line1
-1.4.8
+1.4.8, released 2016-05-26
     Add displayException
-1.4.7
+1.4.7, released 2016-05-22
     #21, add concatForM
-1.4.6
+1.4.6, released 2016-05-11
     #11, add maybeM and eitherM
-1.4.5
+1.4.5, released 2016-04-29
     #17, change fileEq on files that do not exist to be an error
-1.4.4
+1.4.4, released 2016-04-29
     #14, add mconcatMap and mconcatMapM
     #16, add fileEq
     #15, add isMac
-1.4.3
+1.4.3, released 2016-01-07
     Add Data.Version.Extra
-1.4.2
+1.4.2, released 2015-09-14
     Make concatMapM/mapMaybeM faster
-1.4.1
+1.4.1, released 2015-08-04
     Make temp file functions workaround GHC bug #10731
     Add retryBool
-1.4
+1.4, released 2015-07-23
     Add stripInfix and stripInfixEnd
-1.3.1
+1.3.1, released 2015-07-17
     #9, support directory-1.2.3
-1.3
+1.3, released 2015-06-20
     Add whenJustM
     Add errorIO
-1.2
+1.2, released 2015-05-18
     Add onceFork
     Make once async exception safe
     Fix a deadlock in once when two people request in parallel
     Fix a missing hClose in captureOutput
-1.1
+1.1, released 2015-02-17
     #7, add nubOrd, nubOrdOn, nubOrdBy
     #6, add groupSortOn and groupSortBy
     #5, add splitAtEnd
-1.0.1
+1.0.1, released 2015-01-09
     Make listFilesAvoid drop trailing path separators before testing
     #3, add a constraint base >= 4.4
-1.0
+1.0, released 2014-11-27
     No changes
-0.8
+0.8, released 2014-11-12
     Fix a bug in writeFileEncoding/writeFileUTF8
-0.7
+0.7, released 2014-11-03
     Fix for missing case in withNumCapabilities
-0.6
+0.6, released 2014-10-31
     Ensure barrier is thread-safe
     Make subsequent signalBarrier calls throw an exception
     Add timeout function
     Make sure sleep never wraps round an Int
-0.5.1
+0.5.1, released 2014-10-28
     Use uncons from GHC 7.9 and above
-0.5
+0.5, released 2014-10-28
     Use the sortOn from GHC 7.9 and above
     Remove getProcessorCount
     Remove getDirectoryContentsRecursive in favour of listFilesRecursive
     Change the signature for newTempFile/newTempDir
     Add a once function
-0.4
+0.4, released 2014-10-23
     Remove all but the extractors on triples
     Remove groupSortOn
     Remove dropAround
-0.3.2
+0.3.2, released 2014-10-21
     Remove use of ===, allows older QuickCheck versions
-0.3.1
+0.3.1, released 2014-10-20
     Fix a bug in breakEnd/spanEnd
-0.3
+0.3, released 2014-10-18
     Rename showTime to showDuration
     Add stringException
     Eliminate rep/reps, use replace instead
@@ -105,11 +105,11 @@ Changelog for Extra
     Add createDirectoryPrivate
     Rename strip* to trim*
     Generalise showException
-0.2
+0.2, released 2014-10-07
     Redo the cons/uncons functions
     Add withTempDir
     Rename withTemporaryFile to withTempFile
     Change trim to strip (follow text naming convention)
     Ensure operators get exported
-0.1
+0.1, released 2014-10-06
     Initial version, still unstable
