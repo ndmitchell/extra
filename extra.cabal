@@ -70,7 +70,6 @@ test-suite extra-test
         directory,
         filepath,
         extra,
-        clock >= 0.7,
         QuickCheck >= 2.10
     if !os(windows)
         build-depends: unix
