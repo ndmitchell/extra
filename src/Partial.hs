@@ -20,10 +20,18 @@ import GHC.Stack
 import GHC.Exts
 #endif
 
--- | A constraint synonym which denotes that the function is partial, and will
---   (on GHC 8.* and up) produce a stack trace on failure.
---   You may mark your own non-total functions as Partial, if necessary, and this
---   will ensure that they produce useful stack traces.
+-- | A constraint which documents that a function is partial, and on GHC 8.0
+--   and above produces a stack trace on failure. For example:
+--
+-- @
+-- myHead :: 'Partial' => [a] -> a
+-- myHead [] = error \"bad\"
+-- myHead (x:xs) = x
+-- @
+--
+--   When using 'Partial' with GHC 7.8 or below you need to enable the
+--   language feature @ConstraintKinds@, e.g. @{-\# LANGUAGE ConstraintKinds \#-}@
+--   at the top of the file.
 #if __GLASGOW_HASKELL__ >= 800
 type Partial = HasCallStack
 #else
