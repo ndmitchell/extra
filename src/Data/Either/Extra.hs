@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP #-}
+{-# LANGUAGE CPP, ConstraintKinds #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- | This module extends "Data.Either" with extra operations, particularly

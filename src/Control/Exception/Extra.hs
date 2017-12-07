@@ -1,4 +1,4 @@
-{-# LANGUAGE ScopedTypeVariables, CPP #-}
+{-# LANGUAGE ScopedTypeVariables, CPP, ConstraintKinds #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- | Extra functions for "Control.Exception".

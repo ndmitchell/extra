@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, TupleSections, BangPatterns #-}
+{-# LANGUAGE CPP, TupleSections, BangPatterns, ConstraintKinds #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- | This module extends "Data.List" with extra functions of a similar nature.

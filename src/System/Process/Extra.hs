@@ -1,4 +1,4 @@
-{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TupleSections, ConstraintKinds #-}
 
 -- | Extra functions for creating processes. Specifically variants that automatically check
 --   the 'ExitCode' and capture the 'stdout'\/'stderr' handles.
