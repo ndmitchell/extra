@@ -40,6 +40,8 @@ library
     if !os(windows)
         build-depends: unix
 
+    other-modules:
+        Partial
     exposed-modules:
         Extra
         Control.Concurrent.Extra

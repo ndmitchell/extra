@@ -6,6 +6,7 @@
 --   and functions to catch\/ignore exceptions, including monomorphic (no 'Exception' context) versions.
 module Control.Exception.Extra(
     module Control.Exception,
+    Partial,
     retry, retryBool,
     errorWithoutStackTrace,
     showException, stringException,
@@ -21,6 +22,7 @@ import Control.Exception
 import Control.Monad
 import Data.List.Extra
 import Data.Functor
+import Partial
 import Prelude
 
 
