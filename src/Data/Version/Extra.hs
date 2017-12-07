@@ -8,6 +8,7 @@ module Data.Version.Extra(
     makeVersion, readVersion
     ) where
 
+import Partial
 import Data.Version
 import Data.List.Extra
 import Text.ParserCombinators.ReadP
@@ -27,7 +28,7 @@ makeVersion b = Version b []
 --
 -- > \x -> readVersion (showVersion x) == x
 -- > readVersion "hello" == undefined
-readVersion :: String -> Version
+readVersion :: Partial => String -> Version
 readVersion s =
     case [ x | (x,"") <- readP_to_S parseVersion $ trimEnd s] of
         [x] -> x

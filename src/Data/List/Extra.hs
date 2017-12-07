@@ -28,6 +28,7 @@ module Data.List.Extra(
     replace, merge, mergeBy,
     ) where
 
+import Partial
 import Data.List
 import Data.Maybe
 import Data.Function
@@ -179,13 +180,14 @@ splitAtEnd i xs = f xs (drop i xs)
 --
 -- > \i xs -> zip [i..] xs == zipFrom i xs
 -- > zipFrom False [1..3] == undefined
-zipFrom :: Enum a => a -> [b] -> [(a, b)]
+zipFrom :: (Partial, Enum a) => a -> [b] -> [(a, b)]
 zipFrom = zipWithFrom (,)
 
 -- | 'zipFrom' generalised to any combining operation.
+--   Never truncates the output - raises an error if the enumeration runs out.
 --
 -- > \i xs -> zipWithFrom (,) i xs == zipFrom i xs
-zipWithFrom :: Enum a => (a -> b -> c) -> a -> [b] -> [c]
+zipWithFrom :: (Partial, Enum a) => (a -> b -> c) -> a -> [b] -> [c]
 zipWithFrom f a xs = go a xs
     where
         -- if we aren't strict in the accumulator, it's highly like to be a space leak
@@ -340,7 +342,7 @@ mergeBy f (x:xs) (y:ys)
 -- > replace "el" "e" "Hello"       == "Helo"
 -- > replace "" "e" "Hello"         == undefined
 -- > \xs ys -> not (null xs) ==> replace xs xs ys == ys
-replace :: Eq a => [a] -> [a] -> [a] -> [a]
+replace :: (Partial, Eq a) => [a] -> [a] -> [a] -> [a]
 replace [] _ _ = error "Extra.replace, first argument cannot be empty"
 replace from to xs | Just xs <- stripPrefix from xs = to ++ replace from to xs
 replace from to (x:xs) = x : replace from to xs
@@ -457,7 +459,7 @@ breakOnEnd needle haystack = both reverse $ swap $ breakOn (reverse needle) (rev
 -- > splitOn "x"    ""                 == [""]
 -- > \s x -> s /= "" ==> intercalate s (splitOn s x) == x
 -- > \c x -> splitOn [c] x                           == split (==c) x
-splitOn :: Eq a => [a] -> [a] -> [[a]]
+splitOn :: (Partial, Eq a) => [a] -> [a] -> [[a]]
 splitOn [] _ = error "splitOn, needle may not be empty"
 splitOn _ [] = [[]]
 splitOn needle haystack = a : if null b then [] else splitOn needle $ drop (length needle) b
@@ -541,7 +543,7 @@ stripInfixEnd needle haystack = both reverse . swap <$> stripInfix (reverse need
 -- > chunksOf 3 "mytest"  == ["myt","est"]
 -- > chunksOf 8 ""        == []
 -- > chunksOf 0 "test"    == undefined
-chunksOf :: Int -> [a] -> [[a]]
+chunksOf :: Partial => Int -> [a] -> [[a]]
 chunksOf i xs | i <= 0 = error $ "chunksOf, number must be positive, got " ++ show i
 chunksOf i xs = repeatedly (splitAt i) xs
 

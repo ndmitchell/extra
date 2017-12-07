@@ -75,7 +75,7 @@ ignore = void . try_
 --   Note that while 'fail' in 'IO' raises an 'IOException', this function raises an 'ErrorCall' exception.
 --
 -- > try (errorIO "Hello") == return (Left (ErrorCall "Hello"))
-errorIO :: String -> IO a
+errorIO :: Partial => String -> IO a
 errorIO = throwIO . ErrorCall
 
 

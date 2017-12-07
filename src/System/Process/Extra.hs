@@ -12,6 +12,7 @@ import System.IO.Extra
 import System.Process
 import System.Exit
 import Data.Functor
+import Partial
 import Prelude
 
 
@@ -26,7 +27,7 @@ systemOutput x = withTempFile $ \file -> do
 
 
 -- | A version of 'system' that throws an error if the 'ExitCode' is not 'ExitSuccess'.
-system_ :: String -> IO ()
+system_ :: Partial => String -> IO ()
 system_ x = do
     res <- system x
     when (res /= ExitSuccess) $
@@ -34,7 +35,7 @@ system_ x = do
 
 -- | A version of 'system' that captures the output (both 'stdout' and 'stderr')
 --   and throws an error if the 'ExitCode' is not 'ExitSuccess'.
-systemOutput_ :: String -> IO String
+systemOutput_ :: Partial => String -> IO String
 systemOutput_ x = do
     (res,out) <- systemOutput x
     when (res /= ExitSuccess) $

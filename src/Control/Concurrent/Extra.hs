@@ -226,7 +226,7 @@ newBarrier = fmap Barrier $ newVar . Left =<< newEmptyMVar
 
 -- | Write a value into the Barrier, releasing anyone at 'waitBarrier'.
 --   Any subsequent attempts to signal the 'Barrier' will throw an exception.
-signalBarrier :: Barrier a -> a -> IO ()
+signalBarrier :: Partial => Barrier a -> a -> IO ()
 signalBarrier (Barrier var) v = mask_ $ -- use mask so never in an inconsistent state
     join $ modifyVar var $ \x -> case x of
         Left bar -> return (Right v, putMVar bar ())

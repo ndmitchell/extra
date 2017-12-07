@@ -12,6 +12,7 @@ module Data.Either.Extra(
     ) where
 
 import Data.Either
+import Partial
 
 
 #if __GLASGOW_HASKELL__ < 801
@@ -41,7 +42,7 @@ fromRight b _         = b
 --
 -- > \x -> fromLeft' (Left  x) == x
 -- > \x -> fromLeft' (Right x) == undefined
-fromLeft' :: Either l r -> l
+fromLeft' :: Partial => Either l r -> l
 fromLeft' (Left x) = x
 fromLeft' _ = error "fromLeft', given a Right"
 
@@ -51,7 +52,7 @@ fromLeft' _ = error "fromLeft', given a Right"
 --
 -- > \x -> fromRight' (Right x) == x
 -- > \x -> fromRight' (Left  x) == undefined
-fromRight' :: Either l r -> r
+fromRight' :: Partial => Either l r -> r
 fromRight' (Right x) = x
 fromRight' _ = error "fromRight', given a Left"
 
