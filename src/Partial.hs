@@ -1,5 +1,6 @@
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE KindSignatures  #-}
+{-# LANGUAGE MultiParamTypeClasses  #-}
 {-# LANGUAGE CPP             #-}
 {-# LANGUAGE ImplicitParams  #-}
 
@@ -37,7 +38,8 @@ import GHC.Stack
 --   You may mark your own non-total functions as Partial, if necessary, and this
 --   will ensure that they produce useful stack traces.
 #if OPTION == 0
-type Partial = (() :: Constraint)
+class Partial
+instance Partial
 #elif OPTION == 1
 type Partial = (?loc :: CallStack)
 #else
