@@ -194,6 +194,10 @@ tests = do
     testGen "chunksOf 3 \"mytest\"  == [\"myt\",\"est\"]" $ chunksOf 3 "mytest"  == ["myt","est"]
     testGen "chunksOf 8 \"\"        == []" $ chunksOf 8 ""        == []
     testGen "chunksOf 0 \"test\"    == undefined" $ erroneous $ chunksOf 0 "test"
+    testGen "nubSort \"this is a test\" == \" aehist\"" $ nubSort "this is a test" == " aehist"
+    testGen "\\xs -> nubSort xs == nub (sort xs)" $ \xs -> nubSort xs == nub (sort xs)
+    testGen "nubSortOn length [\"a\",\"test\",\"of\",\"this\"] == [\"a\",\"of\",\"test\"]" $ nubSortOn length ["a","test","of","this"] == ["a","of","test"]
+    testGen "nubSortBy (compare `on` length) [\"a\",\"test\",\"of\",\"this\"] == [\"a\",\"of\",\"test\"]" $ nubSortBy (compare `on` length) ["a","test","of","this"] == ["a","of","test"]
     testGen "nubOrd \"this is a test\" == \"this ae\"" $ nubOrd "this is a test" == "this ae"
     testGen "nubOrd (take 4 (\"this\" ++ undefined)) == \"this\"" $ nubOrd (take 4 ("this" ++ undefined)) == "this"
     testGen "\\xs -> nubOrd xs == nub xs" $ \xs -> nubOrd xs == nub xs

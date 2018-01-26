@@ -1,5 +1,7 @@
 Changelog for Extra
 
+    Add maximumOn and minimumOn
+    #31, add nubSort, nubSortBy and nubSortOn
 1.6.2, released 2017-12-07
     Mark the partial functions with Partial
     Add Partial constraint

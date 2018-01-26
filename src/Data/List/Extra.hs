@@ -9,7 +9,7 @@ module Data.List.Extra(
     module Data.List,
     -- * String operations
     lower, upper, trim, trimStart, trimEnd, word1, line1,
-    -- * Splitting    
+    -- * Splitting
     dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd,
     dropWhileEnd, dropWhileEnd', takeWhileEnd,
     stripSuffix, stripInfix, stripInfixEnd,
@@ -21,6 +21,8 @@ module Data.List.Extra(
     groupSort, groupSortOn, groupSortBy,
     nubOrd, nubOrdBy, nubOrdOn,
     nubOn, groupOn, sortOn,
+    nubSort, nubSortBy, nubSortOn,
+    maximumOn, minimumOn,
     disjoint, allSame, anySame,
     repeatedly, for, firstJust,
     concatUnzip, concatUnzip3,
@@ -296,6 +298,13 @@ groupOn f = groupBy ((==) `on2` f)
 nubOn :: Eq b => (a -> b) -> [a] -> [a]
 nubOn f = map snd . nubBy ((==) `on` fst) . map (\x -> let y = f x in y `seq` (y, x))
 
+-- | A version of 'maximum' where the comparison is done on some extracted value.
+maximumOn :: Ord b => (a -> b) -> [a] -> a
+maximumOn f = maximumBy (compare `on` f)
+
+-- | A version of 'minimum' where the comparison is done on some extracted value.
+minimumOn :: Ord b => (a -> b) -> [a] -> a
+minimumOn f = minimumBy (compare `on` f)
 
 -- | A combination of 'group' and 'sort'.
 --
@@ -547,6 +556,29 @@ chunksOf :: Partial => Int -> [a] -> [[a]]
 chunksOf i xs | i <= 0 = error $ "chunksOf, number must be positive, got " ++ show i
 chunksOf i xs = repeatedly (splitAt i) xs
 
+
+-- | /O(n log n)/. The 'nubSort' function sorts and removes duplicate elements from a list.
+-- In particular, it keeps only the first occurrence of each element.
+--
+-- > nubSort "this is a test" == " aehist"
+-- > \xs -> nubSort xs == nub (sort xs)
+nubSort :: Ord a => [a] -> [a]
+nubSort = nubSortBy compare
+
+-- | A version of 'nubSort' which operates on a portion of the value.
+--
+-- > nubSortOn length ["a","test","of","this"] == ["a","of","test"]
+nubSortOn :: Ord b => (a -> b) -> [a] -> [a]
+nubSortOn f = nubSortBy (compare `on` f)
+
+-- | A version of 'nubSort' with a custom predicate.
+--
+-- > nubSortBy (compare `on` length) ["a","test","of","this"] == ["a","of","test"]
+nubSortBy :: (a -> a -> Ordering) -> [a] -> [a]
+nubSortBy cmp = f . sortBy cmp
+    where f (x1:x2:xs) | cmp x1 x2 == EQ = f (x1:xs)
+          f (x:xs) = x : f xs
+          f [] = []
 
 -- | /O(n log n)/. The 'nubOrd' function removes duplicate elements from a list.
 -- In particular, it keeps only the first occurrence of each element.
