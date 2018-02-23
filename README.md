@@ -20,13 +20,4 @@ When producing a library of extra functions I have been guided by a few principl
 
 ## Base versions
 
-The following GHC versions correspond to the following base library versions:
-
-* base 4.9 == GHC 8.0
-* base 4.8 == GHC 7.10
-* base 4.7 == GHC 7.8
-* base 4.6 == GHC 7.6
-* base 4.5 == GHC 7.4
-* base 4.4 == GHC 7.2
-
-A more complete list can be found [here](https://wiki.haskell.org/Base_package#Versions).
+A mapping between `base` versions and GHC compiler versions can be found [here](https://wiki.haskell.org/Base_package#Versions).
