@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Add dropPrefix and dropSuffix
 1.6.3, released 2018-01-26
     Add maximumOn and minimumOn
     #31, add nubSort, nubSortBy and nubSortOn

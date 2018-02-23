@@ -184,6 +184,11 @@ tests = do
     testGen "last (dropWhileEnd' even [undefined,3]) == 3" $ last (dropWhileEnd' even [undefined,3]) == 3
     testGen "head (dropWhileEnd  even (3:undefined)) == 3" $ head (dropWhileEnd  even (3:undefined)) == 3
     testGen "head (dropWhileEnd' even (3:undefined)) == undefined" $ erroneous $ head (dropWhileEnd' even (3:undefined))
+    testGen "dropPrefix \"Mr. \" \"Mr. Men\" == \"Men\"" $ dropPrefix "Mr. " "Mr. Men" == "Men"
+    testGen "dropPrefix \"Mr. \" \"Dr. Men\" == \"Dr. Men\"" $ dropPrefix "Mr. " "Dr. Men" == "Dr. Men"
+    testGen "dropSuffix \"!\" \"Hello World!\"  == \"Hello World\"" $ dropSuffix "!" "Hello World!"  == "Hello World"
+    testGen "dropSuffix \"!\" \"Hello World!!\" == \"Hello World!\"" $ dropSuffix "!" "Hello World!!" == "Hello World!"
+    testGen "dropSuffix \"!\" \"Hello World.\"  == \"Hello World.\"" $ dropSuffix "!" "Hello World."  == "Hello World."
     testGen "stripSuffix \"bar\" \"foobar\" == Just \"foo\"" $ stripSuffix "bar" "foobar" == Just "foo"
     testGen "stripSuffix \"\"    \"baz\"    == Just \"baz\"" $ stripSuffix ""    "baz"    == Just "baz"
     testGen "stripSuffix \"foo\" \"quux\"   == Nothing" $ stripSuffix "foo" "quux"   == Nothing

@@ -13,6 +13,7 @@ module Data.List.Extra(
     dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd,
     dropWhileEnd, dropWhileEnd', takeWhileEnd,
     stripSuffix, stripInfix, stripInfixEnd,
+    dropPrefix, dropSuffix,
     wordsBy, linesBy,
     breakOn, breakOnEnd, splitOn, split, chunksOf,
     -- * Basics
@@ -512,8 +513,27 @@ dropWhileEnd p = foldr (\x xs -> if p x && null xs then [] else x : xs) []
 dropWhileEnd' :: (a -> Bool) -> [a] -> [a]
 dropWhileEnd' p = foldr (\x xs -> if null xs && p x then [] else x : xs) []
 
--- | Return the prefix of the second string if its suffix
--- matches the entire first string.
+
+-- | Drops the given prefix from a list.
+--   It returns the original sequence if the sequence doesn't start with the given prefix.
+--
+-- > dropPrefix "Mr. " "Mr. Men" == "Men"
+-- > dropPrefix "Mr. " "Dr. Men" == "Dr. Men"
+dropPrefix :: Eq a => [a] -> [a] -> [a]
+dropPrefix a b = fromMaybe b $ stripPrefix a b
+
+
+-- | Drops the given suffix from a list.
+--   It returns the original sequence if the sequence doesn't end with the given suffix.
+--
+-- > dropSuffix "!" "Hello World!"  == "Hello World"
+-- > dropSuffix "!" "Hello World!!" == "Hello World!"
+-- > dropSuffix "!" "Hello World."  == "Hello World."
+dropSuffix :: Eq a => [a] -> [a] -> [a]
+dropSuffix a b = fromMaybe b $ stripSuffix a b
+
+-- | Return the prefix of the second list if its suffix
+--   matches the entire first list.
 --
 -- Examples:
 --
