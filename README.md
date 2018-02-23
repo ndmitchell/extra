@@ -9,7 +9,6 @@ A library of extra functions for the standard Haskell libraries. Most functions 
 
 The module `Extra` documents all functions provided by this library. Modules such as `Data.List.Extra` provide extra functions over `Data.List` and also reexport `Data.List`. Users are recommended to replace `Data.List` imports with `Data.List.Extra` if they need the extra functionality.
 
-
 ## Which functions?
 
 When producing a library of extra functions I have been guided by a few principles. I encourage others with small useful utility functions contribute them here, perhaps as a temporary stop before proposing they join the standard libraries.
@@ -18,7 +17,6 @@ When producing a library of extra functions I have been guided by a few principl
 * The functions follow the spirit of the original Prelude/base libraries. I am happy to provide partial functions (e.g. `fromRight`), and functions which are specialisations of more generic functions (`whenJust`).
 * Most of the functions have trivial implementations. If a beginner couldn't write the function, it probably doesn't belong here.
 * I have defined only a few new data types or type aliases. It's a package for defining new utilities on existing types, not new types or concepts.
-
 
 ## Base versions
 
