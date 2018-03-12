@@ -79,11 +79,15 @@ runTests t = do
 instance Testable a => Testable (IO a) where
     property = property . unsafePerformIO
 
-instance Eq a => Eq (IO a) where
+-- We only use this property to assert equality as a property
+-- And the Show instance is useless (since it may be non-deterministic)
+-- So we print out full information on failure
+instance (Show a, Eq a) => Eq (IO a) where
     a == b = unsafePerformIO $ do
         a <- try_ $ captureOutput a
         b <- try_ $ captureOutput b
-        return $ a == b
+        if a == b then return True else
+            error $ show ("IO values not equal", a, b)
 
 instance Show (IO a) where
     show _ = "<<IO>>"
