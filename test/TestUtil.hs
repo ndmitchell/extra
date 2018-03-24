@@ -71,6 +71,9 @@ instance Eq ErrorCall where
 
 runTests :: IO () -> IO ()
 runTests t = do
+    -- ensure that capturing output is robust
+    hSetBuffering stdout NoBuffering
+    hSetBuffering stderr NoBuffering
     writeIORef testCount 0
     t
     n <- readIORef testCount
