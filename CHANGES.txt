@@ -1,5 +1,7 @@
 Changelog for Extra
 
+1.6.5, released 2018-03-24
+    #33, improve error messages on test suite failures
 1.6.4, released 2018-02-23
     Add dropPrefix and dropSuffix
 1.6.3, released 2018-01-26
