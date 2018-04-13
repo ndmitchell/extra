@@ -23,7 +23,7 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     modifyIORef', writeIORef', atomicModifyIORef', atomicWriteIORef, atomicWriteIORef',
     -- * Data.List.Extra
     -- | Extra functions available in @"Data.List.Extra"@.
-    lower, upper, trim, trimStart, trimEnd, word1, line1, dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd, dropWhileEnd, dropWhileEnd', takeWhileEnd, stripSuffix, stripInfix, stripInfixEnd, dropPrefix, dropSuffix, wordsBy, linesBy, breakOn, breakOnEnd, splitOn, split, chunksOf, list, uncons, unsnoc, cons, snoc, drop1, mconcatMap, groupSort, groupSortOn, groupSortBy, nubOrd, nubOrdBy, nubOrdOn, nubOn, groupOn, sortOn, nubSort, nubSortBy, nubSortOn, maximumOn, minimumOn, disjoint, allSame, anySame, repeatedly, for, firstJust, concatUnzip, concatUnzip3, zipFrom, zipWithFrom, replace, merge, mergeBy,
+    lower, upper, trim, trimStart, trimEnd, word1, line1, escapeHTML, escapeJSON, unescapeHTML, unescapeJSON, dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd, dropWhileEnd, dropWhileEnd', takeWhileEnd, stripSuffix, stripInfix, stripInfixEnd, dropPrefix, dropSuffix, wordsBy, linesBy, breakOn, breakOnEnd, splitOn, split, chunksOf, list, uncons, unsnoc, cons, snoc, drop1, mconcatMap, groupSort, groupSortOn, groupSortBy, nubOrd, nubOrdBy, nubOrdOn, nubOn, groupOn, sortOn, nubSort, nubSortBy, nubSortOn, maximumOn, minimumOn, disjoint, allSame, anySame, repeatedly, for, firstJust, concatUnzip, concatUnzip3, zipFrom, zipWithFrom, replace, merge, mergeBy,
     -- * Data.Tuple.Extra
     -- | Extra functions available in @"Data.Tuple.Extra"@.
     first, second, (***), (&&&), dupe, both, fst3, snd3, thd3,

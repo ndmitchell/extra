@@ -9,6 +9,8 @@ module Data.List.Extra(
     module Data.List,
     -- * String operations
     lower, upper, trim, trimStart, trimEnd, word1, line1,
+    escapeHTML, escapeJSON,
+    unescapeHTML, unescapeJSON,
     -- * Splitting
     dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd,
     dropWhileEnd, dropWhileEnd', takeWhileEnd,
@@ -38,6 +40,7 @@ import Data.Function
 import Data.Char
 import Data.Tuple.Extra
 import Data.Monoid
+import Numeric
 import Data.Functor
 import Prelude
 
@@ -271,6 +274,73 @@ word1 = second (dropWhile isSpace) . break isSpace . dropWhile isSpace
 -- > line1 "test\nrest\nmore" == ("test","rest\nmore")
 line1 :: String -> (String, String)
 line1 = second drop1 . break (== '\n')
+
+-- | Escape a string such that it can be inserted into an HTML document or @\"@ attribute
+--   without any special interpretation. This requires escaping the @<@, @>@, @&@ and @\"@ characters.
+--   Note that it does /not/ escape @\'@, so will not work when placed in a @\'@ delimited attribute.
+--   Also note that it will escape @\"@ even though that is not required in an HTML body (but is not harmful).
+--
+-- > escapeHTML "this is a test" == "this is a test"
+-- > escapeHTML "<b>\"g&t\"</n>" == "&lt;b&gt;&quot;g&amp;t&quot;&lt;/n&gt;"
+-- > escapeHTML "don't" == "don't"
+escapeHTML :: String -> String
+escapeHTML = concatMap f
+    where
+        f '>' = "&gt;"
+        f '<' = "&lt;"
+        f '&' = "&amp;"
+        f '\"' = "&quot;"
+        f x = [x]
+
+-- | Invert of 'escapeHTML' (does not do general HTML unescaping)
+--
+-- > \xs -> unescapeHTML (escapeHTML xs) == xs
+unescapeHTML :: String -> String
+unescapeHTML ('&':xs)
+    | Just xs <- stripPrefix "lt;" xs = '<' : unescapeHTML xs
+    | Just xs <- stripPrefix "gt;" xs = '>' : unescapeHTML xs
+    | Just xs <- stripPrefix "amp;" xs = '&' : unescapeHTML xs
+    | Just xs <- stripPrefix "quot;" xs = '\"' : unescapeHTML xs
+unescapeHTML (x:xs) = x : unescapeHTML xs
+unescapeHTML [] = []
+
+
+-- | Escape a string so it can form part of a JSON literal.
+--   This requires escaping the special whitespace and control characters. Additionally,
+--   Note that it does /not/ add quote characters around the string.
+--
+-- > escapeJSON "this is a test" == "this is a test"
+-- > escapeJSON "\ttab\nnewline\\" == "\\ttab\\nnewline\\\\"
+-- > escapeJSON "\ESC[0mHello" == "\\u001b[0mHello"
+escapeJSON :: String -> String
+escapeJSON x = concatMap f x
+    where f '\"' = "\\\""
+          f '\\' = "\\\\"
+          -- the spaces are technically optional, but we include them so the JSON is readable
+          f '\b' = "\\b"
+          f '\f' = "\\f"
+          f '\n' = "\\n"
+          f '\r' = "\\r"
+          f '\t' = "\\t"
+          f x | isControl x = "\\u" ++ takeEnd 4 ("0000" ++ showHex (ord x) "")
+          f x = [x]
+
+-- | General JSON unescaping, inversion of 'escapeJSON' and all other JSON escapes.
+--
+-- > \xs -> unescapeJSON (escapeJSON xs) == xs
+unescapeJSON :: String -> String
+unescapeJSON ('\\':x:xs)
+    | x == '\"' = '\"' : unescapeJSON xs
+    | x == '\\' = '\\' : unescapeJSON xs
+    | x == '/' = '/' : unescapeJSON xs
+    | x == 'b' = '\b' : unescapeJSON xs
+    | x == 'f' = '\f' : unescapeJSON xs
+    | x == 'n' = '\n' : unescapeJSON xs
+    | x == 'r' = '\r' : unescapeJSON xs
+    | x == 't' = '\t' : unescapeJSON xs
+    | x == 'u', let (a,b) = splitAt 4 xs, length a == 4, [(i, "")] <- readHex a = chr i : unescapeJSON b
+unescapeJSON (x:xs) = x : unescapeJSON xs
+unescapeJSON [] = []
 
 
 #if __GLASGOW_HASKELL__ < 709

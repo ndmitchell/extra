@@ -132,6 +132,14 @@ tests = do
     testGen "line1 \"test\\n\" == (\"test\",\"\")" $ line1 "test\n" == ("test","")
     testGen "line1 \"test\\nrest\" == (\"test\",\"rest\")" $ line1 "test\nrest" == ("test","rest")
     testGen "line1 \"test\\nrest\\nmore\" == (\"test\",\"rest\\nmore\")" $ line1 "test\nrest\nmore" == ("test","rest\nmore")
+    testGen "escapeHTML \"this is a test\" == \"this is a test\"" $ escapeHTML "this is a test" == "this is a test"
+    testGen "escapeHTML \"<b>\\\"g&t\\\"</n>\" == \"&lt;b&gt;&quot;g&amp;t&quot;&lt;/n&gt;\"" $ escapeHTML "<b>\"g&t\"</n>" == "&lt;b&gt;&quot;g&amp;t&quot;&lt;/n&gt;"
+    testGen "escapeHTML \"don't\" == \"don't\"" $ escapeHTML "don't" == "don't"
+    testGen "\\xs -> unescapeHTML (escapeHTML xs) == xs" $ \xs -> unescapeHTML (escapeHTML xs) == xs
+    testGen "escapeJSON \"this is a test\" == \"this is a test\"" $ escapeJSON "this is a test" == "this is a test"
+    testGen "escapeJSON \"\\ttab\\nnewline\\\\\" == \"\\\\ttab\\\\nnewline\\\\\\\\\"" $ escapeJSON "\ttab\nnewline\\" == "\\ttab\\nnewline\\\\"
+    testGen "escapeJSON \"\\ESC[0mHello\" == \"\\\\u001b[0mHello\"" $ escapeJSON "\ESC[0mHello" == "\\u001b[0mHello"
+    testGen "\\xs -> unescapeJSON (escapeJSON xs) == xs" $ \xs -> unescapeJSON (escapeJSON xs) == xs
     testGen "sortOn fst [(3,\"z\"),(1,\"\"),(3,\"a\")] == [(1,\"\"),(3,\"z\"),(3,\"a\")]" $ sortOn fst [(3,"z"),(1,""),(3,"a")] == [(1,""),(3,"z"),(3,"a")]
     testGen "groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,\"t\"),(2,\"es\"),(3,\"t\")]" $ groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,"t"),(2,"es"),(3,"t")]
     testGen "\\xs -> map fst (groupSort xs) == sort (nub (map fst xs))" $ \xs -> map fst (groupSort xs) == sort (nub (map fst xs))
