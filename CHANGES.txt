@@ -1,5 +1,6 @@
 Changelog for Extra
 
+1.6.6, released 2018-04-16
     Add escapeJSON and unescapeJSON
     Add escapeHTML and unescapeHTML
 1.6.5, released 2018-03-24
