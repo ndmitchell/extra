@@ -117,7 +117,7 @@ onceFork act = do
 -- LOCK
 
 -- | Like an MVar, but has no value.
---   Used to guarantees single-threaded access, typically to some system resource. 
+--   Used to guarantee single-threaded access, typically to some system resource. 
 --   As an example:
 --
 -- @
@@ -156,7 +156,7 @@ withLockTry (Lock m) act = bracket
 -- VAR
 
 -- | Like an MVar, but must always be full.
---   Used to on a mutable variable in a thread-safe way.
+--   Used to operate on a mutable variable in a thread-safe way.
 --   As an example:
 --
 -- @
