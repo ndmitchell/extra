@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #34, lots of documentation typos
 1.6.6, released 2018-04-16
     Add escapeJSON and unescapeJSON
     Add escapeHTML and unescapeHTML
