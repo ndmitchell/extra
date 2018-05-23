@@ -117,7 +117,7 @@ onceFork act = do
 -- LOCK
 
 -- | Like an 'MVar', but has no value.
---   Used to guarantee single-threaded access, typically to some system resource. 
+--   Used to guarantee single-threaded access, typically to some system resource.
 --   As an example:
 --
 -- @
