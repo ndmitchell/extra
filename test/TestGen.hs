@@ -26,6 +26,8 @@ tests = do
     testGen "whenJust Nothing  print == return ()" $ whenJust Nothing  print == return ()
     testGen "whenJust (Just 1) print == print 1" $ whenJust (Just 1) print == print 1
     testGen "\\(x :: Maybe ()) -> unit x == x" $ \(x :: Maybe ()) -> unit x == x
+    testGen "fold1M (\\x y -> Just x) [] == undefined" $ erroneous $ fold1M (\x y -> Just x) []
+    testGen "fold1M (\\x y -> Just $ x + y) [1, 2, 3] == Just 6" $ fold1M (\x y -> Just $ x + y) [1, 2, 3] == Just 6
     testGen "partitionM (Just . even) [1,2,3] == Just ([2], [1,3])" $ partitionM (Just . even) [1,2,3] == Just ([2], [1,3])
     testGen "partitionM (const Nothing) [1,2,3] == Nothing" $ partitionM (const Nothing) [1,2,3] == Nothing
     testGen "Just True  ||^ undefined  == Just True" $ Just True  ||^ undefined  == Just True
