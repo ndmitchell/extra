@@ -65,7 +65,7 @@ fold1M f xs = error "fold1M: empty list"
 
 -- | Like 'fold1M' but discards the result.
 fold1M_ :: (Partial, Monad m) => (a -> a -> m a) -> [a] -> m ()
-fold1M_ f xs = void $ fold1M f xs
+fold1M_ f xs = fold1M f xs >> return ()
 
 
 -- Data.List for Monad
