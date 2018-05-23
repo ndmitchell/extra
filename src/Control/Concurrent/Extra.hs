@@ -62,7 +62,7 @@ setNumCapabilities n = return ()
 -- called with asynchronous exceptions masked.
 --
 -- @
--- forkFinally action and_then =
+-- 'forkFinally' action and_then =
 --    mask $ \restore ->
 --      forkIO $ try (restore action) >>= and_then
 -- @
@@ -79,11 +79,11 @@ forkFinally action and_then =
 -- | Given an action, produce a wrapped action that runs at most once.
 --   If the function raises an exception, the same exception will be reraised each time.
 --
--- > let x ||| y = do t1 <- onceFork x; t2 <- onceFork y; t1; t2
--- > \(x :: IO Int) -> void (once x) == return ()
--- > \(x :: IO Int) -> join (once x) == x
--- > \(x :: IO Int) -> (do y <- once x; y; y) == x
--- > \(x :: IO Int) -> (do y <- once x; y ||| y) == x
+-- > let x ||| y = do t1 <- 'onceFork' x; t2 <- 'onceFork' y; t1; t2
+-- > \(x :: IO Int) -> void ('once' x) == return ()
+-- > \(x :: IO Int) -> join ('once' x) == x
+-- > \(x :: IO Int) -> (do y <- 'once' x; y; y) == x
+-- > \(x :: IO Int) -> (do y <- 'once' x; y ||| y) == x
 once :: IO a -> IO (IO a)
 once act = do
     var <- newVar OncePending
@@ -104,8 +104,8 @@ data Once a = OncePending | OnceRunning (Barrier a) | OnceDone a
 
 -- | Like 'once', but immediately starts running the computation on a background thread.
 --
--- > \(x :: IO Int) -> join (onceFork x) == x
--- > \(x :: IO Int) -> (do a <- onceFork x; a; a) == x
+-- > \(x :: IO Int) -> join ('onceFork' x) == x
+-- > \(x :: IO Int) -> (do a <- 'onceFork' x; a; a) == x
 onceFork :: IO a -> IO (IO a)
 onceFork act = do
     bar <- newBarrier
@@ -116,8 +116,8 @@ onceFork act = do
 ---------------------------------------------------------------------
 -- LOCK
 
--- | Like an MVar, but has no value.
---   Used to guarantees single-threaded access, typically to some system resource. 
+-- | Like an 'MVar', but has no value.
+--   Used to guarantee single-threaded access, typically to some system resource. 
 --   As an example:
 --
 -- @
@@ -128,7 +128,7 @@ onceFork act = do
 -- @
 --
 --   Here we are creating a lock to ensure that when writing output our messages
---   do not get interleaved. This use of MVar never blocks on a put. It is permissible,
+--   do not get interleaved. This use of 'MVar' never blocks on a put. It is permissible,
 --   but rare, that a withLock contains a withLock inside it - but if so,
 --   watch out for deadlocks.
 
@@ -155,23 +155,23 @@ withLockTry (Lock m) act = bracket
 ---------------------------------------------------------------------
 -- VAR
 
--- | Like an MVar, but must always be full.
---   Used to on a mutable variable in a thread-safe way.
+-- | Like an 'MVar', but must always be full.
+--   Used to operate on a mutable variable in a thread-safe way.
 --   As an example:
 --
 -- @
 -- hits <- 'newVar' 0
 -- forkIO $ do ...; 'modifyVar_' hits (+1); ...
 -- i <- 'readVar' hits
--- print ("HITS",i)
+-- print (\"HITS\",i)
 -- @
 --
 --   Here we have a variable which we modify atomically, so modifications are
---   not interleaved. This use of MVar never blocks on a put. No modifyVar
+--   not interleaved. This use of 'MVar' never blocks on a put. No modifyVar
 --   operation should ever block, and they should always complete in a reasonable
---   timeframe. A Var should not be used to protect some external resource, only
---   the variable contained within. Information from a readVar should not be subsequently
---   inserted back into the Var.
+--   timeframe. A 'Var' should not be used to protect some external resource, only
+--   the variable contained within. Information from a 'readVar' should not be subsequently
+--   inserted back into the 'Var'.
 newtype Var a = Var (MVar a)
 
 -- | Create a new 'Var' with a value.

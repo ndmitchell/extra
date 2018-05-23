@@ -255,7 +255,7 @@ upper = map toUpper
 
 
 -- | Split the first word off a string. Useful for when starting to parse the beginning
---   of a string, but you want to accurately perserve whitespace in the rest of the string.
+--   of a string, but you want to accurately preserve whitespace in the rest of the string.
 --
 -- > word1 "" == ("", "")
 -- > word1 "keyword rest of string" == ("keyword","rest of string")

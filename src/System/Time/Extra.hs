@@ -71,7 +71,7 @@ timeout n f
 
 
 -- | Show a number of seconds, typically a duration, in a suitable manner with
---   responable precision for a human.
+--   reasonable precision for a human.
 --
 -- > showDuration 3.435   == "3.44s"
 -- > showDuration 623.8   == "10m24s"
@@ -99,7 +99,7 @@ offsetTime = do
         return $ 1e-9 * fromIntegral (toNanoSecs $ end - start)
     where time = getTime Monotonic
 
-{-# DEPRECATED offsetTimeIncrease "Use offsetTime instead, which is guaranteed to always increase." #-}
+{-# DEPRECATED offsetTimeIncrease "Use 'offsetTime' instead, which is guaranteed to always increase." #-}
 
 -- | A synonym for 'offsetTime'.
 offsetTimeIncrease :: IO (IO Seconds)
