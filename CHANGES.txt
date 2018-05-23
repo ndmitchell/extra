@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #35, add fold1M and fold1M_
     #34, lots of documentation typos
 1.6.6, released 2018-04-16
     Add escapeJSON and unescapeJSON

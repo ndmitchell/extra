@@ -12,11 +12,13 @@ module Control.Monad.Extra(
     loopM, whileM,
     -- * Lists
     partitionM, concatMapM, concatForM, mconcatMapM, mapMaybeM, findM, firstJustM,
+    fold1M, fold1M_,
     -- * Booleans
     whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM
     ) where
 
 import Control.Monad
+import Control.Exception.Extra
 import Data.Maybe
 import Control.Applicative
 import Data.Monoid
@@ -51,6 +53,19 @@ maybeM n j x = maybe n j =<< x
 -- | Monadic generalisation of 'either'.
 eitherM :: Monad m => (a -> m c) -> (b -> m c) -> m (Either a b) -> m c
 eitherM l r x = either l r =<< x
+
+-- | A variant of 'foldM' that has no base case, and thus may only be applied to non-empty lists.
+--
+-- > fold1M (\x y -> Just x) [] == undefined
+-- > fold1M (\x y -> Just $ x + y) [Just 1, Just 2, Just 3] == Just 6
+fold1M :: (Partial, Monad m) => (a -> a -> m a) -> [a] -> m a
+fold1M f (x:xs) = foldM f x xs
+fold1M f xs = error "fold1M: empty list"
+
+-- | Like 'fold1M' but discards the result.
+fold1M_ :: (Partial, Monad m) => (a -> a -> m a) -> [a] -> m ()
+fold1M_ f xs = void $ fold1M f xs
+
 
 -- Data.List for Monad
 
