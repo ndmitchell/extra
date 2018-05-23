@@ -1,3 +1,4 @@
+{-# LANGUAGE ConstraintKinds #-}
 
 -- | Extra functions for "Control.Monad".
 --   These functions provide looping, list operations and booleans.
