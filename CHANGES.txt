@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Add notNull
     Add listDirectories
 1.6.7, released 2018-05-23
     #35, add fold1M and fold1M_

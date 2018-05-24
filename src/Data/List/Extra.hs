@@ -19,7 +19,7 @@ module Data.List.Extra(
     wordsBy, linesBy,
     breakOn, breakOnEnd, splitOn, split, chunksOf,
     -- * Basics
-    list, uncons, unsnoc, cons, snoc, drop1, mconcatMap,
+    notNull, list, uncons, unsnoc, cons, snoc, drop1, mconcatMap,
     -- * List operations
     groupSort, groupSortOn, groupSortBy,
     nubOrd, nubOrdBy, nubOrdOn,
@@ -95,6 +95,14 @@ allSame :: Eq a => [a] -> Bool
 allSame [] = True
 allSame (x:xs) = all (x ==) xs
 
+
+-- | A composition of 'not' and 'null'.
+--
+-- > notNull []  == False
+-- > notNull [1] == True
+-- > \xs -> notNull xs == not (null xs)
+notNull :: [a] -> Bool
+notNull = not . null
 
 -- | Non-recursive transform over a list, like 'maybe'.
 --

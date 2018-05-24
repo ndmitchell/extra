@@ -82,6 +82,9 @@ tests = do
     testGen "allSame []      == True" $ allSame []      == True
     testGen "allSame (1:1:2:undefined) == False" $ allSame (1:1:2:undefined) == False
     testGen "\\xs -> allSame xs == (length (nub xs) <= 1)" $ \xs -> allSame xs == (length (nub xs) <= 1)
+    testGen "notNull []  == False" $ notNull []  == False
+    testGen "notNull [1] == True" $ notNull [1] == True
+    testGen "\\xs -> notNull xs == not (null xs)" $ \xs -> notNull xs == not (null xs)
     testGen "list 1 (\\v _ -> v - 2) [5,6,7] == 3" $ list 1 (\v _ -> v - 2) [5,6,7] == 3
     testGen "list 1 (\\v _ -> v - 2) []      == 1" $ list 1 (\v _ -> v - 2) []      == 1
     testGen "\\nil cons xs -> maybe nil (uncurry cons) (uncons xs) == list nil cons xs" $ \nil cons xs -> maybe nil (uncurry cons) (uncons xs) == list nil cons xs
