@@ -1,5 +1,6 @@
 Changelog for Extra
 
+1.6.8, released 2018-05-24
     Add notNull
     Add listDirectories
 1.6.7, released 2018-05-23
