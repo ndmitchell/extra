@@ -38,7 +38,7 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     showDP, intToDouble, intToFloat, floatToDouble, doubleToFloat,
     -- * System.Directory.Extra
     -- | Extra functions available in @"System.Directory.Extra"@.
-    withCurrentDirectory, createDirectoryPrivate, listContents, listFiles, listFilesInside, listFilesRecursive,
+    withCurrentDirectory, createDirectoryPrivate, listContents, listDirectories, listFiles, listFilesInside, listFilesRecursive,
     -- * System.Environment.Extra
     -- | Extra functions available in @"System.Environment.Extra"@.
     getExecutablePath, lookupEnv,

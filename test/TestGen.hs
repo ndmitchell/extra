@@ -236,6 +236,7 @@ tests = do
     let touch = mapM_ $ \x -> createDirectoryIfMissing True (takeDirectory x) >> writeFile x ""
     let listTest op as bs = withTempDir $ \dir -> do touch $ map (dir </>) as; res <- op dir; return $ map (drop (length dir + 1)) res == bs
     testGen "listTest listContents [\"bar.txt\",\"foo/baz.txt\",\"zoo\"] [\"bar.txt\",\"foo\",\"zoo\"]" $ listTest listContents ["bar.txt","foo/baz.txt","zoo"] ["bar.txt","foo","zoo"]
+    testGen "listTest listDirectories [\"bar.txt\",\"foo/baz.txt\",\"zoo\"] [\"foo\"]" $ listTest listDirectories ["bar.txt","foo/baz.txt","zoo"] ["foo"]
     testGen "listTest listFiles [\"bar.txt\",\"foo/baz.txt\",\"zoo\"] [\"bar.txt\",\"zoo\"]" $ listTest listFiles ["bar.txt","foo/baz.txt","zoo"] ["bar.txt","zoo"]
     testGen "listTest listFilesRecursive [\"bar.txt\",\"zoo\",\"foo\" </> \"baz.txt\"] [\"bar.txt\",\"zoo\",\"foo\" </> \"baz.txt\"]" $ listTest listFilesRecursive ["bar.txt","zoo","foo" </> "baz.txt"] ["bar.txt","zoo","foo" </> "baz.txt"]
     testGen "listTest (listFilesInside $ return . not . isPrefixOf \".\" . takeFileName)    [\"bar.txt\",\"foo\" </> \"baz.txt\",\".foo\" </> \"baz2.txt\", \"zoo\"] [\"bar.txt\",\"zoo\",\"foo\" </> \"baz.txt\"]" $ listTest (listFilesInside $ return . not . isPrefixOf "." . takeFileName)    ["bar.txt","foo" </> "baz.txt",".foo" </> "baz2.txt", "zoo"] ["bar.txt","zoo","foo" </> "baz.txt"]

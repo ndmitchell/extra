@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Add listDirectories
 1.6.7, released 2018-05-23
     #35, add fold1M and fold1M_
     #34, lots of documentation typos

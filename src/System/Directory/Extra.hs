@@ -17,7 +17,7 @@ module System.Directory.Extra(
     withCurrentDirectory,
 #endif
     createDirectoryPrivate,
-    listContents, listFiles, listFilesInside, listFilesRecursive
+    listContents, listDirectories, listFiles, listFilesInside, listFilesRecursive
     ) where
 
 import System.Directory
@@ -58,6 +58,15 @@ listContents :: FilePath -> IO [FilePath]
 listContents dir = do
     xs <- getDirectoryContents dir
     return $ sort [dir </> x | x <- xs, not $ all (== '.') x]
+
+
+-- | Like 'listContents', but only returns the directories in a directory, not the files.
+--   Each directory will be prefixed by the query directory.
+--
+-- > listTest listDirectories ["bar.txt","foo/baz.txt","zoo"] ["foo"]
+listDirectories :: FilePath -> IO [FilePath]
+listDirectories dir = filterM doesDirectoryExist =<< listContents dir
+
 
 -- | Like 'listContents', but only returns the files in a directory, not other directories.
 --   Each file will be prefixed by the query directory.
