@@ -25,6 +25,8 @@ tests = do
     testGen "retry 3 (fail \"die\") == fail \"die\"" $ retry 3 (fail "die") == fail "die"
     testGen "whenJust Nothing  print == return ()" $ whenJust Nothing  print == return ()
     testGen "whenJust (Just 1) print == print 1" $ whenJust (Just 1) print == print 1
+    testGen "whenMaybe True  (print 1) == fmap Just (print 1)" $ whenMaybe True  (print 1) == fmap Just (print 1)
+    testGen "whenMaybe False (print 1) == return Nothing" $ whenMaybe False (print 1) == return Nothing
     testGen "\\(x :: Maybe ()) -> unit x == x" $ \(x :: Maybe ()) -> unit x == x
     testGen "fold1M (\\x y -> Just x) [] == undefined" $ erroneous $ fold1M (\x y -> Just x) []
     testGen "fold1M (\\x y -> Just $ x + y) [1, 2, 3] == Just 6" $ fold1M (\x y -> Just $ x + y) [1, 2, 3] == Just 6

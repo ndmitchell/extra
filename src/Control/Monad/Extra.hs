@@ -7,6 +7,7 @@
 module Control.Monad.Extra(
     module Control.Monad,
     whenJust, whenJustM,
+    whenMaybe, whenMaybeM,
     unit,
     maybeM, eitherM,
     -- * Loops
@@ -37,6 +38,20 @@ whenJust mg f = maybe (pure ()) f mg
 -- | Like 'whenJust', but where the test can be monadic.
 whenJustM :: Monad m => m (Maybe a) -> (a -> m ()) -> m ()
 whenJustM mg f = maybe (return ()) f =<< mg
+
+
+-- | Like 'when', but return either 'Nothing' if the predicate was 'False',
+--   of 'Just' with the result of the computation.
+--
+-- > whenMaybe True  (print 1) == fmap Just (print 1)
+-- > whenMaybe False (print 1) == return Nothing
+whenMaybe :: Applicative m => Bool -> m a -> m (Maybe a)
+whenMaybe b x = if b then Just <$> x else pure Nothing
+
+-- | Like 'whenMaybe', but where the test can be monadic.
+whenMaybeM :: Monad m => m Bool -> m a -> m (Maybe a)
+whenMaybeM mb x = flip whenMaybe x =<< mb
+
 
 -- | The identity function which requires the inner argument to be @()@. Useful for functions
 --   with overloaded return types.
