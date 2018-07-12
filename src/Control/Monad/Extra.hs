@@ -37,7 +37,7 @@ whenJust mg f = maybe (pure ()) f mg
 
 -- | Like 'whenJust', but where the test can be monadic.
 whenJustM :: Monad m => m (Maybe a) -> (a -> m ()) -> m ()
-whenJustM mg f = maybe (return ()) f =<< mg
+whenJustM mg f = flip whenJust f =<< mg
 
 
 -- | Like 'when', but return either 'Nothing' if the predicate was 'False',
