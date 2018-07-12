@@ -6,5 +6,5 @@
 - ignore: {name: Unused LANGUAGE pragma, within: Partial} # CPP
 - ignore: {name: Eta reduce} # Not sure I agree
 - ignore: {name: Use lambda-case} # not available on GHC 7.4
-- ignore: {name: Use fmap, within: Control.Monad.Extra.mconcatMapM} # Only a Monad context
-- ignore: {name: Use void, within: Control.Monad.Extra.fold1M_} # Only a Monad context
+- ignore: {name: Use fmap, within: Control.Monad.Extra} # Only a Monad context
+- ignore: {name: Use void, within: Control.Monad.Extra} # Only a Monad context
