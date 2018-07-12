@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Add loop, the non-monadic version of loopM
     #36, add whenMaybe and whenMaybeM
 1.6.8, released 2018-05-24
     Add notNull

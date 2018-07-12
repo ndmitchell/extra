@@ -11,7 +11,7 @@ module Control.Monad.Extra(
     unit,
     maybeM, eitherM,
     -- * Loops
-    loopM, whileM,
+    loop, loopM, whileM,
     -- * Lists
     partitionM, concatMapM, concatForM, mconcatMapM, mapMaybeM, findM, firstJustM,
     fold1M, fold1M_,
@@ -121,6 +121,15 @@ mapMaybeM op = foldr f (return [])
 -- Looping
 
 -- | A looping operation, where the predicate returns 'Left' as a seed for the next loop
+--   or 'Right' to abort the loop.
+--
+-- > loop (\x -> if x < 10 then Left $ x * 2 else Right $ show x) 1 == "16"
+loop :: (a -> Either a b) -> a -> b
+loop act x = case act x of
+    Left x -> loop act x
+    Right v -> v
+
+-- | A monadic version of 'loop', where the predicate returns 'Left' as a seed for the next loop
 --   or 'Right' to abort the loop.
 loopM :: Monad m => (a -> m (Either a b)) -> a -> m b
 loopM act x = do

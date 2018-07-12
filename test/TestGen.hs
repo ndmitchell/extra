@@ -32,6 +32,7 @@ tests = do
     testGen "fold1M (\\x y -> Just $ x + y) [1, 2, 3] == Just 6" $ fold1M (\x y -> Just $ x + y) [1, 2, 3] == Just 6
     testGen "partitionM (Just . even) [1,2,3] == Just ([2], [1,3])" $ partitionM (Just . even) [1,2,3] == Just ([2], [1,3])
     testGen "partitionM (const Nothing) [1,2,3] == Nothing" $ partitionM (const Nothing) [1,2,3] == Nothing
+    testGen "loop (\\x -> if x < 10 then Left $ x * 2 else Right $ show x) 1 == \"16\"" $ loop (\x -> if x < 10 then Left $ x * 2 else Right $ show x) 1 == "16"
     testGen "Just True  ||^ undefined  == Just True" $ Just True  ||^ undefined  == Just True
     testGen "Just False ||^ Just True  == Just True" $ Just False ||^ Just True  == Just True
     testGen "Just False ||^ Just False == Just False" $ Just False ||^ Just False == Just False
