@@ -37,6 +37,7 @@ whenJust mg f = maybe (pure ()) f mg
 
 -- | Like 'whenJust', but where the test can be monadic.
 whenJustM :: Monad m => m (Maybe a) -> (a -> m ()) -> m ()
+-- Can't reuse whenMaybe on GHC 7.8 or lower because Monad does not imply Applicative
 whenJustM mg f = maybe (return ()) f =<< mg
 
 
@@ -50,9 +51,10 @@ whenMaybe b x = if b then Just <$> x else pure Nothing
 
 -- | Like 'whenMaybe', but where the test can be monadic.
 whenMaybeM :: Monad m => m Bool -> m a -> m (Maybe a)
+-- Can't reuse whenMaybe on GHC 7.8 or lower because Monad does not imply Applicative
 whenMaybeM mb x = do
     b <- mb
-    if b then Just <$> x else return Nothing
+    if b then liftM Just x else return Nothing
 
 
 -- | The identity function which requires the inner argument to be @()@. Useful for functions
