@@ -37,7 +37,7 @@ whenJust mg f = maybe (pure ()) f mg
 
 -- | Like 'whenJust', but where the test can be monadic.
 whenJustM :: Monad m => m (Maybe a) -> (a -> m ()) -> m ()
-whenJustM mg f = flip whenJust f =<< mg
+whenJustM mg f = maybe (return ()) f =<< mg
 
 
 -- | Like 'when', but return either 'Nothing' if the predicate was 'False',
@@ -50,7 +50,9 @@ whenMaybe b x = if b then Just <$> x else pure Nothing
 
 -- | Like 'whenMaybe', but where the test can be monadic.
 whenMaybeM :: Monad m => m Bool -> m a -> m (Maybe a)
-whenMaybeM mb x = flip whenMaybe x =<< mb
+whenMaybeM mb x = do
+    b <- mb
+    if b then Just <$> x else return Nothing
 
 
 -- | The identity function which requires the inner argument to be @()@. Useful for functions
