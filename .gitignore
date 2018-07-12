@@ -1,5 +1,6 @@
 /dist/
 /.stack-work/
+/.idea/
 /issues/
 stack.yaml
 tags
