@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #37, make a duration/sleep test more robust (wider bounds)
 1.6.9, released 2018-07-12
     Add loop, the non-monadic version of loopM
     #36, add whenMaybe and whenMaybeM

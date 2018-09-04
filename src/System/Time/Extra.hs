@@ -107,7 +107,7 @@ offsetTimeIncrease = offsetTime
 
 -- | Record how long a computation takes in 'Seconds'.
 --
--- > do (a,_) <- duration $ sleep 1; return $ a >= 1 && a <= 1.1
+-- > do (a,_) <- duration $ sleep 1; return $ a >= 1 && a <= 1.5
 duration :: IO a -> IO (Seconds, a)
 duration act = do
     time <- offsetTime
