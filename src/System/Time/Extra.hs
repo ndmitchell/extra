@@ -63,7 +63,7 @@ timeout n f
     | otherwise = do
         pid <- myThreadId
         ex  <- fmap Timeout newUnique
-        handleBool (== ex) 
+        handleBool (== ex)
                    (const $ return Nothing)
                    (bracket (forkIOWithUnmask $ \unmask -> unmask $ sleep n >> throwTo pid ex)
                             killThread
