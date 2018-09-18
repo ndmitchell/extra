@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #38, make escapeHTML replace ' with &#39;
 1.6.10, released 2018-09-04
     #37, make a duration/sleep test more robust (wider bounds)
 1.6.9, released 2018-07-12
