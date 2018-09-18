@@ -285,12 +285,11 @@ line1 = second drop1 . break (== '\n')
 
 -- | Escape a string such that it can be inserted into an HTML document or @\"@ attribute
 --   without any special interpretation. This requires escaping the @<@, @>@, @&@ and @\"@ characters.
---   Note that it does /not/ escape @\'@, so will not work when placed in a @\'@ delimited attribute.
---   Also note that it will escape @\"@ even though that is not required in an HTML body (but is not harmful).
+--   Note that it will escape @\"@ and @\'@ even though that is not required in an HTML body (but is not harmful).
 --
 -- > escapeHTML "this is a test" == "this is a test"
 -- > escapeHTML "<b>\"g&t\"</n>" == "&lt;b&gt;&quot;g&amp;t&quot;&lt;/n&gt;"
--- > escapeHTML "don't" == "don't"
+-- > escapeHTML "t'was another test" == "t&#39;was another test"
 escapeHTML :: String -> String
 escapeHTML = concatMap f
     where
@@ -298,6 +297,7 @@ escapeHTML = concatMap f
         f '<' = "&lt;"
         f '&' = "&amp;"
         f '\"' = "&quot;"
+        f '\'' = "&#39;"
         f x = [x]
 
 -- | Invert of 'escapeHTML' (does not do general HTML unescaping)
@@ -309,6 +309,7 @@ unescapeHTML ('&':xs)
     | Just xs <- stripPrefix "gt;" xs = '>' : unescapeHTML xs
     | Just xs <- stripPrefix "amp;" xs = '&' : unescapeHTML xs
     | Just xs <- stripPrefix "quot;" xs = '\"' : unescapeHTML xs
+    | Just xs <- stripPrefix "#39;" xs = '\'' : unescapeHTML xs
 unescapeHTML (x:xs) = x : unescapeHTML xs
 unescapeHTML [] = []
 

@@ -142,7 +142,7 @@ tests = do
     testGen "line1 \"test\\nrest\\nmore\" == (\"test\",\"rest\\nmore\")" $ line1 "test\nrest\nmore" == ("test","rest\nmore")
     testGen "escapeHTML \"this is a test\" == \"this is a test\"" $ escapeHTML "this is a test" == "this is a test"
     testGen "escapeHTML \"<b>\\\"g&t\\\"</n>\" == \"&lt;b&gt;&quot;g&amp;t&quot;&lt;/n&gt;\"" $ escapeHTML "<b>\"g&t\"</n>" == "&lt;b&gt;&quot;g&amp;t&quot;&lt;/n&gt;"
-    testGen "escapeHTML \"don't\" == \"don't\"" $ escapeHTML "don't" == "don't"
+    testGen "escapeHTML \"t'was another test\" == \"t&#39;was another test\"" $ escapeHTML "t'was another test" == "t&#39;was another test"
     testGen "\\xs -> unescapeHTML (escapeHTML xs) == xs" $ \xs -> unescapeHTML (escapeHTML xs) == xs
     testGen "escapeJSON \"this is a test\" == \"this is a test\"" $ escapeJSON "this is a test" == "this is a test"
     testGen "escapeJSON \"\\ttab\\nnewline\\\\\" == \"\\\\ttab\\\\nnewline\\\\\\\\\"" $ escapeJSON "\ttab\nnewline\\" == "\\ttab\\nnewline\\\\"
