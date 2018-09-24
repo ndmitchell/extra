@@ -8,8 +8,9 @@ module Data.Tuple.Extra(
     first, second, (***), (&&&),
     -- * More pair operations
     dupe, both,
-    -- * Extract from a triple
-    fst3, snd3, thd3
+    -- * Operations on triple
+    fst3, snd3, thd3,
+    curry3, uncurry3
     ) where
 
 import Data.Tuple
@@ -66,3 +67,11 @@ snd3 (a,b,c) = b
 -- | Extract the final element of a triple.
 thd3 :: (a,b,c) -> c
 thd3 (a,b,c) = c
+
+-- | Converts an uncurried function to a curried function.
+curry3 :: ((a, b, c) -> d) -> a -> b -> c -> d
+curry3 f a b c = f (a,b,c)
+
+-- | Converts a curried function to a function on a triple.
+uncurry3 :: (a -> b -> c -> d) -> ((a, b, c) -> d)
+uncurry3 f ~(a,b,c) = f a b c

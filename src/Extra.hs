@@ -26,7 +26,7 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     lower, upper, trim, trimStart, trimEnd, word1, line1, escapeHTML, escapeJSON, unescapeHTML, unescapeJSON, dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd, dropWhileEnd, dropWhileEnd', takeWhileEnd, stripSuffix, stripInfix, stripInfixEnd, dropPrefix, dropSuffix, wordsBy, linesBy, breakOn, breakOnEnd, splitOn, split, chunksOf, notNull, list, uncons, unsnoc, cons, snoc, drop1, mconcatMap, groupSort, groupSortOn, groupSortBy, nubOrd, nubOrdBy, nubOrdOn, nubOn, groupOn, sortOn, nubSort, nubSortBy, nubSortOn, maximumOn, minimumOn, disjoint, allSame, anySame, repeatedly, for, firstJust, concatUnzip, concatUnzip3, zipFrom, zipWithFrom, replace, merge, mergeBy,
     -- * Data.Tuple.Extra
     -- | Extra functions available in @"Data.Tuple.Extra"@.
-    first, second, (***), (&&&), dupe, both, fst3, snd3, thd3,
+    first, second, (***), (&&&), dupe, both, fst3, snd3, thd3, curry3, uncurry3,
     -- * Data.Typeable.Extra
     -- | Extra functions available in @"Data.Typeable.Extra"@.
     typeRep, (:~:)(..), Proxy(..),

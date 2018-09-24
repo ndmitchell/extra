@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #39, add curry3/uncurry3
 1.6.11, released 2018-09-18
     #38, make escapeHTML replace ' with &#39;
 1.6.10, released 2018-09-04
