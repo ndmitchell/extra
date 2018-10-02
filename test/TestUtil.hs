@@ -11,10 +11,6 @@ module TestUtil
     ) where
 
 import Test.QuickCheck
--- isSuccess is also exported from Test.QuickCheck in 2.12.4
--- so to support both and avoid redundant imports we name the import here
--- once supporting QuickCheck-2.13 and above only, delete the line below
-import Test.QuickCheck.Test(isSuccess)
 import System.IO.Unsafe
 import Text.Show.Functions()
 
@@ -47,7 +43,9 @@ testCount = unsafePerformIO $ newIORef 0
 testGen :: Testable prop => String -> prop -> IO ()
 testGen msg prop = testRaw msg $ do
     r <- quickCheckResult prop
-    unless (isSuccess r) $ error "Test failed"
+    case r of
+        Success{} -> return ()
+        _ -> errorIO "Test failed"
 
 testRaw :: String -> IO () -> IO ()
 testRaw msg test = do
