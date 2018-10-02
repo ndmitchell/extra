@@ -11,7 +11,10 @@ module TestUtil
     ) where
 
 import Test.QuickCheck
-import Test.QuickCheck.Test
+-- isSuccess is also exported from Test.QuickCheck in 2.12.4
+-- so to support both and avoid redundant imports we name the import here
+-- once supporting QuickCheck-2.13 and above only, delete the line below
+import Test.QuickCheck.Test(isSuccess)
 import System.IO.Unsafe
 import Text.Show.Functions()
 
