@@ -71,7 +71,6 @@ tests = do
     testGen "\\xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs" $ \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
     testGen "\\xs -> repeatedly word1 (trim xs) == words xs" $ \xs -> repeatedly word1 (trim xs) == words xs
     testGen "\\xs -> repeatedly line1 xs == lines xs" $ \xs -> repeatedly line1 xs == lines xs
-    testGen "for [1,2,3] (+1) == [2,3,4]" $ for [1,2,3] (+1) == [2,3,4]
     testGen "disjoint [1,2,3] [4,5] == True" $ disjoint [1,2,3] [4,5] == True
     testGen "disjoint [1,2,3] [4,1] == False" $ disjoint [1,2,3] [4,1] == False
     testGen "anySame [1,1,2] == True" $ anySame [1,1,2] == True
