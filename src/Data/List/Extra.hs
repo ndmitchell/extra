@@ -57,9 +57,12 @@ repeatedly f as = b : repeatedly f as'
     where (b, as') = f as
 
 
--- | Flipped version of 'map'.
+-- | /DEPRECATED/ Use @flip map@ directly, since this function clashes with @Data.Traversable.for@.
+--
+--   Flipped version of 'map'.
 --
 -- > for [1,2,3] (+1) == [2,3,4]
+{-# DEPRECATED for "Use flip map directly, since this function clashes with Data.Traversable.for" #-}
 for :: [a] -> (a -> b) -> [b]
 for = flip map
 

@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #40, deprecate Data.List.Extra.for (clashes with Traversable)
 1.6.12, released 2018-09-24
     #39, add curry3/uncurry3
 1.6.11, released 2018-09-18
