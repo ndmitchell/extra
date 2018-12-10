@@ -68,6 +68,10 @@ tests = do
     testGen "\\a -> maybeToEither a Nothing == Left a" $ \a -> maybeToEither a Nothing == Left a
     testGen "\\x -> eitherToMaybe (Left x) == Nothing" $ \x -> eitherToMaybe (Left x) == Nothing
     testGen "\\x -> eitherToMaybe (Right x) == Just x" $ \x -> eitherToMaybe (Right x) == Just x
+    testGen "mapLeft show (Left 1) == Left \"1\"" $ mapLeft show (Left 1) == Left "1"
+    testGen "mapLeft show (Right True) == Right True" $ mapLeft show (Right True) == Right True
+    testGen "mapRight show (Left 1) == Left 1" $ mapRight show (Left 1) == Left 1
+    testGen "mapRight show (Right True) == Right \"True\"" $ mapRight show (Right True) == Right "True"
     testGen "\\xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs" $ \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
     testGen "\\xs -> repeatedly word1 (trim xs) == words xs" $ \xs -> repeatedly word1 (trim xs) == words xs
     testGen "\\xs -> repeatedly line1 xs == lines xs" $ \xs -> repeatedly line1 xs == lines xs

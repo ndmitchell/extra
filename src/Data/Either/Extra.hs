@@ -12,6 +12,7 @@ module Data.Either.Extra(
     isLeft, isRight, fromLeft, fromRight, fromEither,
     fromLeft', fromRight',
     eitherToMaybe, maybeToEither,
+    mapLeft, mapRight,
     ) where
 
 import Data.Either
@@ -96,3 +97,20 @@ maybeToEither a Nothing = Left a
 -- > \x -> eitherToMaybe (Right x) == Just x
 eitherToMaybe :: Either a b -> Maybe b
 eitherToMaybe = either (const Nothing) Just
+
+
+-- | The 'mapLeft' function takes a function and applies it to an Either value
+-- iff the value takes the form @'Left' _@.
+--
+-- > mapLeft show (Left 1) == Left "1"
+-- > mapLeft show (Right True) == Right True
+mapLeft :: (a -> c) -> Either a b -> Either c b
+mapLeft f = either (Left . f) Right
+
+-- | The 'mapRight' function takes a function and applies it to an Either value
+-- iff the value takes the form @'Right' _@.
+--
+-- > mapRight show (Left 1) == Left 1
+-- > mapRight show (Right True) == Right "True"
+mapRight :: (b -> c) -> Either a b -> Either a c
+mapRight f = either Left (Right . f)

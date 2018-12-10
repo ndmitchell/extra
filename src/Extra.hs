@@ -17,7 +17,7 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     whenJust, whenJustM, whenMaybe, whenMaybeM, unit, maybeM, eitherM, loop, loopM, whileM, partitionM, concatMapM, concatForM, mconcatMapM, mapMaybeM, findM, firstJustM, fold1M, fold1M_, whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
     -- * Data.Either.Extra
     -- | Extra functions available in @"Data.Either.Extra"@.
-    isLeft, isRight, fromLeft, fromRight, fromEither, fromLeft', fromRight', eitherToMaybe, maybeToEither,
+    isLeft, isRight, fromLeft, fromRight, fromEither, fromLeft', fromRight', eitherToMaybe, maybeToEither, mapLeft, mapRight,
     -- * Data.IORef.Extra
     -- | Extra functions available in @"Data.IORef.Extra"@.
     modifyIORef', writeIORef', atomicModifyIORef', atomicWriteIORef, atomicWriteIORef',
