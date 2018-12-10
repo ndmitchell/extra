@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Add mapLeft and mapRight
 1.6.13, released 2018-10-14
     #40, deprecate Data.List.Extra.for (clashes with Traversable)
 1.6.12, released 2018-09-24
