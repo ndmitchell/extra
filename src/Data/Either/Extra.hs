@@ -113,4 +113,4 @@ mapLeft f = either (Left . f) Right
 -- > mapRight show (Left 1) == Left 1
 -- > mapRight show (Right True) == Right "True"
 mapRight :: (b -> c) -> Either a b -> Either a c
-mapRight f = either Left (Right . f)
+mapRight = fmap
