@@ -4,6 +4,9 @@
 -- | This module extends "Data.Either" with extra operations, particularly
 --   to quickly extract from inside an 'Either'. Some of these operations are
 --   partial, and should be used with care in production-quality code.
+--
+--   If you need more 'Either' functions see the
+--   <https://hackage.haskell.org/package/either either>.
 module Data.Either.Extra(
     module Data.Either,
     isLeft, isRight, fromLeft, fromRight, fromEither,
