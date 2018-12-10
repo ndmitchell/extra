@@ -4,6 +4,9 @@
 -- | Extra functions for "Control.Exception".
 --   These functions provide retrying, showing in the presence of exceptions,
 --   and functions to catch\/ignore exceptions, including monomorphic (no 'Exception' context) versions.
+--
+--   If you want to use a safer set of exceptions see the
+--   <https://hackage.haskell.org/package/safe-exceptions safe-exceptions> package.
 module Control.Exception.Extra(
     module Control.Exception,
     Partial,
