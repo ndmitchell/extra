@@ -3,7 +3,7 @@
 -- | Extra functions for "Control.Monad".
 --   These functions provide looping, list operations and booleans.
 --   If you need a wider selection of monad loops and list generalisations,
---   see <http://hackage.haskell.org/package/monad-loops monad-loops>.
+--   see <https://hackage.haskell.org/package/monad-loops monad-loops>.
 module Control.Monad.Extra(
     module Control.Monad,
     whenJust, whenJustM,

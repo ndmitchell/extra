@@ -3,7 +3,7 @@
 -- | More IO functions. The functions include ones for reading files with specific encodings,
 --   strictly reading files, and writing files with encodings. There are also some simple
 --   temporary file functions, more advanced alternatives can be found in
---   the <http://hackage.haskell.org/package/exceptions exceptions> package.
+--   the <https://hackage.haskell.org/package/exceptions exceptions> package.
 module System.IO.Extra(
     module System.IO,
     captureOutput,

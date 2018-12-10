@@ -4,7 +4,7 @@
 -- | This module extends "Data.List" with extra functions of a similar nature.
 --   The package also exports the existing "Data.List" functions.
 --   Some of the names and semantics were inspired by the
---   <http://hackage.haskell.org/package/text text> package.
+--   <https://hackage.haskell.org/package/text text> package.
 module Data.List.Extra(
     module Data.List,
     -- * String operations
@@ -708,7 +708,7 @@ nubOrdBy cmp xs = f E xs
 
 ---------------------------------------------------------------------
 -- OKASAKI RED BLACK TREE
--- Taken from http://www.cs.kent.ac.uk/people/staff/smk/redblack/Untyped.hs
+-- Taken from https://www.cs.kent.ac.uk/people/staff/smk/redblack/Untyped.hs
 
 data Color = R | B deriving Show
 data RB a = E | T Color (RB a) a (RB a) deriving Show
