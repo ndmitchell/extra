@@ -15,7 +15,7 @@ description:
     The module "Extra" documents all functions provided by this library. Modules such as "Data.List.Extra" provide extra functions over "Data.List" and also reexport "Data.List". Users are recommended to replace "Data.List" imports with "Data.List.Extra" if they need the extra functionality.
 homepage:           https://github.com/ndmitchell/extra#readme
 bug-reports:        https://github.com/ndmitchell/extra/issues
-tested-with:        GHC==8.6.1, GHC==8.4.4, GHC==8.2.2, GHC==8.0.2, GHC==7.10.3, GHC==7.8.4, GHC==7.6.3, GHC==7.4.2
+tested-with:        GHC==8.6.3, GHC==8.4.4, GHC==8.2.2, GHC==8.0.2, GHC==7.10.3, GHC==7.8.4, GHC==7.6.3, GHC==7.4.2
 
 extra-doc-files:
     CHANGES.txt
