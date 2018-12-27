@@ -42,18 +42,34 @@ tests = do
     testGen "anyM Just [False,True ,undefined] == Just True" $ anyM Just [False,True ,undefined] == Just True
     testGen "anyM Just [False,False,undefined] == undefined" $ erroneous $ anyM Just [False,False,undefined]
     testGen "\\(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)" $ \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
+    testGen "anyM Just (Just True) == Just True" $ anyM Just (Just True) == Just True
+    testGen "anyM Just Nothing == Just False" $ anyM Just Nothing == Just False
     testGen "allM Just [True,False,undefined] == Just False" $ allM Just [True,False,undefined] == Just False
     testGen "allM Just [True,True ,undefined] == undefined" $ erroneous $ allM Just [True,True ,undefined]
     testGen "\\(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)" $ \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
+    testGen "allM Just (Just False) == Just False" $ allM Just (Just False) == Just False
+    testGen "allM Just Nothing == Just True" $ allM Just Nothing == Just True
     testGen "orM [Just False,Just True ,undefined] == Just True" $ orM [Just False,Just True ,undefined] == Just True
     testGen "orM [Just False,Just False,undefined] == undefined" $ erroneous $ orM [Just False,Just False,undefined]
     testGen "\\xs -> Just (or xs) == orM (map Just xs)" $ \xs -> Just (or xs) == orM (map Just xs)
+    testGen "orM (Just $ Just False) == Just False" $ orM (Just $ Just False) == Just False
+    testGen "orM (Just Nothing) == Nothing" $ orM (Just Nothing) == Nothing
+    testGen "orM Nothing == Just False" $ orM Nothing == Just False
     testGen "andM [Just True,Just False,undefined] == Just False" $ andM [Just True,Just False,undefined] == Just False
     testGen "andM [Just True,Just True ,undefined] == undefined" $ erroneous $ andM [Just True,Just True ,undefined]
     testGen "\\xs -> Just (and xs) == andM (map Just xs)" $ \xs -> Just (and xs) == andM (map Just xs)
+    testGen "andM (Just $ Just False) == Just False" $ andM (Just $ Just False) == Just False
+    testGen "andM (Just Nothing) == Nothing" $ andM (Just Nothing) == Nothing
+    testGen "andM Nothing == Just True" $ andM Nothing == Just True
     testGen "findM (Just . isUpper) \"teST\"             == Just (Just 'S')" $ findM (Just . isUpper) "teST"             == Just (Just 'S')
     testGen "findM (Just . isUpper) \"test\"             == Just Nothing" $ findM (Just . isUpper) "test"             == Just Nothing
     testGen "findM (Just . const True) [\"x\",undefined] == Just (Just \"x\")" $ findM (Just . const True) ["x",undefined] == Just (Just "x")
+    testGen "findM (Just . isUpper) (Just 'A') == Just (Just 'A')" $ findM (Just . isUpper) (Just 'A') == Just (Just 'A')
+    testGen "findM (Just . isUpper) Nothing == Just Nothing" $ findM (Just . isUpper) Nothing == Just Nothing
+    testGen "firstJustM (Just . fmap not) [Just True, Nothing] == Just (Just False)" $ firstJustM (Just . fmap not) [Just True, Nothing] == Just (Just False)
+    testGen "firstJustM (Just . fmap not) [Just False] == Just (Just True)" $ firstJustM (Just . fmap not) [Just False] == Just (Just True)
+    testGen "firstJustM (Just . fmap not) (Just $ Just False) == Just (Just True)" $ firstJustM (Just . fmap not) (Just $ Just False) == Just (Just True)
+    testGen "firstJustM (Just . fmap not) Nothing == Just Nothing" $ firstJustM (Just . fmap not) Nothing == Just Nothing
     testGen "fromLeft 1 (Left 3) == 3" $ fromLeft 1 (Left 3) == 3
     testGen "fromLeft 1 (Right \"foo\") == 1" $ fromLeft 1 (Right "foo") == 1
     testGen "fromRight 1 (Right 3) == 3" $ fromRight 1 (Right 3) == 3

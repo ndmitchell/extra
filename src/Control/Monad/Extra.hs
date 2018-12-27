@@ -22,6 +22,7 @@ module Control.Monad.Extra(
 import Control.Monad
 import Control.Exception.Extra
 import Data.Maybe
+import Data.Foldable
 import Control.Applicative
 import Data.Monoid
 import Prelude
@@ -198,25 +199,30 @@ notM = fmap not
 -- > anyM Just [False,True ,undefined] == Just True
 -- > anyM Just [False,False,undefined] == undefined
 -- > \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
-anyM :: Monad m => (a -> m Bool) -> [a] -> m Bool
-anyM p [] = return False
-anyM p (x:xs) = ifM (p x) (return True) (anyM p xs)
+-- > anyM Just (Just True) == Just True
+-- > anyM Just Nothing == Just False
+anyM :: (Foldable f, Monad m) => (a -> m Bool) -> f a -> m Bool
+anyM p = fmap isJust . findM p
 
 -- | A version of 'all' lifted to a monad. Retains the short-circuiting behaviour.
 --
 -- > allM Just [True,False,undefined] == Just False
 -- > allM Just [True,True ,undefined] == undefined
 -- > \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
-allM :: Monad m => (a -> m Bool) -> [a] -> m Bool
-allM p [] = return True
-allM p (x:xs) = ifM (p x) (allM p xs) (return False)
+-- > allM Just (Just False) == Just False
+-- > allM Just Nothing == Just True
+allM :: (Foldable f, Monad m) => (a -> m Bool) -> f a -> m Bool
+allM p = fmap not . anyM (fmap not . p)
 
 -- | A version of 'or' lifted to a monad. Retains the short-circuiting behaviour.
 --
 -- > orM [Just False,Just True ,undefined] == Just True
 -- > orM [Just False,Just False,undefined] == undefined
 -- > \xs -> Just (or xs) == orM (map Just xs)
-orM :: Monad m => [m Bool] -> m Bool
+-- > orM (Just $ Just False) == Just False
+-- > orM (Just Nothing) == Nothing
+-- > orM Nothing == Just False
+orM :: (Foldable f, Monad m) => f (m Bool) -> m Bool
 orM = anyM id
 
 -- | A version of 'and' lifted to a monad. Retains the short-circuiting behaviour.
@@ -224,7 +230,10 @@ orM = anyM id
 -- > andM [Just True,Just False,undefined] == Just False
 -- > andM [Just True,Just True ,undefined] == undefined
 -- > \xs -> Just (and xs) == andM (map Just xs)
-andM :: Monad m => [m Bool] -> m Bool
+-- > andM (Just $ Just False) == Just False
+-- > andM (Just Nothing) == Nothing
+-- > andM Nothing == Just True
+andM :: (Foldable f, Monad m) => f (m Bool) -> m Bool
 andM = allM id
 
 -- Searching
@@ -234,11 +243,19 @@ andM = allM id
 -- > findM (Just . isUpper) "teST"             == Just (Just 'S')
 -- > findM (Just . isUpper) "test"             == Just Nothing
 -- > findM (Just . const True) ["x",undefined] == Just (Just "x")
-findM :: Monad m => (a -> m Bool) -> [a] -> m (Maybe a)
-findM p [] = return Nothing
-findM p (x:xs) = ifM (p x) (return $ Just x) (findM p xs)
+-- > findM (Just . isUpper) (Just 'A') == Just (Just 'A')
+-- > findM (Just . isUpper) Nothing == Just Nothing
+findM :: (Foldable f, Monad m) => (a -> m Bool) -> f a -> m (Maybe a)
+findM p = helper . toList
+    where helper [] = return Nothing
+          helper (x:xs) = ifM (p x) (return $ Just x) (findM p xs)
 
 -- | Like 'findM', but also allows you to compute some additional information in the predicate.
-firstJustM :: Monad m => (a -> m (Maybe b)) -> [a] -> m (Maybe b)
-firstJustM p [] = return Nothing
-firstJustM p (x:xs) = maybe (firstJustM p xs) (return . Just) =<< p x
+-- > firstJustM (Just . fmap not) [Just True, Nothing] == Just (Just False)
+-- > firstJustM (Just . fmap not) [Just False] == Just (Just True)
+-- > firstJustM (Just . fmap not) (Just $ Just False) == Just (Just True)
+-- > firstJustM (Just . fmap not) Nothing == Just Nothing
+firstJustM :: (Foldable f, Monad m) => (a -> m (Maybe b)) -> f a -> m (Maybe b)
+firstJustM p = helper . toList
+    where helper [] = return Nothing
+          helper (x:xs) = maybe (firstJustM p xs) (return . Just) =<< p x
