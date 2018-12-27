@@ -202,9 +202,9 @@ notM = fmap not
 -- > anyM Just (Just True) == Just True
 -- > anyM Just Nothing == Just False
 #if __GLASGOW_HASKELL__ < 710
-anyM :: (Foldable f, Monad m) => (a -> m Bool) -> f a -> m Bool
-#else
 anyM :: (Foldable f, Functor m, Monad m) => (a -> m Bool) -> f a -> m Bool
+#else
+anyM :: (Foldable f, Monad m) => (a -> m Bool) -> f a -> m Bool
 #endif
 anyM p = fmap isJust . findM p
 
@@ -216,9 +216,9 @@ anyM p = fmap isJust . findM p
 -- > allM Just (Just False) == Just False
 -- > allM Just Nothing == Just True
 #if __GLASGOW_HASKELL__ < 710
-allM :: (Foldable f, Monad m) => (a -> m Bool) -> f a -> m Bool
-#else
 allM :: (Foldable f, Functor m, Monad m) => (a -> m Bool) -> f a -> m Bool
+#else
+allM :: (Foldable f, Monad m) => (a -> m Bool) -> f a -> m Bool
 #endif
 allM p = notM . anyM (notM . p)
 
@@ -230,7 +230,11 @@ allM p = notM . anyM (notM . p)
 -- > orM (Just $ Just False) == Just False
 -- > orM (Just Nothing) == Nothing
 -- > orM Nothing == Just False
+#if __GLASGOW_HASKELL__ < 710
+orM :: (Foldable f, Functor m, Monad m) => f (m Bool) -> m Bool
+#else
 orM :: (Foldable f, Monad m) => f (m Bool) -> m Bool
+#endif
 orM = anyM id
 
 -- | A version of 'and' lifted to a monad. Retains the short-circuiting behaviour.
@@ -241,7 +245,11 @@ orM = anyM id
 -- > andM (Just $ Just False) == Just False
 -- > andM (Just Nothing) == Nothing
 -- > andM Nothing == Just True
+#if __GLASGOW_HASKELL__ < 710
+andM :: (Foldable f, Functor m, Monad m) => f (m Bool) -> m Bool
+#else
 andM :: (Foldable f, Monad m) => f (m Bool) -> m Bool
+#endif
 andM = allM id
 
 -- Searching
