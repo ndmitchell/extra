@@ -25,7 +25,7 @@ import Data.Maybe
 import Data.Foldable
 import Control.Applicative
 import Data.Monoid
-import Prelude
+import Prelude hiding (foldr)
 
 -- General utilities
 
