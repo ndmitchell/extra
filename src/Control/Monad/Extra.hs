@@ -1,4 +1,4 @@
-{-# LANGUAGE ConstraintKinds #-}
+{-# LANGUAGE ConstraintKinds, CPP #-}
 
 -- | Extra functions for "Control.Monad".
 --   These functions provide looping, list operations and booleans.
@@ -201,7 +201,11 @@ notM = fmap not
 -- > \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
 -- > anyM Just (Just True) == Just True
 -- > anyM Just Nothing == Just False
+#if __GLASGOW_HASKELL__ < 710
 anyM :: (Foldable f, Monad m) => (a -> m Bool) -> f a -> m Bool
+#else
+anyM :: (Foldable f, Functor m, Monad m) => (a -> m Bool) -> f a -> m Bool
+#endif
 anyM p = fmap isJust . findM p
 
 -- | A version of 'all' lifted to a monad. Retains the short-circuiting behaviour.
@@ -211,8 +215,12 @@ anyM p = fmap isJust . findM p
 -- > \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
 -- > allM Just (Just False) == Just False
 -- > allM Just Nothing == Just True
+#if __GLASGOW_HASKELL__ < 710
 allM :: (Foldable f, Monad m) => (a -> m Bool) -> f a -> m Bool
-allM p = fmap not . anyM (fmap not . p)
+#else
+allM :: (Foldable f, Functor m, Monad m) => (a -> m Bool) -> f a -> m Bool
+#endif
+allM p = notM . anyM (notM . p)
 
 -- | A version of 'or' lifted to a monad. Retains the short-circuiting behaviour.
 --
