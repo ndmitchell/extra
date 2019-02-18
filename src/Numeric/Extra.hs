@@ -7,7 +7,7 @@ module Numeric.Extra(
     ) where
 
 import Numeric
-import Control.Arrow
+
 
 ---------------------------------------------------------------------
 -- Data.String
@@ -18,8 +18,7 @@ import Control.Arrow
 -- > showDP 0 pi == "3"
 -- > showDP 2 3  == "3.00"
 showDP :: RealFloat a => Int -> a -> String
-showDP n x = a ++ (if n > 0 then "." else "") ++ b ++ replicate (n - length b) '0'
-    where (a,b) = second (drop 1) $ break (== '.') $ showFFloat (Just n) x ""
+showDP n x = showFFloat (Just n) x ""
 
 
 ---------------------------------------------------------------------
@@ -40,5 +39,3 @@ floatToDouble = realToFrac
 -- | Specialised numeric conversion, type restricted version of 'realToFrac'.
 doubleToFloat :: Double -> Float
 doubleToFloat = realToFrac
-
-
