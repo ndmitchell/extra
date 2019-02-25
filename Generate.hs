@@ -38,10 +38,10 @@ main = do
         concat [ ["    -- * " ++ mod
                  ,"    -- | Extra functions available in @" ++ show mod ++ "@."
                  ,"    " ++ unwords (map (++",") funs)]
-               | (mod,funs,_) <- ifaces] ++
+               | (mod,funs@(_:_),_) <- ifaces] ++
         ["    ) where"
         ,""] ++
-        ["import " ++ x | x <- mods]
+        ["import " ++ mod | (mod,_:_,_) <- ifaces]
     writeFileBinaryChanged "test/TestGen.hs" $ unlines $
         ["-- GENERATED CODE - DO NOT MODIFY"
         ,"-- See Generate.hs for details of how to generate"
