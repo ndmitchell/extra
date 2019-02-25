@@ -94,9 +94,6 @@ tests = do
     testGen "list 1 (\\v _ -> v - 2) [5,6,7] == 3" $ list 1 (\v _ -> v - 2) [5,6,7] == 3
     testGen "list 1 (\\v _ -> v - 2) []      == 1" $ list 1 (\v _ -> v - 2) []      == 1
     testGen "\\nil cons xs -> maybe nil (uncurry cons) (uncons xs) == list nil cons xs" $ \nil cons xs -> maybe nil (uncurry cons) (uncons xs) == list nil cons xs
-    testGen "uncons \"test\" == Just ('t',\"est\")" $ uncons "test" == Just ('t',"est")
-    testGen "uncons \"\"     == Nothing" $ uncons ""     == Nothing
-    testGen "\\xs -> uncons xs == if null xs then Nothing else Just (head xs, tail xs)" $ \xs -> uncons xs == if null xs then Nothing else Just (head xs, tail xs)
     testGen "unsnoc \"test\" == Just (\"tes\",'t')" $ unsnoc "test" == Just ("tes",'t')
     testGen "unsnoc \"\"     == Nothing" $ unsnoc ""     == Nothing
     testGen "\\xs -> unsnoc xs == if null xs then Nothing else Just (init xs, last xs)" $ \xs -> unsnoc xs == if null xs then Nothing else Just (init xs, last xs)
@@ -151,7 +148,6 @@ tests = do
     testGen "escapeJSON \"\\ttab\\nnewline\\\\\" == \"\\\\ttab\\\\nnewline\\\\\\\\\"" $ escapeJSON "\ttab\nnewline\\" == "\\ttab\\nnewline\\\\"
     testGen "escapeJSON \"\\ESC[0mHello\" == \"\\\\u001b[0mHello\"" $ escapeJSON "\ESC[0mHello" == "\\u001b[0mHello"
     testGen "\\xs -> unescapeJSON (escapeJSON xs) == xs" $ \xs -> unescapeJSON (escapeJSON xs) == xs
-    testGen "sortOn fst [(3,\"z\"),(1,\"\"),(3,\"a\")] == [(1,\"\"),(3,\"z\"),(3,\"a\")]" $ sortOn fst [(3,"z"),(1,""),(3,"a")] == [(1,""),(3,"z"),(3,"a")]
     testGen "groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,\"t\"),(2,\"es\"),(3,\"t\")]" $ groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,"t"),(2,"es"),(3,"t")]
     testGen "\\xs -> map fst (groupSort xs) == sort (nub (map fst xs))" $ \xs -> map fst (groupSort xs) == sort (nub (map fst xs))
     testGen "\\xs -> concatMap snd (groupSort xs) == map snd (sortOn fst xs)" $ \xs -> concatMap snd (groupSort xs) == map snd (sortOn fst xs)
@@ -233,8 +229,6 @@ tests = do
     testGen "(succ &&& pred) 1 == (2,0)" $ (succ &&& pred) 1 == (2,0)
     testGen "dupe 12 == (12, 12)" $ dupe 12 == (12, 12)
     testGen "both succ (1,2) == (2,3)" $ both succ (1,2) == (2,3)
-    testGen "typeRep (Proxy :: Proxy Int) == typeOf (1 :: Int)" $ typeRep (Proxy :: Proxy Int) == typeOf (1 :: Int)
-    testGen "showVersion (makeVersion [1,2,3]) == \"1.2.3\"" $ showVersion (makeVersion [1,2,3]) == "1.2.3"
     testGen "\\x -> readVersion (showVersion x) == x" $ \x -> readVersion (showVersion x) == x
     testGen "readVersion \"hello\" == undefined" $ erroneous $ readVersion "hello"
     testGen "showDP 4 pi == \"3.1416\"" $ showDP 4 pi == "3.1416"
