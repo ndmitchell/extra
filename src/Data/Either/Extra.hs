@@ -9,7 +9,7 @@
 --   <https://hackage.haskell.org/package/either either>.
 module Data.Either.Extra(
     module Data.Either,
-    isLeft, isRight, fromLeft, fromRight, fromEither,
+    fromLeft, fromRight, fromEither,
     fromLeft', fromRight',
     eitherToMaybe, maybeToEither,
     mapLeft, mapRight,
@@ -60,18 +60,6 @@ fromRight' :: Partial => Either l r -> r
 fromRight' (Right x) = x
 fromRight' _ = error "fromRight', given a Left"
 
-
-#if __GLASGOW_HASKELL__ < 708
--- | Test if an 'Either' value is the 'Left' constructor.
---   Provided as standard with GHC 7.8 and above.
-isLeft :: Either l r -> Bool
-isLeft Left{} = True; isLeft _ = False
-
--- | Test if an 'Either' value is the 'Right' constructor.
---   Provided as standard with GHC 7.8 and above.
-isRight :: Either l r -> Bool
-isRight Right{} = True; isRight _ = False
-#endif
 
 -- | Pull the value out of an 'Either' where both alternatives
 --   have the same type.
