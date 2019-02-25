@@ -1,4 +1,4 @@
-{-# LANGUAGE ScopedTypeVariables, CPP, FlexibleInstances #-}
+{-# LANGUAGE ScopedTypeVariables, FlexibleInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-} -- OK because a test module
 
 module TestUtil
@@ -64,11 +64,6 @@ erroneousIO x = unsafePerformIO $ fmap isLeft $ try_ $ evaluate . length . show 
 a ==== b
     | a == b = True
     | otherwise = error $ "Not equal!\n" ++ show a ++ "\n" ++ show b
-
-#if __GLASGOW_HASKELL__ < 707
-instance Eq ErrorCall where
-    ErrorCall x == ErrorCall y = x == y
-#endif
 
 runTests :: IO () -> IO ()
 runTests t = do
