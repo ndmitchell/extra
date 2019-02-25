@@ -1,5 +1,4 @@
-{-# LANGUAGE CPP, TupleSections, ConstraintKinds #-}
-{-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
+{-# LANGUAGE TupleSections, ConstraintKinds #-}
 
 -- | Extra functions for "Control.Concurrent".
 --
@@ -14,8 +13,8 @@
 --   see the <httdp://hackage.haskell.org/package/async async> package.
 module Control.Concurrent.Extra(
     module Control.Concurrent,
-    getNumCapabilities, setNumCapabilities, withNumCapabilities,
-    forkFinally, once, onceFork,
+    withNumCapabilities,
+    once, onceFork,
     -- * Lock
     Lock, newLock, withLock, withLockTry,
     -- * Var
@@ -41,39 +40,6 @@ withNumCapabilities new act | rtsSupportsBoundThreads = do
     if old == new then act else
         bracket_ (setNumCapabilities new) (setNumCapabilities old) act
 withNumCapabilities _ act = act
-
-
-#if __GLASGOW_HASKELL__ < 702
--- | A version of 'getNumCapabilities' that works on all versions of GHC, but returns 1 before GHC 7.2.
-getNumCapabilities :: IO Int
-getNumCapabilities = return 1
-#endif
-
-#if __GLASGOW_HASKELL__ < 706
--- | A version of 'setNumCapabilities' that works on all versions of GHC, but has no effect before GHC 7.6.
-setNumCapabilities :: Int -> IO ()
-setNumCapabilities n = return ()
-#endif
-
-
-#if __GLASGOW_HASKELL__ < 706
--- | fork a thread and call the supplied function when the thread is about
--- to terminate, with an exception or a returned value.  The function is
--- called with asynchronous exceptions masked.
---
--- @
--- 'forkFinally' action and_then =
---    mask $ \restore ->
---      forkIO $ try (restore action) >>= and_then
--- @
---
--- This function is useful for informing the parent when a child
--- terminates, for example.
-forkFinally :: IO a -> (Either SomeException a -> IO ()) -> IO ThreadId
-forkFinally action and_then =
-  mask $ \restore ->
-    forkIO $ try (restore action) >>= and_then
-#endif
 
 
 -- | Given an action, produce a wrapped action that runs at most once.
