@@ -1,5 +1,4 @@
-{-# LANGUAGE CPP, TupleSections, BangPatterns, ConstraintKinds #-}
-{-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
+{-# LANGUAGE TupleSections, BangPatterns, ConstraintKinds #-}
 
 -- | This module extends "Data.List" with extra functions of a similar nature.
 --   The package also exports the existing "Data.List" functions.
@@ -13,17 +12,17 @@ module Data.List.Extra(
     unescapeHTML, unescapeJSON,
     -- * Splitting
     dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd,
-    dropWhileEnd, dropWhileEnd', takeWhileEnd,
+    dropWhileEnd', takeWhileEnd,
     stripSuffix, stripInfix, stripInfixEnd,
     dropPrefix, dropSuffix,
     wordsBy, linesBy,
     breakOn, breakOnEnd, splitOn, split, chunksOf,
     -- * Basics
-    notNull, list, uncons, unsnoc, cons, snoc, drop1, mconcatMap,
+    notNull, list, unsnoc, cons, snoc, drop1, mconcatMap,
     -- * List operations
     groupSort, groupSortOn, groupSortBy,
     nubOrd, nubOrdBy, nubOrdOn,
-    nubOn, groupOn, sortOn,
+    nubOn, groupOn,
     nubSort, nubSortBy, nubSortOn,
     maximumOn, minimumOn,
     disjoint, allSame, anySame,
@@ -113,17 +112,6 @@ notNull = not . null
 list :: b -> (a -> [a] -> b) -> [a] -> b
 list nil cons [] = nil
 list nil cons (x:xs) = cons x xs
-
-#if __GLASGOW_HASKELL__ < 709
--- | If the list is empty returns 'Nothing', otherwise returns the 'head' and the 'tail'.
---
--- > uncons "test" == Just ('t',"est")
--- > uncons ""     == Nothing
--- > \xs -> uncons xs == if null xs then Nothing else Just (head xs, tail xs)
-uncons :: [a] -> Maybe (a, [a])
-uncons [] = Nothing
-uncons (x:xs) = Just (x,xs)
-#endif
 
 -- | If the list is empty returns 'Nothing', otherwise returns the 'init' and the 'last'.
 --
@@ -353,18 +341,6 @@ unescapeJSON (x:xs) = x : unescapeJSON xs
 unescapeJSON [] = []
 
 
-#if __GLASGOW_HASKELL__ < 709
--- | Sort a list by comparing the results of a key function applied to each
--- element.  @sortOn f@ is equivalent to @sortBy (comparing f)@, but has the
--- performance advantage of only evaluating @f@ once for each element in the
--- input list.  This is called the decorate-sort-undecorate paradigm, or
--- Schwartzian transform.
---
--- > sortOn fst [(3,"z"),(1,""),(3,"a")] == [(1,""),(3,"z"),(3,"a")]
-sortOn :: Ord b => (a -> b) -> [a] -> [a]
-sortOn f = map snd . sortBy (compare `on` fst) . map (\x -> let y = f x in y `seq` (y, x))
-#endif
-
 -- | A version of 'group' where the equality is done on some extracted value.
 groupOn :: Eq b => (a -> b) -> [a] -> [[a]]
 groupOn f = groupBy ((==) `on2` f)
@@ -569,12 +545,6 @@ split :: (a -> Bool) -> [a] -> [[a]]
 split f [] = [[]]
 split f (x:xs) | f x = [] : split f xs
 split f (x:xs) | y:ys <- split f xs = (x:y) : ys
-
-
-#if __GLASGOW_HASKELL__ < 704
-dropWhileEnd :: (a -> Bool) -> [a] -> [a]
-dropWhileEnd p = foldr (\x xs -> if p x && null xs then [] else x : xs) []
-#endif
 
 
 -- | A version of 'dropWhileEnd' but with different strictness properties.
