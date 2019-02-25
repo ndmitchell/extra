@@ -13,7 +13,7 @@ module Control.Exception.Extra(
     retry, retryBool,
     errorWithoutStackTrace,
     showException, stringException,
-    errorIO, displayException,
+    errorIO,
     -- * Exception catching/ignoring
     ignore,
     catch_, handle_, try_,
@@ -51,13 +51,6 @@ stringException x = do
 showException :: Show e => e -> IO String
 showException = stringException . show
 
-
-#if __GLASGOW_HASKELL__ < 710
--- | Render this exception value in a human-friendly manner.
---   Part of the 'Exception' class in GHC 7.10 onwards.
-displayException :: Exception e => e -> String
-displayException = show
-#endif
 
 #if __GLASGOW_HASKELL__ < 800
 -- | A variant of 'error' that does not produce a stack trace.
