@@ -70,6 +70,11 @@ maybeM :: Monad m => m b -> (a -> m b) -> m (Maybe a) -> m b
 maybeM n j x = maybe n j =<< x
 
 
+-- | Monadic generalisation of 'fromMaybe'.
+fromMaybeM :: Monad m => m a -> m (Maybe a) -> m a
+fromMaybeM n x = maybe n pure =<< x
+
+
 -- | Monadic generalisation of 'either'.
 eitherM :: Monad m => (a -> m c) -> (b -> m c) -> m (Either a b) -> m c
 eitherM l r x = either l r =<< x
