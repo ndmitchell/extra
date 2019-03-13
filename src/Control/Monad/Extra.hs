@@ -9,7 +9,7 @@ module Control.Monad.Extra(
     whenJust, whenJustM,
     whenMaybe, whenMaybeM,
     unit,
-    maybeM, eitherM,
+    maybeM, fromMaybeM, eitherM,
     -- * Loops
     loop, loopM, whileM,
     -- * Lists
