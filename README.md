@@ -1,11 +1,11 @@
 # Extra [![Hackage version](https://img.shields.io/hackage/v/extra.svg?label=Hackage)](https://hackage.haskell.org/package/extra) [![Stackage version](https://www.stackage.org/package/extra/badge/nightly?label=Stackage)](https://www.stackage.org/package/extra) [![Linux Build Status](https://img.shields.io/travis/ndmitchell/extra/master.svg?label=Linux%20build)](https://travis-ci.org/ndmitchell/extra) [![Windows Build Status](https://img.shields.io/appveyor/ci/ndmitchell/extra/master.svg?label=Windows%20build)](https://ci.appveyor.com/project/ndmitchell/extra)
 
-A library of extra functions for the standard Haskell libraries. Most functions are simple additions, filling out missing functionality. A few functions are available in later versions of GHC, but this package makes them available back to GHC 7.2. A few examples:
+A library of extra functions for the standard Haskell libraries. Most functions are simple additions, filling out missing functionality. A few functions are available in later versions of GHC, but this package makes them available back to GHC 7.10. A few examples:
 
 * `Control.Monad.Extra.concatMapM` provides a monadic version of `concatMap`, in the same way that `mapM` is a monadic version of `map`.
 * `Data.Tuple.Extra.fst3` provides a function to get the first element of a triple.
 * `Control.Exception.Extra.retry` provides a function that retries an `IO` action a number of times.
-* `System.Environment.Extra.lookupEnv` is a function available in GHC 7.6 and above. On GHC 7.6 and above this package reexports the version from `System.Environment` while on GHC 7.4 and below it defines an equivalent version.
+* `Data.Either.Extra.fromLeft` is a function available in GHC 8.0 and above. On GHC 8.0 and above this package reexports the version from `Data.Either` while on GHC 7.10 and below it defines an equivalent version.
 
 The module `Extra` documents all functions provided by this library. Modules such as `Data.List.Extra` provide extra functions over `Data.List` and also reexport `Data.List`. Users are recommended to replace `Data.List` imports with `Data.List.Extra` if they need the extra functionality.
 
