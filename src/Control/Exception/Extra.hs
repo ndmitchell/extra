@@ -1,4 +1,4 @@
-{-# LANGUAGE ScopedTypeVariables, CPP, ConstraintKinds #-}
+{-# LANGUAGE ScopedTypeVariables, CPP, ConstraintKinds, RankNTypes #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- | Extra functions for "Control.Exception".
@@ -25,6 +25,7 @@ import Control.Exception
 import Control.Monad
 import Data.List.Extra
 import Data.Functor
+import Data.Typeable (typeOf)
 import Partial
 import Prelude
 
@@ -140,3 +141,19 @@ tryBool f a = tryJust (bool f) a
 
 bool :: (e -> Bool) -> (e -> Maybe e)
 bool f x = if f x then Just x else Nothing
+
+-- | Apply a function to whatever @Exception@ type is inside a
+-- @SomeException@:
+--
+-- >>> catch (readFile "/tmp/nonexistant") (withException (return . show . typeOf))
+-- "IOException"
+withException :: forall r. (forall e. Exception e => e -> r) -> SomeException -> r
+withException f (SomeException e) = f e
+
+-- | Use 'withException' to obtain the exception's type name (similar
+-- to 'Control.Exception.displayException')
+--
+-- >>> catch (readFile "/tmp/nonexistant") (return . displaySomeExceptionType)
+-- "IOException"
+displaySomeExceptionType :: SomeException -> String
+displaySomeExceptionType = withException (show . typeOf)

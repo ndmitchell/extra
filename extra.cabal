@@ -34,6 +34,7 @@ library
         base >= 4.4 && < 5,
         directory,
         filepath,
+        mtl,
         process,
         clock >= 0.7,
         time
@@ -46,6 +47,7 @@ library
         Extra
         Control.Concurrent.Extra
         Control.Exception.Extra
+        Control.Monad.Except.Extra
         Control.Monad.Extra
         Data.Either.Extra
         Data.IORef.Extra
