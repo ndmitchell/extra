@@ -11,10 +11,13 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     withNumCapabilities, once, onceFork, Lock, newLock, withLock, withLockTry, Var, newVar, readVar, writeVar, modifyVar, modifyVar_, withVar, Barrier, newBarrier, signalBarrier, waitBarrier, waitBarrierMaybe,
     -- * Control.Exception.Extra
     -- | Extra functions available in @"Control.Exception.Extra"@.
-    Partial, retry, retryBool, errorWithoutStackTrace, showException, stringException, errorIO, ignore, catch_, handle_, try_, catchJust_, handleJust_, tryJust_, catchBool, handleBool, tryBool,
+    Partial, retry, retryBool, errorWithoutStackTrace, showException, stringException, errorIO, ignore, catch_, handle_, try_, catchJust_, handleJust_, tryJust_, catchBool, handleBool, tryBool, withException, displayExceptionType,
     -- * Control.Monad.Extra
     -- | Extra functions available in @"Control.Monad.Extra"@.
     whenJust, whenJustM, whenMaybe, whenMaybeM, unit, maybeM, fromMaybeM, eitherM, loop, loopM, whileM, partitionM, concatMapM, concatForM, mconcatMapM, mapMaybeM, findM, firstJustM, fold1M, fold1M_, whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
+    -- * Control.Monad.Except.Extra
+    -- | Extra functions available in @"Control.Monad.Except.Extra"@.
+    tryError, withError, handleError,
     -- * Data.Either.Extra
     -- | Extra functions available in @"Data.Either.Extra"@.
     fromLeft, fromRight, fromEither, fromLeft', fromRight', eitherToMaybe, maybeToEither, mapLeft, mapRight,
@@ -53,6 +56,7 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
 import Control.Concurrent.Extra
 import Control.Exception.Extra
 import Control.Monad.Extra
+import Control.Monad.Except.Extra
 import Data.Either.Extra
 import Data.IORef.Extra
 import Data.List.Extra
