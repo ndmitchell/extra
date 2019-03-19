@@ -13,7 +13,7 @@ module Control.Exception.Extra(
     retry, retryBool,
     errorWithoutStackTrace,
     showException, stringException,
-    errorIO,
+    errorIO, withException, displayExceptionType,
     -- * Exception catching/ignoring
     ignore,
     catch_, handle_, try_,
@@ -155,5 +155,5 @@ withException f (SomeException e) = f e
 --
 -- >>> catch (readFile "/tmp/nonexistant") (return . displaySomeExceptionType)
 -- "IOException"
-displaySomeExceptionType :: SomeException -> String
-displaySomeExceptionType = withException (show . typeOf)
+displayExceptionType :: SomeException -> String
+displayExceptionType = withException (show . typeOf)
