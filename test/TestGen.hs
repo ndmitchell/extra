@@ -223,6 +223,10 @@ tests = do
     testGen "\\xs -> nubOrd xs == nub xs" $ \xs -> nubOrd xs == nub xs
     testGen "nubOrdOn length [\"a\",\"test\",\"of\",\"this\"] == [\"a\",\"test\",\"of\"]" $ nubOrdOn length ["a","test","of","this"] == ["a","test","of"]
     testGen "nubOrdBy (compare `on` length) [\"a\",\"test\",\"of\",\"this\"] == [\"a\",\"test\",\"of\"]" $ nubOrdBy (compare `on` length) ["a","test","of","this"] == ["a","test","of"]
+    testGen "(1 :| [2,3]) |> 4 |> 5 == 1 :| [2,3,4,5]" $ (1 :| [2,3]) |> 4 |> 5 == 1 :| [2,3,4,5]
+    testGen "[1,2,3] |: 4 |> 5 == 1 :| [2,3,4,5]" $ [1,2,3] |: 4 |> 5 == 1 :| [2,3,4,5]
+    testGen "appendl (1 :| [2,3]) [4,5] == 1 :| [2,3,4,5]" $ appendl (1 :| [2,3]) [4,5] == 1 :| [2,3,4,5]
+    testGen "appendr [1,2,3] (4 :| [5]) == 1 :| [2,3,4,5]" $ appendr [1,2,3] (4 :| [5]) == 1 :| [2,3,4,5]
     testGen "first succ (1,\"test\") == (2,\"test\")" $ first succ (1,"test") == (2,"test")
     testGen "second reverse (1,\"test\") == (1,\"tset\")" $ second reverse (1,"test") == (1,"tset")
     testGen "(succ *** reverse) (1,\"test\") == (2,\"tset\")" $ (succ *** reverse) (1,"test") == (2,"tset")

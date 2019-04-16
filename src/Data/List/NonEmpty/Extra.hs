@@ -29,12 +29,12 @@ snoc = (|>)
 
 -- | Append a list to a non-empty list.
 --
--- > appendl (1 :| [2,3]) [4,5] = 1 :| [2,3,4,5]
+-- > appendl (1 :| [2,3]) [4,5] == 1 :| [2,3,4,5]
 appendl :: NonEmpty a -> [a] -> NonEmpty a
 appendl (x :| xs) l = x :| (xs ++ l)
 
 -- | Append a non-empty list to a list.
 --
--- > appendr [1,2,3] (4 :| [5]) = 1 :| [2,3,4,5]
+-- > appendr [1,2,3] (4 :| [5]) == 1 :| [2,3,4,5]
 appendr :: [a] -> NonEmpty a -> NonEmpty a
 appendr l nel = foldr cons nel l

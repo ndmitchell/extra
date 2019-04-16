@@ -37,11 +37,11 @@ main = do
         ,"module Extra {-# DEPRECATED \"This module is provided as documentation of all new functions, you should import the more specific modules directly.\" #-} ("] ++
         concat [ ["    -- * " ++ mod
                  ,"    -- | Extra functions available in @" ++ show mod ++ "@."
-                 ,"    " ++ unwords (map (++",") funs)]
+                 ,"    " ++ (unwords . map (++",") . filter (notHidden mod) $ funs)]
                | (mod,funs@(_:_),_) <- ifaces] ++
         ["    ) where"
         ,""] ++
-        ["import " ++ mod | (mod,_:_,_) <- ifaces]
+        ["import " ++ addHiding mod | (mod,_:_,_) <- ifaces]
     writeFileBinaryChanged "test/TestGen.hs" $ unlines $
         ["-- GENERATED CODE - DO NOT MODIFY"
         ,"-- See Generate.hs for details of how to generate"
@@ -66,6 +66,17 @@ writeFileBinaryChanged file x = do
     when (Just x /= old) $
         writeFileBinary file x
 
+hidden :: String -> [String]
+hidden "Data.List.NonEmpty.Extra" = ["cons", "snoc"]
+hidden _ = []
+
+notHidden :: String -> String -> Bool
+notHidden mod fun = fun `notElem` hidden mod
+
+addHiding :: String -> String
+addHiding mod
+  | xs@(_:_) <- hidden mod = mod ++ " hiding (" ++ intercalate ", " xs ++ ")"
+  | otherwise = mod
 
 validIdentifier xs =
     (take 1 xs == "(" || isName (takeWhile (/= '(') xs)) &&
