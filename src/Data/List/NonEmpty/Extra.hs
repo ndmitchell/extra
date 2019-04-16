@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 
 -- | Extra functions for working with 'NonEmpty' lists. The package
 --   also exports the existing "Data.List.NonEmpty" functions.
@@ -8,6 +9,10 @@ module Data.List.NonEmpty.Extra(
     ) where
 
 import Data.List.NonEmpty
+
+#if __GLASGOW_HASKELL__ <= 802
+import Data.Semigroup ((<>))
+#endif
 
 infixl 5 |>, |:
 

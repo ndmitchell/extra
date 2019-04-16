@@ -36,6 +36,7 @@ library
         filepath,
         process,
         clock >= 0.7,
+        semigroups,
         time
     if !os(windows)
         build-depends: unix
