@@ -24,6 +24,9 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     -- * Data.List.Extra
     -- | Extra functions available in @"Data.List.Extra"@.
     lower, upper, trim, trimStart, trimEnd, word1, line1, escapeHTML, escapeJSON, unescapeHTML, unescapeJSON, dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd, dropWhileEnd', takeWhileEnd, stripSuffix, stripInfix, stripInfixEnd, dropPrefix, dropSuffix, wordsBy, linesBy, breakOn, breakOnEnd, splitOn, split, chunksOf, notNull, list, unsnoc, cons, snoc, drop1, mconcatMap, groupSort, groupSortOn, groupSortBy, nubOrd, nubOrdBy, nubOrdOn, nubOn, groupOn, nubSort, nubSortBy, nubSortOn, maximumOn, minimumOn, disjoint, allSame, anySame, repeatedly, for, firstJust, concatUnzip, concatUnzip3, zipFrom, zipWithFrom, replace, merge, mergeBy,
+    -- * Data.List.NonEmpty.Extra
+    -- | Extra functions available in @"Data.List.NonEmpty.Extra"@.
+    (|:), (|>), appendl, appendr,
     -- * Data.Tuple.Extra
     -- | Extra functions available in @"Data.Tuple.Extra"@.
     first, second, (***), (&&&), dupe, both, fst3, snd3, thd3, curry3, uncurry3,
@@ -56,6 +59,7 @@ import Control.Monad.Extra
 import Data.Either.Extra
 import Data.IORef.Extra
 import Data.List.Extra
+import Data.List.NonEmpty.Extra hiding (cons, snoc)
 import Data.Tuple.Extra
 import Data.Version.Extra
 import Numeric.Extra

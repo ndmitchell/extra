@@ -36,6 +36,8 @@ library
         filepath,
         process,
         clock >= 0.7,
+        -- For GHC 7.10 since Data.List.NonEmpty wasn't in base then
+        semigroups,
         time
     if !os(windows)
         build-depends: unix
@@ -50,6 +52,7 @@ library
         Data.Either.Extra
         Data.IORef.Extra
         Data.List.Extra
+        Data.List.NonEmpty.Extra
         Data.Tuple.Extra
         Data.Typeable.Extra
         Data.Version.Extra
