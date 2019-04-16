@@ -50,6 +50,7 @@ library
         Data.Either.Extra
         Data.IORef.Extra
         Data.List.Extra
+        Data.List.NonEmpty.Extra
         Data.Tuple.Extra
         Data.Typeable.Extra
         Data.Version.Extra
