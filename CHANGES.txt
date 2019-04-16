@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #45, add NonEmpty.Extra for extra appending functions
     #42, add fromMaybeM
     Remove support for GHC 7.4, 7.6 and 7.8
 1.6.14, released 2018-12-10
