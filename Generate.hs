@@ -37,7 +37,7 @@ main = do
         ,"module Extra {-# DEPRECATED \"This module is provided as documentation of all new functions, you should import the more specific modules directly.\" #-} ("] ++
         concat [ ["    -- * " ++ mod
                  ,"    -- | Extra functions available in @" ++ show mod ++ "@."
-                 ,"    " ++ (unwords . map (++",") . filter (notHidden mod) $ funs)]
+                 ,"    " ++ unwords (map (++",") $ filter (notHidden mod) funs)]
                | (mod,funs@(_:_),_) <- ifaces] ++
         ["    ) where"
         ,""] ++
