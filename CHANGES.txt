@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Add atomicModifyIORef_ and atomicModifyIORef'_
 1.6.15, released 2019-04-22
     #45, add NonEmpty.Extra for extra appending functions
     #42, add fromMaybeM

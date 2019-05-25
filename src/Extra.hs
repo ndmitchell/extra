@@ -20,7 +20,7 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     fromLeft, fromRight, fromEither, fromLeft', fromRight', eitherToMaybe, maybeToEither, mapLeft, mapRight,
     -- * Data.IORef.Extra
     -- | Extra functions available in @"Data.IORef.Extra"@.
-    writeIORef', atomicWriteIORef',
+    writeIORef', atomicWriteIORef', atomicModifyIORef_, atomicModifyIORef'_,
     -- * Data.List.Extra
     -- | Extra functions available in @"Data.List.Extra"@.
     lower, upper, trim, trimStart, trimEnd, word1, line1, escapeHTML, escapeJSON, unescapeHTML, unescapeJSON, dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd, dropWhileEnd', takeWhileEnd, stripSuffix, stripInfix, stripInfixEnd, dropPrefix, dropSuffix, wordsBy, linesBy, breakOn, breakOnEnd, splitOn, split, chunksOf, notNull, list, unsnoc, cons, snoc, drop1, mconcatMap, groupSort, groupSortOn, groupSortBy, nubOrd, nubOrdBy, nubOrdOn, nubOn, groupOn, nubSort, nubSortBy, nubSortOn, maximumOn, minimumOn, disjoint, allSame, anySame, repeatedly, for, firstJust, concatUnzip, concatUnzip3, zipFrom, zipWithFrom, replace, merge, mergeBy,

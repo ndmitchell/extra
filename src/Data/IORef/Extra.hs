@@ -3,7 +3,8 @@
 --   Some of these functions are available in later versions of GHC, but not all.
 module Data.IORef.Extra(
     module Data.IORef,
-    writeIORef', atomicWriteIORef'
+    writeIORef', atomicWriteIORef',
+    atomicModifyIORef_, atomicModifyIORef'_
     ) where
 
 import Data.IORef
@@ -21,3 +22,12 @@ atomicWriteIORef' :: IORef a -> a -> IO ()
 atomicWriteIORef' ref x = do
     evaluate x
     atomicWriteIORef ref x
+
+
+-- | Variant of 'atomicModifyIORef' which ignores the return value
+atomicModifyIORef_ :: IORef a -> (a -> a) -> IO ()
+atomicModifyIORef_ r f = atomicModifyIORef r $ \v -> (f v, ())
+
+-- | Variant of 'atomicModifyIORef'' which ignores the return value
+atomicModifyIORef'_ :: IORef a -> (a -> a) -> IO ()
+atomicModifyIORef'_ r f = atomicModifyIORef' r $ \v -> (f v, ())
