@@ -101,6 +101,7 @@ tests = do
     testGen "\\x xs -> uncons (cons x xs) == Just (x,xs)" $ \x xs -> uncons (cons x xs) == Just (x,xs)
     testGen "snoc \"tes\" 't' == \"test\"" $ snoc "tes" 't' == "test"
     testGen "\\xs x -> unsnoc (snoc xs x) == Just (xs,x)" $ \xs x -> unsnoc (snoc xs x) == Just (xs,x)
+    testGen "enumerate == [False, True]" $ enumerate == [False, True]
     testGen "takeEnd 3 \"hello\"  == \"llo\"" $ takeEnd 3 "hello"  == "llo"
     testGen "takeEnd 5 \"bye\"    == \"bye\"" $ takeEnd 5 "bye"    == "bye"
     testGen "takeEnd (-1) \"bye\" == \"\"" $ takeEnd (-1) "bye" == ""

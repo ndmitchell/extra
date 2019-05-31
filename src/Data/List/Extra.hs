@@ -19,6 +19,8 @@ module Data.List.Extra(
     breakOn, breakOnEnd, splitOn, split, chunksOf,
     -- * Basics
     notNull, list, unsnoc, cons, snoc, drop1, mconcatMap,
+    -- * Enum operations
+    enumerate,
     -- * List operations
     groupSort, groupSortOn, groupSortBy,
     nubOrd, nubOrdBy, nubOrdOn,
@@ -138,6 +140,12 @@ cons = (:)
 snoc :: [a] -> a -> [a]
 snoc xs x = xs ++ [x]
 
+
+-- | Enumerate all the values of an 'Enum', from 'minBound' to 'maxBound'.
+--
+-- > enumerate == [False, True]
+enumerate :: (Enum a, Bounded a) => [a]
+enumerate = [minBound..maxBound]
 
 -- | Take a number of elements from the end of the list.
 --
