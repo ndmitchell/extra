@@ -1,5 +1,6 @@
 Changelog for Extra
 
+1.6.17, released 2019-05-31
     Add enumerate
 1.6.16, released 2019-05-25
     Add atomicModifyIORef_ and atomicModifyIORef'_
