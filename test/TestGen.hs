@@ -149,6 +149,10 @@ tests = do
     testGen "escapeJSON \"\\ttab\\nnewline\\\\\" == \"\\\\ttab\\\\nnewline\\\\\\\\\"" $ escapeJSON "\ttab\nnewline\\" == "\\ttab\\nnewline\\\\"
     testGen "escapeJSON \"\\ESC[0mHello\" == \"\\\\u001b[0mHello\"" $ escapeJSON "\ESC[0mHello" == "\\u001b[0mHello"
     testGen "\\xs -> unescapeJSON (escapeJSON xs) == xs" $ \xs -> unescapeJSON (escapeJSON xs) == xs
+    testGen "maximumOn id [] == undefined" $ erroneous $ maximumOn id []
+    testGen "maximumOn length [\"test\",\"extra\",\"a\"] == \"extra\"" $ maximumOn length ["test","extra","a"] == "extra"
+    testGen "minimumOn id [] == undefined" $ erroneous $ minimumOn id []
+    testGen "minimumOn length [\"test\",\"extra\",\"a\"] == \"a\"" $ minimumOn length ["test","extra","a"] == "a"
     testGen "groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,\"t\"),(2,\"es\"),(3,\"t\")]" $ groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,"t"),(2,"es"),(3,"t")]
     testGen "\\xs -> map fst (groupSort xs) == sort (nub (map fst xs))" $ \xs -> map fst (groupSort xs) == sort (nub (map fst xs))
     testGen "\\xs -> concatMap snd (groupSort xs) == map snd (sortOn fst xs)" $ \xs -> concatMap snd (groupSort xs) == map snd (sortOn fst xs)

@@ -364,12 +364,33 @@ nubOn :: Eq b => (a -> b) -> [a] -> [a]
 nubOn f = map snd . nubBy ((==) `on` fst) . map (\x -> let y = f x in y `seq` (y, x))
 
 -- | A version of 'maximum' where the comparison is done on some extracted value.
-maximumOn :: Ord b => (a -> b) -> [a] -> a
-maximumOn f = maximumBy (compare `on` f)
+--   Raises an error if the list is empty. Only calls the function once per element.
+--
+-- > maximumOn id [] == undefined
+-- > maximumOn length ["test","extra","a"] == "extra"
+maximumOn :: (Partial, Ord b) => (a -> b) -> [a] -> a
+maximumOn f [] = error "Data.List.Extra.maximumOn: empty list"
+maximumOn f (x:xs) = g x (f x) xs
+    where
+        g v mv [] = v
+        g v mv (x:xs) | mx > mv = g x mx xs
+                      | otherwise = g v mv xs
+            where mx = f x
 
--- | A version of 'minimum' where the comparison is done on some extracted value.
-minimumOn :: Ord b => (a -> b) -> [a] -> a
-minimumOn f = minimumBy (compare `on` f)
+
+-- | A version of 'maximum' where the comparison is done on some extracted value.
+--   Raises an error if the list is empty. Only calls the function once per element.
+--
+-- > minimumOn id [] == undefined
+-- > minimumOn length ["test","extra","a"] == "a"
+minimumOn :: (Partial, Ord b) => (a -> b) -> [a] -> a
+minimumOn f [] = error "Data.List.Extra.minimumOn: empty list"
+minimumOn f (x:xs) = g x (f x) xs
+    where
+        g v mv [] = v
+        g v mv (x:xs) | mx < mv = g x mx xs
+                      | otherwise = g v mv xs
+            where mx = f x
 
 -- | A combination of 'group' and 'sort'.
 --
