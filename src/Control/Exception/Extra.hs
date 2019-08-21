@@ -23,7 +23,7 @@ module Control.Exception.Extra(
 
 #if __GLASGOW_HASKELL__ >= 800
 import GHC.Stack
-#else
+#endif
 
 import Control.Exception
 import Control.Monad
@@ -81,7 +81,7 @@ errorIO x = withFrozenCallStack $ evaluate $ error x
 #if __GLASGOW_HASKELL__ < 800
 withFrozenCallStack :: a -> a
 withFrozenCallStack = id
-#else
+#endif
 
 
 -- | Retry an operation at most /n/ times (/n/ must be positive).
