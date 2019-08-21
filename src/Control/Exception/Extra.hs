@@ -21,11 +21,14 @@ module Control.Exception.Extra(
     catchBool, handleBool, tryBool
     ) where
 
+#if __GLASGOW_HASKELL__ >= 800
+import GHC.Stack
+#else
+
 import Control.Exception
 import Control.Monad
 import Data.List.Extra
 import Data.Functor
-import GHC.Stack
 import Partial
 import Prelude
 
@@ -74,6 +77,11 @@ ignore = void . try_
 -- > catch (errorIO "Hello") (\(ErrorCall x) -> return x) == return "Hello"
 errorIO :: Partial => String -> IO a
 errorIO x = withFrozenCallStack $ evaluate $ error x
+
+#if __GLASGOW_HASKELL__ < 800
+withFrozenCallStack :: a -> a
+withFrozenCallStack = id
+#else
 
 
 -- | Retry an operation at most /n/ times (/n/ must be positive).
