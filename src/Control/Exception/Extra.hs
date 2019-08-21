@@ -25,6 +25,7 @@ import Control.Exception
 import Control.Monad
 import Data.List.Extra
 import Data.Functor
+import GHC.Stack
 import Partial
 import Prelude
 
@@ -68,11 +69,11 @@ ignore = void . try_
 
 
 -- | Like error, but in the 'IO' monad.
---   Note that while 'fail' in 'IO' raises an 'IOException', this function raises an 'ErrorCall' exception.
+--   Note that while 'fail' in 'IO' raises an 'IOException', this function raises an 'ErrorCall' exception with a call stack.
 --
--- > try (errorIO "Hello") == return (Left (ErrorCall "Hello"))
+-- > catch (errorIO "Hello") (\(ErrorCall x) -> return x) == return "Hello"
 errorIO :: Partial => String -> IO a
-errorIO = throwIO . ErrorCall
+errorIO x = withFrozenCallStack $ evaluate $ error x
 
 
 -- | Retry an operation at most /n/ times (/n/ must be positive).
