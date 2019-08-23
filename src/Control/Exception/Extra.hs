@@ -71,10 +71,11 @@ ignore :: IO () -> IO ()
 ignore = void . try_
 
 
--- | Like error, but in the 'IO' monad.
+-- | An 'IO' action that when evaluated calls 'error', in the 'IO' monad.
 --   Note that while 'fail' in 'IO' raises an 'IOException', this function raises an 'ErrorCall' exception with a call stack.
 --
 -- > catch (errorIO "Hello") (\(ErrorCall x) -> return x) == return "Hello"
+-- > seq (errorIO "foo") (print 1) == print 1
 errorIO :: Partial => String -> IO a
 errorIO x = withFrozenCallStack $ evaluate $ error x
 

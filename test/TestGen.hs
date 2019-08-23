@@ -21,6 +21,7 @@ tests = do
     testGen "ignore (print 1)    == print 1" $ ignore (print 1)    == print 1
     testGen "ignore (fail \"die\") == return ()" $ ignore (fail "die") == return ()
     testGen "catch (errorIO \"Hello\") (\\(ErrorCall x) -> return x) == return \"Hello\"" $ catch (errorIO "Hello") (\(ErrorCall x) -> return x) == return "Hello"
+    testGen "seq (errorIO \"foo\") (print 1) == print 1" $ seq (errorIO "foo") (print 1) == print 1
     testGen "retry 1 (print \"x\")  == print \"x\"" $ retry 1 (print "x")  == print "x"
     testGen "retry 3 (fail \"die\") == fail \"die\"" $ retry 3 (fail "die") == fail "die"
     testGen "whenJust Nothing  print == return ()" $ whenJust Nothing  print == return ()
