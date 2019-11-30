@@ -204,8 +204,7 @@ notM = fmap not
 -- > anyM Just [False,False,undefined] == undefined
 -- > \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
 anyM :: Monad m => (a -> m Bool) -> [a] -> m Bool
-anyM p [] = return False
-anyM p (x:xs) = ifM (p x) (return True) (anyM p xs)
+anyM p = foldr (\x -> ifM (p x) (return True)) (return False)
 
 -- | A version of 'all' lifted to a monad. Retains the short-circuiting behaviour.
 --
@@ -240,8 +239,7 @@ andM = allM id
 -- > findM (Just . isUpper) "test"             == Just Nothing
 -- > findM (Just . const True) ["x",undefined] == Just (Just "x")
 findM :: Monad m => (a -> m Bool) -> [a] -> m (Maybe a)
-findM p [] = return Nothing
-findM p (x:xs) = ifM (p x) (return $ Just x) (findM p xs)
+findM p = foldr (\x -> ifM (p x) (return $ Just x)) (return Nothing)
 
 -- | Like 'findM', but also allows you to compute some additional information in the predicate.
 firstJustM :: Monad m => (a -> m (Maybe b)) -> [a] -> m (Maybe b)
