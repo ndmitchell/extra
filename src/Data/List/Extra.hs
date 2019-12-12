@@ -378,7 +378,7 @@ maximumOn f (x:xs) = g x (f x) xs
             where mx = f x
 
 
--- | A version of 'maximum' where the comparison is done on some extracted value.
+-- | A version of 'minimum' where the comparison is done on some extracted value.
 --   Raises an error if the list is empty. Only calls the function once per element.
 --
 -- > minimumOn id [] == undefined
