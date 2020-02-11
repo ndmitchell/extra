@@ -89,6 +89,12 @@ tests = do
     testGen "allSame []      == True" $ allSame []      == True
     testGen "allSame (1:1:2:undefined) == False" $ allSame (1:1:2:undefined) == False
     testGen "\\xs -> allSame xs == (length (nub xs) <= 1)" $ \xs -> allSame xs == (length (nub xs) <= 1)
+    testGen "headDef 1 []      == 1" $ headDef 1 []      == 1
+    testGen "headDef 1 [2,3,4] == 2" $ headDef 1 [2,3,4] == 2
+    testGen "\\x xs -> headDef x xs == fromMaybe x (listToMaybe xs)" $ \x xs -> headDef x xs == fromMaybe x (listToMaybe xs)
+    testGen "lastDef 1 []      == 1" $ lastDef 1 []      == 1
+    testGen "lastDef 1 [2,3,4] == 4" $ lastDef 1 [2,3,4] == 4
+    testGen "\\x xs -> lastDef x xs == last (x:xs)" $ \x xs -> lastDef x xs == last (x:xs)
     testGen "notNull []  == False" $ notNull []  == False
     testGen "notNull [1] == True" $ notNull [1] == True
     testGen "\\xs -> notNull xs == not (null xs)" $ \xs -> notNull xs == not (null xs)
@@ -183,6 +189,9 @@ tests = do
     testGen "drop1 \"\"         == \"\"" $ drop1 ""         == ""
     testGen "drop1 \"test\"     == \"est\"" $ drop1 "test"     == "est"
     testGen "\\xs -> drop 1 xs == drop1 xs" $ \xs -> drop 1 xs == drop1 xs
+    testGen "dropEnd1 \"\"         == \"\"" $ dropEnd1 ""         == ""
+    testGen "dropEnd1 \"test\"     == \"tes\"" $ dropEnd1 "test"     == "tes"
+    testGen "\\xs -> dropEnd 1 xs == dropEnd1 xs" $ \xs -> dropEnd 1 xs == dropEnd1 xs
     testGen "mconcatMap Sum [1,2,3] == Sum 6" $ mconcatMap Sum [1,2,3] == Sum 6
     testGen "\\f xs -> mconcatMap f xs == concatMap f xs" $ \f xs -> mconcatMap f xs == concatMap f xs
     testGen "breakOn \"::\" \"a::b::c\" == (\"a\", \"::b::c\")" $ breakOn "::" "a::b::c" == ("a", "::b::c")

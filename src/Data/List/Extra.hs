@@ -18,7 +18,8 @@ module Data.List.Extra(
     wordsBy, linesBy,
     breakOn, breakOnEnd, splitOn, split, chunksOf,
     -- * Basics
-    notNull, list, unsnoc, cons, snoc, drop1, mconcatMap,
+    headDef, lastDef, notNull, list, unsnoc, cons, snoc,
+    drop1, dropEnd1, mconcatMap,
     -- * Enum operations
     enumerate,
     -- * List operations
@@ -96,6 +97,26 @@ anySame = f []
 allSame :: Eq a => [a] -> Bool
 allSame [] = True
 allSame (x:xs) = all (x ==) xs
+
+
+-- | A total 'head' with a default value.
+--
+-- > headDef 1 []      == 1
+-- > headDef 1 [2,3,4] == 2
+-- > \x xs -> headDef x xs == fromMaybe x (listToMaybe xs)
+headDef :: a -> [a] -> a
+headDef d [] = d
+headDef _ (x:_) = x
+
+
+-- | A total 'last' with a default value.
+--
+-- > lastDef 1 []      == 1
+-- > lastDef 1 [2,3,4] == 4
+-- > \x xs -> lastDef x xs == last (x:xs)
+lastDef :: a -> [a] -> a
+lastDef d xs = foldl (\_ x -> x) d xs -- I know this looks weird, but apparently this is the fastest way to do this: https://hackage.haskell.org/package/base-4.12.0.0/docs/src/GHC.List.html#last
+{-# INLINE lastDef #-}
 
 
 -- | A composition of 'not' and 'null'.
@@ -508,6 +529,16 @@ firstJust f = listToMaybe . mapMaybe f
 drop1 :: [a] -> [a]
 drop1 [] = []
 drop1 (x:xs) = xs
+
+
+-- | Equivalent to @dropEnd 1@, but likely to be faster and a single lexeme.
+--
+-- > dropEnd1 ""         == ""
+-- > dropEnd1 "test"     == "tes"
+-- > \xs -> dropEnd 1 xs == dropEnd1 xs
+dropEnd1 :: [a] -> [a]
+dropEnd1 [] = []
+dropEnd1 (x:xs) = foldr (\z f y -> y : f z) (const []) xs x
 
 
 -- | Version on `concatMap` generalised to a `Monoid` rather than just a list.
