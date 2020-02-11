@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #50, add headDef, lastDef, and dropEnd1
 1.6.18, released 2019-08-21
     Make errorIO include a call stack
     Make maximumOn and minimumOn apply the function once per element
