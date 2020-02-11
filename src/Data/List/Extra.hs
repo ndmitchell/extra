@@ -116,6 +116,7 @@ headDef _ (x:_) = x
 -- > \x xs -> lastDef x xs == last (x:xs)
 lastDef :: a -> [a] -> a
 lastDef d xs = foldl (\_ x -> x) d xs -- I know this looks weird, but apparently this is the fastest way to do this: https://hackage.haskell.org/package/base-4.12.0.0/docs/src/GHC.List.html#last
+{-# INLINE lastDef #-}
 
 
 -- | A composition of 'not' and 'null'.
