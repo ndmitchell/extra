@@ -1,3 +1,4 @@
+{-# LANGUAGE TupleSections #-}
 
 -- | Extra functions for working with pairs and triples.
 --   Some of these functions are available in the "Control.Arrow" module,
@@ -8,6 +9,8 @@ module Data.Tuple.Extra(
     first, second, (***), (&&&),
     -- * More pair operations
     dupe, both,
+    -- * Monadic versions
+    firstM, secondM,
     -- * Operations on triple
     fst3, snd3, thd3,
     curry3, uncurry3
@@ -29,6 +32,18 @@ first = Arrow.first
 -- > second reverse (1,"test") == (1,"tset")
 second :: (b -> b') -> (a, b) -> (a, b')
 second = Arrow.second
+
+-- | Update the first component of a pair.
+--
+-- > firstM (\x -> [x-1, x+1]) (1,"test") == [(0,"test"),(2,"test")]
+firstM :: Functor m => (a -> m a') -> (a, b) -> m (a', b)
+firstM f (a,b) = (,b) <$> f a
+
+-- | Update the second component of a pair.
+--
+-- > secondM (\x -> [reverse x, x]) (1,"test") == [(1,"tset"),(1,"test")]
+secondM :: Functor m => (b -> m b') -> (a, b) -> m (a, b')
+secondM f (a,b) = (a,) <$> f b
 
 -- | Given two functions, apply one to the first component and one to the second.
 --   A specialised version of 'Control.Arrow.***'.

@@ -245,6 +245,8 @@ tests = do
     testGen "(1 :| [3, 5, 3]) `union` (4 :| [5, 3, 5, 2]) == 1 :| [3, 5, 3, 4, 2]" $ (1 :| [3, 5, 3]) `union` (4 :| [5, 3, 5, 2]) == 1 :| [3, 5, 3, 4, 2]
     testGen "first succ (1,\"test\") == (2,\"test\")" $ first succ (1,"test") == (2,"test")
     testGen "second reverse (1,\"test\") == (1,\"tset\")" $ second reverse (1,"test") == (1,"tset")
+    testGen "firstM (\\x -> [x-1, x+1]) (1,\"test\") == [(0,\"test\"),(2,\"test\")]" $ firstM (\x -> [x-1, x+1]) (1,"test") == [(0,"test"),(2,"test")]
+    testGen "secondM (\\x -> [reverse x, x]) (1,\"test\") == [(1,\"tset\"),(1,\"test\")]" $ secondM (\x -> [reverse x, x]) (1,"test") == [(1,"tset"),(1,"test")]
     testGen "(succ *** reverse) (1,\"test\") == (2,\"tset\")" $ (succ *** reverse) (1,"test") == (2,"tset")
     testGen "(succ &&& pred) 1 == (2,0)" $ (succ &&& pred) 1 == (2,0)
     testGen "dupe 12 == (12, 12)" $ dupe 12 == (12, 12)

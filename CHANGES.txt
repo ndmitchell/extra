@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Add firstM, secondM
 1.6.19, released 2020-02-11
     #50, add headDef, lastDef, and dropEnd1
 1.6.18, released 2019-08-21
