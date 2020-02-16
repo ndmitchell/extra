@@ -38,7 +38,7 @@ whenJust mg f = maybe (pure ()) f mg
 -- | Like 'whenJust', but where the test can be monadic.
 whenJustM :: Monad m => m (Maybe a) -> (a -> m ()) -> m ()
 -- Can't reuse whenMaybe on GHC 7.8 or lower because Monad does not imply Applicative
-whenJustM mg f = maybe (return ()) f =<< mg
+whenJustM mg f = maybeM (return ()) f mg
 
 
 -- | Like 'when', but return either 'Nothing' if the predicate was 'False',
@@ -72,7 +72,7 @@ maybeM n j x = maybe n j =<< x
 
 -- | Monadic generalisation of 'fromMaybe'.
 fromMaybeM :: Monad m => m a -> m (Maybe a) -> m a
-fromMaybeM n x = maybe n pure =<< x
+fromMaybeM n x = maybeM n pure x
 
 
 -- | Monadic generalisation of 'either'.
@@ -204,7 +204,7 @@ notM = fmap not
 -- > anyM Just [False,False,undefined] == undefined
 -- > \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
 anyM :: Monad m => (a -> m Bool) -> [a] -> m Bool
-anyM p = foldr (\x -> ifM (p x) (return True)) (return False)
+anyM p = foldr ((||^) . p) (return False)
 
 -- | A version of 'all' lifted to a monad. Retains the short-circuiting behaviour.
 --
@@ -212,8 +212,7 @@ anyM p = foldr (\x -> ifM (p x) (return True)) (return False)
 -- > allM Just [True,True ,undefined] == undefined
 -- > \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
 allM :: Monad m => (a -> m Bool) -> [a] -> m Bool
-allM p [] = return True
-allM p (x:xs) = ifM (p x) (allM p xs) (return False)
+allM p = foldr ((&&^) . p) (return True)
 
 -- | A version of 'or' lifted to a monad. Retains the short-circuiting behaviour.
 --
@@ -244,4 +243,4 @@ findM p = foldr (\x -> ifM (p x) (return $ Just x)) (return Nothing)
 -- | Like 'findM', but also allows you to compute some additional information in the predicate.
 firstJustM :: Monad m => (a -> m (Maybe b)) -> [a] -> m (Maybe b)
 firstJustM p [] = return Nothing
-firstJustM p (x:xs) = maybe (firstJustM p xs) (return . Just) =<< p x
+firstJustM p (x:xs) = maybeM (firstJustM p xs) (return . Just) (p x)

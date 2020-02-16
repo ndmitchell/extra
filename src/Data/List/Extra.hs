@@ -289,7 +289,7 @@ upper = map toUpper
 -- > \s -> fst (word1 s) == concat (take 1 $ words s)
 -- > \s -> words (snd $ word1 s) == drop 1 (words s)
 word1 :: String -> (String, String)
-word1 = second (dropWhile isSpace) . break isSpace . dropWhile isSpace
+word1 = second trimStart . break isSpace . trimStart
 
 -- | Split the first line off a string.
 --

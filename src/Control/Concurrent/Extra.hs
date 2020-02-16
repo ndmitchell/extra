@@ -76,7 +76,7 @@ onceFork :: IO a -> IO (IO a)
 onceFork act = do
     bar <- newBarrier
     forkFinally act $ signalBarrier bar
-    return $ either throwIO return =<< waitBarrier bar
+    return $ eitherM throwIO return $ waitBarrier bar
 
 
 ---------------------------------------------------------------------
