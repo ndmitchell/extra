@@ -75,7 +75,7 @@ nubOrd = nubOrdBy compare
 --
 -- > Data.List.NonEmpty.Extra.nubOrdBy (compare `on` Data.List.length) ("a" :| ["test","of","this"]) == "a" :| ["test","of"]
 nubOrdBy :: (a -> a -> Ordering) -> NonEmpty a -> NonEmpty a
-nubOrdBy cmp (x :| xs) = x :| List.nubOrdBy cmp (List.filter (\y -> cmp x y /= EQ) xs)
+nubOrdBy cmp = fromList . List.nubOrdBy cmp . toList
 
 -- | @nubOrdOn@ for 'NonEmpty'. Behaves the same as 'Data.List.Extra.nubOrdOn'.
 --
