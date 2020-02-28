@@ -73,7 +73,8 @@ test-suite extra-test
         directory,
         filepath,
         extra,
-        QuickCheck >= 2.10
+        QuickCheck >= 2.10,
+        quickcheck-instances >= 0.3.17
     if !os(windows)
         build-depends: unix
     hs-source-dirs: test

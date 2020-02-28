@@ -7,12 +7,14 @@ module Data.List.NonEmpty.Extra(
     (|:), (|>), snoc,
     appendl, appendr,
     sortOn, union, unionBy,
+    nubOrd, nubOrdBy, nubOrdOn, nubOn,
     maximum1, minimum1, maximumBy1, minimumBy1, maximumOn1, minimumOn1
     ) where
 
 import           Data.Function
-import qualified Data.List as List
+import qualified Data.List.Extra as List
 import           Data.List.NonEmpty
+import           Data.Tuple.Extra
 
 #if __GLASGOW_HASKELL__ <= 802
 import Data.Semigroup ((<>))
@@ -61,6 +63,29 @@ sortOn f = fromList . List.sortOn f . toList
 -- > (1 :| [3, 5, 3]) `union` (4 :| [5, 3, 5, 2]) == 1 :| [3, 5, 3, 4, 2]
 union :: Eq a => NonEmpty a -> NonEmpty a -> NonEmpty a
 union = unionBy (==)
+
+-- | @nubOrd@ for 'NonEmpty'. Behaves the same as 'Data.List.Extra.nubOrd'.
+--
+-- > Data.List.NonEmpty.Extra.nubOrd (1 :| [2, 3, 3, 4, 1, 2]) == 1 :| [2, 3, 4]
+-- > \xs -> Data.List.NonEmpty.Extra.nubOrd xs == Data.List.NonEmpty.Extra.nub xs
+nubOrd :: Ord a => NonEmpty a -> NonEmpty a
+nubOrd = nubOrdBy compare
+
+-- | @nubOrdBy@ for 'NonEmpty'. Behaves the same as 'Data.List.Extra.nubOrdBy'.
+--
+-- > Data.List.NonEmpty.Extra.nubOrdBy (compare `on` Data.List.length) ("a" :| ["test","of","this"]) == "a" :| ["test","of"]
+nubOrdBy :: (a -> a -> Ordering) -> NonEmpty a -> NonEmpty a
+nubOrdBy cmp (x :| xs) = x :| List.nubOrdBy cmp (List.filter (\y -> cmp x y /= EQ) xs)
+
+-- | @nubOrdOn@ for 'NonEmpty'. Behaves the same as 'Data.List.Extra.nubOrdOn'.
+--
+-- > Data.List.NonEmpty.Extra.nubOrdOn Data.List.length ("a" :| ["test","of","this"]) == "a" :| ["test","of"]
+nubOrdOn :: Ord b => (a -> b) -> NonEmpty a -> NonEmpty a
+nubOrdOn f = fmap snd . nubOrdBy (compare `on` fst) . fmap (f &&& id)
+
+-- | @nubOn@ for 'NonEmpty'. Behaves the same as 'Data.List.Extra.nubOn'.
+nubOn :: Eq b => (a -> b) -> NonEmpty a -> NonEmpty a
+nubOn f = fmap snd . nubBy ((==) `on` fst) . fmap (\x -> let y = f x in y `seq` (y, x))
 
 -- | The non-overloaded version of 'union'.
 unionBy :: (a -> a -> Bool) -> NonEmpty a -> NonEmpty a -> NonEmpty a

@@ -49,6 +49,9 @@ main = do
         ,"{-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables, ViewPatterns #-}"
         ,"module TestGen(tests) where"
         ,"import TestUtil"
+        ,"import qualified Data.List"
+        ,"import qualified Data.List.NonEmpty.Extra"
+        ,"import Test.QuickCheck.Instances.Semigroup ()"
         ,"default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))"
         ,"tests :: IO ()"
         ,"tests = do"] ++
@@ -67,7 +70,9 @@ writeFileBinaryChanged file x = do
         writeFileBinary file x
 
 hidden :: String -> [String]
-hidden "Data.List.NonEmpty.Extra" = ["cons", "snoc", "sortOn", "union", "unionBy"]
+hidden "Data.List.NonEmpty.Extra" = [ "cons", "snoc", "sortOn", "union", "unionBy"
+                                    , "nubOrd", "nubOrdBy", "nubOrdOn", "nubOn"
+                                    ]
 hidden _ = []
 
 notHidden :: String -> String -> Bool

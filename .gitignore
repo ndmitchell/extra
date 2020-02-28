@@ -1,6 +1,8 @@
 /dist/
+/dist-newstyle/
 /.stack-work/
 /.idea/
 /issues/
 stack.yaml
+stack.yaml.lock
 tags
