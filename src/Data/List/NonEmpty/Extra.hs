@@ -7,14 +7,13 @@ module Data.List.NonEmpty.Extra(
     (|:), (|>), snoc,
     appendl, appendr,
     sortOn, union, unionBy,
-    nubOrd, nubOrdBy, nubOrdOn, nubOn,
+    nubOrd, nubOrdBy, nubOrdOn,
     maximum1, minimum1, maximumBy1, minimumBy1, maximumOn1, minimumOn1
     ) where
 
 import           Data.Function
 import qualified Data.List.Extra as List
 import           Data.List.NonEmpty
-import           Data.Tuple.Extra
 
 #if __GLASGOW_HASKELL__ <= 802
 import Data.Semigroup ((<>))
@@ -81,11 +80,7 @@ nubOrdBy cmp = fromList . List.nubOrdBy cmp . toList
 --
 -- > Data.List.NonEmpty.Extra.nubOrdOn Data.List.length ("a" :| ["test","of","this"]) == "a" :| ["test","of"]
 nubOrdOn :: Ord b => (a -> b) -> NonEmpty a -> NonEmpty a
-nubOrdOn f = fmap snd . nubOrdBy (compare `on` fst) . fmap (f &&& id)
-
--- | @nubOn@ for 'NonEmpty'. Behaves the same as 'Data.List.Extra.nubOn'.
-nubOn :: Eq b => (a -> b) -> NonEmpty a -> NonEmpty a
-nubOn f = fmap snd . nubBy ((==) `on` fst) . fmap (\x -> let y = f x in y `seq` (y, x))
+nubOrdOn f = fromList . List.nubOrdOn f . toList
 
 -- | The non-overloaded version of 'union'.
 unionBy :: (a -> a -> Bool) -> NonEmpty a -> NonEmpty a -> NonEmpty a
