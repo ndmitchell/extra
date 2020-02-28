@@ -40,4 +40,4 @@ systemOutput_ x = do
     (res,out) <- systemOutput x
     when (res /= ExitSuccess) $
         error $ "Failed when running system command: " ++ x
-    return out
+    pure out

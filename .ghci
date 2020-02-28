@@ -3,11 +3,11 @@
 :set -isrc -itest
 :load Extra Generate Test
 :module Extra
-:def docs_ const $ return $ unlines [":!cabal haddock"]
-:def docs const $ return $ unlines [":docs_",":!start dist\\doc\\html\\extra\\Extra.html"]
-:def generate const $ return $ unlines ["Generate.main"]
-:def test const $ return $ unlines ["Test.main"]
-:def travis const $ return $ unlines [":!runhaskell -isrc travis.hs"]
+:def docs_ const $ pure $ unlines [":!cabal haddock"]
+:def docs const $ pure $ unlines [":docs_",":!start dist\\doc\\html\\extra\\Extra.html"]
+:def generate const $ pure $ unlines ["Generate.main"]
+:def test const $ pure $ unlines ["Test.main"]
+:def travis const $ pure $ unlines [":!runhaskell -isrc travis.hs"]
 
 -- if there are errors in generate or reload I want them at the bottom of the screen so I can see them
-:def go const $ return $ unlines [":reload",":generate",":reload",":test",":generate",":reload"]
+:def go const $ pure $ unlines [":reload",":generate",":reload",":test",":generate",":reload"]

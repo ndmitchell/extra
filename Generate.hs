@@ -25,7 +25,7 @@ main = do
                     words $ replace "," " " $ drop1 $ dropWhile (/= '(') $
                     unlines $ filter (\x -> not $ any (`isPrefixOf` trim x) ["--","#"]) $ lines src
         let tests = mapMaybe (stripPrefix "-- > ") $ lines src
-        return (mod, funcs, tests)
+        pure (mod, funcs, tests)
     writeFileBinaryChanged "src/Extra.hs" $ unlines $
         ["-- GENERATED CODE - DO NOT MODIFY"
         ,"-- See Generate.hs for details of how to generate"
@@ -62,7 +62,7 @@ rejoin [] = []
 writeFileBinaryChanged :: FilePath -> String -> IO ()
 writeFileBinaryChanged file x = do
     evaluate $ length x -- ensure we don't write out files with _|_ in them
-    old <- ifM (doesFileExist file) (Just <$> readFileBinary' file) (return Nothing)
+    old <- ifM (doesFileExist file) (Just <$> readFileBinary' file) (pure Nothing)
     when (Just x /= old) $
         writeFileBinary file x
 

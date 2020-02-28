@@ -8,26 +8,26 @@ default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))
 tests :: IO ()
 tests = do
     let x ||| y = do t1 <- onceFork x; t2 <- onceFork y; t1; t2
-    testGen "\\(x :: IO Int) -> void (once x) == return ()" $ \(x :: IO Int) -> void (once x) == return ()
+    testGen "\\(x :: IO Int) -> void (once x) == pure ()" $ \(x :: IO Int) -> void (once x) == pure ()
     testGen "\\(x :: IO Int) -> join (once x) == x" $ \(x :: IO Int) -> join (once x) == x
     testGen "\\(x :: IO Int) -> (do y <- once x; y; y) == x" $ \(x :: IO Int) -> (do y <- once x; y; y) == x
     testGen "\\(x :: IO Int) -> (do y <- once x; y ||| y) == x" $ \(x :: IO Int) -> (do y <- once x; y ||| y) == x
     testGen "\\(x :: IO Int) -> join (onceFork x) == x" $ \(x :: IO Int) -> join (onceFork x) == x
     testGen "\\(x :: IO Int) -> (do a <- onceFork x; a; a) == x" $ \(x :: IO Int) -> (do a <- onceFork x; a; a) == x
-    testGen "stringException \"test\"                           == return \"test\"" $ stringException "test"                           == return "test"
-    testGen "stringException (\"test\" ++ undefined)            == return \"test<Exception>\"" $ stringException ("test" ++ undefined)            == return "test<Exception>"
-    testGen "stringException (\"test\" ++ undefined ++ \"hello\") == return \"test<Exception>\"" $ stringException ("test" ++ undefined ++ "hello") == return "test<Exception>"
-    testGen "stringException ['t','e','s','t',undefined]      == return \"test<Exception>\"" $ stringException ['t','e','s','t',undefined]      == return "test<Exception>"
+    testGen "stringException \"test\"                           == pure \"test\"" $ stringException "test"                           == pure "test"
+    testGen "stringException (\"test\" ++ undefined)            == pure \"test<Exception>\"" $ stringException ("test" ++ undefined)            == pure "test<Exception>"
+    testGen "stringException (\"test\" ++ undefined ++ \"hello\") == pure \"test<Exception>\"" $ stringException ("test" ++ undefined ++ "hello") == pure "test<Exception>"
+    testGen "stringException ['t','e','s','t',undefined]      == pure \"test<Exception>\"" $ stringException ['t','e','s','t',undefined]      == pure "test<Exception>"
     testGen "ignore (print 1)    == print 1" $ ignore (print 1)    == print 1
-    testGen "ignore (fail \"die\") == return ()" $ ignore (fail "die") == return ()
-    testGen "catch (errorIO \"Hello\") (\\(ErrorCall x) -> return x) == return \"Hello\"" $ catch (errorIO "Hello") (\(ErrorCall x) -> return x) == return "Hello"
+    testGen "ignore (fail \"die\") == pure ()" $ ignore (fail "die") == pure ()
+    testGen "catch (errorIO \"Hello\") (\\(ErrorCall x) -> pure x) == pure \"Hello\"" $ catch (errorIO "Hello") (\(ErrorCall x) -> pure x) == pure "Hello"
     testGen "seq (errorIO \"foo\") (print 1) == print 1" $ seq (errorIO "foo") (print 1) == print 1
     testGen "retry 1 (print \"x\")  == print \"x\"" $ retry 1 (print "x")  == print "x"
     testGen "retry 3 (fail \"die\") == fail \"die\"" $ retry 3 (fail "die") == fail "die"
-    testGen "whenJust Nothing  print == return ()" $ whenJust Nothing  print == return ()
+    testGen "whenJust Nothing  print == pure ()" $ whenJust Nothing  print == pure ()
     testGen "whenJust (Just 1) print == print 1" $ whenJust (Just 1) print == print 1
     testGen "whenMaybe True  (print 1) == fmap Just (print 1)" $ whenMaybe True  (print 1) == fmap Just (print 1)
-    testGen "whenMaybe False (print 1) == return Nothing" $ whenMaybe False (print 1) == return Nothing
+    testGen "whenMaybe False (print 1) == pure Nothing" $ whenMaybe False (print 1) == pure Nothing
     testGen "\\(x :: Maybe ()) -> unit x == x" $ \(x :: Maybe ()) -> unit x == x
     testGen "fold1M (\\x y -> Just x) [] == undefined" $ erroneous $ fold1M (\x y -> Just x) []
     testGen "fold1M (\\x y -> Just $ x + y) [1, 2, 3] == Just 6" $ fold1M (\x y -> Just $ x + y) [1, 2, 3] == Just 6
@@ -259,38 +259,38 @@ tests = do
     testGen "withTempDir $ \\dir -> do writeFile (dir </> \"foo.txt\") \"\"; withCurrentDirectory dir $ doesFileExist \"foo.txt\"" $ withTempDir $ \dir -> do writeFile (dir </> "foo.txt") ""; withCurrentDirectory dir $ doesFileExist "foo.txt"
     testGen "withTempDir $ \\dir -> do writeFile (dir </> \"test.txt\") \"\"; (== [dir </> \"test.txt\"]) <$> listContents dir" $ withTempDir $ \dir -> do writeFile (dir </> "test.txt") ""; (== [dir </> "test.txt"]) <$> listContents dir
     let touch = mapM_ $ \x -> createDirectoryIfMissing True (takeDirectory x) >> writeFile x ""
-    let listTest op as bs = withTempDir $ \dir -> do touch $ map (dir </>) as; res <- op dir; return $ map (drop (length dir + 1)) res == bs
+    let listTest op as bs = withTempDir $ \dir -> do touch $ map (dir </>) as; res <- op dir; pure $ map (drop (length dir + 1)) res == bs
     testGen "listTest listContents [\"bar.txt\",\"foo/baz.txt\",\"zoo\"] [\"bar.txt\",\"foo\",\"zoo\"]" $ listTest listContents ["bar.txt","foo/baz.txt","zoo"] ["bar.txt","foo","zoo"]
     testGen "listTest listDirectories [\"bar.txt\",\"foo/baz.txt\",\"zoo\"] [\"foo\"]" $ listTest listDirectories ["bar.txt","foo/baz.txt","zoo"] ["foo"]
     testGen "listTest listFiles [\"bar.txt\",\"foo/baz.txt\",\"zoo\"] [\"bar.txt\",\"zoo\"]" $ listTest listFiles ["bar.txt","foo/baz.txt","zoo"] ["bar.txt","zoo"]
     testGen "listTest listFilesRecursive [\"bar.txt\",\"zoo\",\"foo\" </> \"baz.txt\"] [\"bar.txt\",\"zoo\",\"foo\" </> \"baz.txt\"]" $ listTest listFilesRecursive ["bar.txt","zoo","foo" </> "baz.txt"] ["bar.txt","zoo","foo" </> "baz.txt"]
-    testGen "listTest (listFilesInside $ return . not . isPrefixOf \".\" . takeFileName)    [\"bar.txt\",\"foo\" </> \"baz.txt\",\".foo\" </> \"baz2.txt\", \"zoo\"] [\"bar.txt\",\"zoo\",\"foo\" </> \"baz.txt\"]" $ listTest (listFilesInside $ return . not . isPrefixOf "." . takeFileName)    ["bar.txt","foo" </> "baz.txt",".foo" </> "baz2.txt", "zoo"] ["bar.txt","zoo","foo" </> "baz.txt"]
-    testGen "listTest (listFilesInside $ const $ return False) [\"bar.txt\"] []" $ listTest (listFilesInside $ const $ return False) ["bar.txt"] []
+    testGen "listTest (listFilesInside $ pure . not . isPrefixOf \".\" . takeFileName)    [\"bar.txt\",\"foo\" </> \"baz.txt\",\".foo\" </> \"baz2.txt\", \"zoo\"] [\"bar.txt\",\"zoo\",\"foo\" </> \"baz.txt\"]" $ listTest (listFilesInside $ pure . not . isPrefixOf "." . takeFileName)    ["bar.txt","foo" </> "baz.txt",".foo" </> "baz2.txt", "zoo"] ["bar.txt","zoo","foo" </> "baz.txt"]
+    testGen "listTest (listFilesInside $ const $ pure False) [\"bar.txt\"] []" $ listTest (listFilesInside $ const $ pure False) ["bar.txt"] []
     testGen "isWindows == (os == \"mingw32\")" $ isWindows == (os == "mingw32")
     testGen "\\(filter isHexDigit -> s) -> fmap (== s) $ withTempFile $ \\file -> do writeFile file s; readFile' file" $ \(filter isHexDigit -> s) -> fmap (== s) $ withTempFile $ \file -> do writeFile file s; readFile' file
     testGen "\\s -> withTempFile $ \\file -> do writeFileUTF8 file s; fmap (== s) $ readFileUTF8' file" $ \s -> withTempFile $ \file -> do writeFileUTF8 file s; fmap (== s) $ readFileUTF8' file
     testGen "\\(ASCIIString s) -> withTempFile $ \\file -> do writeFileBinary file s; fmap (== s) $ readFileBinary' file" $ \(ASCIIString s) -> withTempFile $ \file -> do writeFileBinary file s; fmap (== s) $ readFileBinary' file
-    testGen "captureOutput (print 1) == return (\"1\\n\",())" $ captureOutput (print 1) == return ("1\n",())
-    testGen "withTempFile doesFileExist == return True" $ withTempFile doesFileExist == return True
-    testGen "(doesFileExist =<< withTempFile return) == return False" $ (doesFileExist =<< withTempFile return) == return False
-    testGen "withTempFile readFile' == return \"\"" $ withTempFile readFile' == return ""
-    testGen "withTempDir doesDirectoryExist == return True" $ withTempDir doesDirectoryExist == return True
-    testGen "(doesDirectoryExist =<< withTempDir return) == return False" $ (doesDirectoryExist =<< withTempDir return) == return False
-    testGen "withTempDir listFiles == return []" $ withTempDir listFiles == return []
+    testGen "captureOutput (print 1) == pure (\"1\\n\",())" $ captureOutput (print 1) == pure ("1\n",())
+    testGen "withTempFile doesFileExist == pure True" $ withTempFile doesFileExist == pure True
+    testGen "(doesFileExist =<< withTempFile pure) == pure False" $ (doesFileExist =<< withTempFile pure) == pure False
+    testGen "withTempFile readFile' == pure \"\"" $ withTempFile readFile' == pure ""
+    testGen "withTempDir doesDirectoryExist == pure True" $ withTempDir doesDirectoryExist == pure True
+    testGen "(doesDirectoryExist =<< withTempDir pure) == pure False" $ (doesDirectoryExist =<< withTempDir pure) == pure False
+    testGen "withTempDir listFiles == pure []" $ withTempDir listFiles == pure []
     testGen "fileEq \"does_not_exist1\" \"does_not_exist2\" == undefined" $ erroneousIO $ fileEq "does_not_exist1" "does_not_exist2"
     testGen "fileEq \"does_not_exist\" \"does_not_exist\" == undefined" $ erroneousIO $ fileEq "does_not_exist" "does_not_exist"
     testGen "withTempFile $ \\f1 -> fileEq \"does_not_exist\" f1 == undefined" $ erroneousIO $ withTempFile $ \f1 -> fileEq "does_not_exist" f1
     testGen "withTempFile $ \\f1 -> withTempFile $ \\f2 -> fileEq f1 f2" $ withTempFile $ \f1 -> withTempFile $ \f2 -> fileEq f1 f2
     testGen "withTempFile $ \\f1 -> withTempFile $ \\f2 -> writeFile f1 \"a\" >> writeFile f2 \"a\" >> fileEq f1 f2" $ withTempFile $ \f1 -> withTempFile $ \f2 -> writeFile f1 "a" >> writeFile f2 "a" >> fileEq f1 f2
     testGen "withTempFile $ \\f1 -> withTempFile $ \\f2 -> writeFile f1 \"a\" >> writeFile f2 \"b\" >> notM (fileEq f1 f2)" $ withTempFile $ \f1 -> withTempFile $ \f2 -> writeFile f1 "a" >> writeFile f2 "b" >> notM (fileEq f1 f2)
-    testGen "fmap (round . fst) (duration $ sleep 1) == return 1" $ fmap (round . fst) (duration $ sleep 1) == return 1
-    testGen "timeout (-3) (print 1) == return Nothing" $ timeout (-3) (print 1) == return Nothing
+    testGen "fmap (round . fst) (duration $ sleep 1) == pure 1" $ fmap (round . fst) (duration $ sleep 1) == pure 1
+    testGen "timeout (-3) (print 1) == pure Nothing" $ timeout (-3) (print 1) == pure Nothing
     testGen "timeout 0.1  (print 1) == fmap Just (print 1)" $ timeout 0.1  (print 1) == fmap Just (print 1)
-    testGen "do (t, _) <- duration $ timeout 0.1 $ sleep 1000; print t; return $ t < 1" $ do (t, _) <- duration $ timeout 0.1 $ sleep 1000; print t; return $ t < 1
-    testGen "timeout 0.1  (sleep 2 >> print 1) == return Nothing" $ timeout 0.1  (sleep 2 >> print 1) == return Nothing
+    testGen "do (t, _) <- duration $ timeout 0.1 $ sleep 1000; print t; pure $ t < 1" $ do (t, _) <- duration $ timeout 0.1 $ sleep 1000; print t; pure $ t < 1
+    testGen "timeout 0.1  (sleep 2 >> print 1) == pure Nothing" $ timeout 0.1  (sleep 2 >> print 1) == pure Nothing
     testGen "showDuration 3.435   == \"3.44s\"" $ showDuration 3.435   == "3.44s"
     testGen "showDuration 623.8   == \"10m24s\"" $ showDuration 623.8   == "10m24s"
     testGen "showDuration 62003.8 == \"17h13m\"" $ showDuration 62003.8 == "17h13m"
     testGen "showDuration 1e8     == \"27777h47m\"" $ showDuration 1e8     == "27777h47m"
-    testGen "do f <- offsetTime; xs <- replicateM 10 f; return $ xs == sort xs" $ do f <- offsetTime; xs <- replicateM 10 f; return $ xs == sort xs
-    testGen "do (a,_) <- duration $ sleep 1; return $ a >= 1 && a <= 1.5" $ do (a,_) <- duration $ sleep 1; return $ a >= 1 && a <= 1.5
+    testGen "do f <- offsetTime; xs <- replicateM 10 f; pure $ xs == sort xs" $ do f <- offsetTime; xs <- replicateM 10 f; pure $ xs == sort xs
+    testGen "do (a,_) <- duration $ sleep 1; pure $ a >= 1 && a <= 1.5" $ do (a,_) <- duration $ sleep 1; pure $ a >= 1 && a <= 1.5

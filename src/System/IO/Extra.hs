@@ -66,7 +66,7 @@ hGetContents' :: Handle -> IO String
 hGetContents' h = do
     s <- hGetContents h
     void $ evaluate $ length s
-    return s
+    pure s
 
 -- | A strict version of 'readFile'. When the string is produced, the entire
 --   file will have been read into memory and the file handle will have been closed.
@@ -112,7 +112,7 @@ writeFileBinary file x = withBinaryFile file WriteMode $ \h -> hPutStr h x
 
 -- | Capture the 'stdout' and 'stderr' of a computation.
 --
--- > captureOutput (print 1) == return ("1\n",())
+-- > captureOutput (print 1) == pure ("1\n",())
 captureOutput :: IO a -> IO (String, a)
 captureOutput act = withTempFile $ \file ->
     withFile file ReadWriteMode $ \h -> do
@@ -120,7 +120,7 @@ captureOutput act = withTempFile $ \file ->
             hClose h
             act
         out <- readFile' file
-        return (out, res)
+        pure (out, res)
     where
         clone out h act = do
             buf <- hGetBuffering out
@@ -166,13 +166,13 @@ newTempFileWithin :: FilePath -> IO (FilePath, IO ())
 newTempFileWithin tmpdir = do
         file <- create
         del <- once $ ignore $ removeFile file
-        return (file, del)
+        pure (file, del)
     where
         create = do
             val <- tempUnique
             (file, h) <- retryBool (\(_ :: IOError) -> True) 5 $ openTempFile tmpdir $ "extra-file-" ++ show val ++ "-"
             hClose h
-            return file
+            pure file
 
 
 -- | Create a temporary file in the temporary directory. The file will be deleted
@@ -180,9 +180,9 @@ newTempFileWithin tmpdir = do
 --   The 'FilePath' will not have any file extension, will exist, and will be zero bytes long.
 --   If you require a file with a specific name, use 'withTempDir'.
 --
--- > withTempFile doesFileExist == return True
--- > (doesFileExist =<< withTempFile return) == return False
--- > withTempFile readFile' == return ""
+-- > withTempFile doesFileExist == pure True
+-- > (doesFileExist =<< withTempFile pure) == pure False
+-- > withTempFile readFile' == pure ""
 withTempFile :: (FilePath -> IO a) -> IO a
 withTempFile act = do
     (file, del) <- newTempFile
@@ -200,22 +200,22 @@ newTempDirWithin :: FilePath -> IO (FilePath, IO ())
 newTempDirWithin tmpdir = do
         dir <- retryBool (\(_ :: IOError) -> True) 5 $ create tmpdir
         del <- once $ ignore $ removeDirectoryRecursive dir
-        return (dir, del)
+        pure (dir, del)
     where
         create tmpdir = do
             v <- tempUnique
             let dir = tmpdir </> "extra-dir-" ++ show v
             catchBool isAlreadyExistsError
-                (createDirectoryPrivate dir >> return dir) $
+                (createDirectoryPrivate dir >> pure dir) $
                 \_ -> create tmpdir
 
 
 -- | Create a temporary directory inside the system temporary directory.
 --   The directory will be deleted after the action completes.
 --
--- > withTempDir doesDirectoryExist == return True
--- > (doesDirectoryExist =<< withTempDir return) == return False
--- > withTempDir listFiles == return []
+-- > withTempDir doesDirectoryExist == pure True
+-- > (doesDirectoryExist =<< withTempDir pure) == pure False
+-- > withTempDir listFiles == pure []
 withTempDir :: (FilePath -> IO a) -> IO a
 withTempDir act = do
     (dir,del) <- newTempDir
@@ -235,8 +235,8 @@ sameContent h1 h2 = sameSize h1 h2 &&^ withb (\b1 -> withb $ \b2 -> eq b1 b2)
             r1 <- hGetBuf h1 b1 bufsz
             r2 <- hGetBuf h2 b2 bufsz
             if r1 == 0
-                then return $ r2 == 0
-                else return (r1 == r2) &&^ bufeq b1 b2 r1 &&^ eq b1 b2
+                then pure $ r2 == 0
+                else pure (r1 == r2) &&^ bufeq b1 b2 r1 &&^ eq b1 b2
           bufeq b1 b2 s = (==0) <$> memcmp b1 b2 (fromIntegral s)
           withb = allocaBytesAligned bufsz 4096
           bufsz = 64*1024

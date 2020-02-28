@@ -46,23 +46,23 @@ withNumCapabilities _ act = act
 --   If the function raises an exception, the same exception will be reraised each time.
 --
 -- > let x ||| y = do t1 <- onceFork x; t2 <- onceFork y; t1; t2
--- > \(x :: IO Int) -> void (once x) == return ()
+-- > \(x :: IO Int) -> void (once x) == pure ()
 -- > \(x :: IO Int) -> join (once x) == x
 -- > \(x :: IO Int) -> (do y <- once x; y; y) == x
 -- > \(x :: IO Int) -> (do y <- once x; y ||| y) == x
 once :: IO a -> IO (IO a)
 once act = do
     var <- newVar OncePending
-    let run = either throwIO return
-    return $ mask $ \unmask -> join $ modifyVar var $ \v -> case v of
-        OnceDone x -> return (v, unmask $ run x)
-        OnceRunning x -> return (v, unmask $ run =<< waitBarrier x)
+    let run = either throwIO pure
+    pure $ mask $ \unmask -> join $ modifyVar var $ \v -> case v of
+        OnceDone x -> pure (v, unmask $ run x)
+        OnceRunning x -> pure (v, unmask $ run =<< waitBarrier x)
         OncePending -> do
             b <- newBarrier
-            return $ (OnceRunning b,) $ do
+            pure $ (OnceRunning b,) $ do
                 res <- try_ $ unmask act
                 signalBarrier b res
-                modifyVar_ var $ \_ -> return $ OnceDone res
+                modifyVar_ var $ \_ -> pure $ OnceDone res
                 run res
 
 data Once a = OncePending | OnceRunning (Barrier a) | OnceDone a
@@ -76,7 +76,7 @@ onceFork :: IO a -> IO (IO a)
 onceFork act = do
     bar <- newBarrier
     forkFinally act $ signalBarrier bar
-    return $ eitherM throwIO return $ waitBarrier bar
+    pure $ eitherM throwIO pure $ waitBarrier bar
 
 
 ---------------------------------------------------------------------
@@ -115,7 +115,7 @@ withLockTry :: Lock -> IO a -> IO (Maybe a)
 withLockTry (Lock m) act = bracket
     (tryTakeMVar m)
     (\v -> when (isJust v) $ putMVar m ())
-    (\v -> if isJust v then fmap Just act else return Nothing)
+    (\v -> if isJust v then fmap Just act else pure Nothing)
 
 
 ---------------------------------------------------------------------
@@ -150,7 +150,7 @@ readVar (Var x) = readMVar x
 
 -- | Write a value to become the new value of 'Var'.
 writeVar :: Var a -> a -> IO ()
-writeVar v x = modifyVar_ v $ const $ return x
+writeVar v x = modifyVar_ v $ const $ pure x
 
 -- | Modify a 'Var' producing a new value and a return result.
 modifyVar :: Var a -> (a -> IO (a, b)) -> IO b
@@ -195,7 +195,7 @@ newBarrier = fmap Barrier $ newVar . Left =<< newEmptyMVar
 signalBarrier :: Partial => Barrier a -> a -> IO ()
 signalBarrier (Barrier var) v = mask_ $ -- use mask so never in an inconsistent state
     join $ modifyVar var $ \x -> case x of
-        Left bar -> return (Right v, putMVar bar ())
+        Left bar -> pure (Right v, putMVar bar ())
         Right res -> error "Control.Concurrent.Extra.signalBarrier, attempt to signal a barrier that has already been signaled"
 
 
@@ -204,12 +204,12 @@ waitBarrier :: Barrier a -> IO a
 waitBarrier (Barrier var) = do
     x <- readVar var
     case x of
-        Right res -> return res
+        Right res -> pure res
         Left bar -> do
             readMVar bar
             x <- readVar var
             case x of
-                Right res -> return res
+                Right res -> pure res
                 Left bar -> error "Control.Concurrent.Extra, internal invariant violated in Barrier"
 
 

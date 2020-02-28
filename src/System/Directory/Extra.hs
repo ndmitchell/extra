@@ -52,12 +52,12 @@ withCurrentDirectory dir act =
 --
 -- > withTempDir $ \dir -> do writeFile (dir </> "test.txt") ""; (== [dir </> "test.txt"]) <$> listContents dir
 -- > let touch = mapM_ $ \x -> createDirectoryIfMissing True (takeDirectory x) >> writeFile x ""
--- > let listTest op as bs = withTempDir $ \dir -> do touch $ map (dir </>) as; res <- op dir; return $ map (drop (length dir + 1)) res == bs
+-- > let listTest op as bs = withTempDir $ \dir -> do touch $ map (dir </>) as; res <- op dir; pure $ map (drop (length dir + 1)) res == bs
 -- > listTest listContents ["bar.txt","foo/baz.txt","zoo"] ["bar.txt","foo","zoo"]
 listContents :: FilePath -> IO [FilePath]
 listContents dir = do
     xs <- getDirectoryContents dir
-    return $ sort [dir </> x | x <- xs, not $ all (== '.') x]
+    pure $ sort [dir </> x | x <- xs, not $ all (== '.') x]
 
 
 -- | Like 'listContents', but only returns the directories in a directory, not the files.
@@ -81,21 +81,21 @@ listFiles dir = filterM doesFileExist =<< listContents dir
 --
 -- > listTest listFilesRecursive ["bar.txt","zoo","foo" </> "baz.txt"] ["bar.txt","zoo","foo" </> "baz.txt"]
 listFilesRecursive :: FilePath -> IO [FilePath]
-listFilesRecursive = listFilesInside (const $ return True)
+listFilesRecursive = listFilesInside (const $ pure True)
 
 
 -- | Like 'listFilesRecursive', but with a predicate to decide where to recurse into.
 --   Typically directories starting with @.@ would be ignored. The initial argument directory
 --   will have the test applied to it.
 --
--- > listTest (listFilesInside $ return . not . isPrefixOf "." . takeFileName)
+-- > listTest (listFilesInside $ pure . not . isPrefixOf "." . takeFileName)
 -- >     ["bar.txt","foo" </> "baz.txt",".foo" </> "baz2.txt", "zoo"] ["bar.txt","zoo","foo" </> "baz.txt"]
--- > listTest (listFilesInside $ const $ return False) ["bar.txt"] []
+-- > listTest (listFilesInside $ const $ pure False) ["bar.txt"] []
 listFilesInside :: (FilePath -> IO Bool) -> FilePath -> IO [FilePath]
-listFilesInside test dir = ifM (notM $ test $ dropTrailingPathSeparator dir) (return []) $ do
+listFilesInside test dir = ifM (notM $ test $ dropTrailingPathSeparator dir) (pure []) $ do
     (dirs,files) <- partitionM doesDirectoryExist =<< listContents dir
     rest <- concatMapM (listFilesInside test) dirs
-    return $ files ++ rest
+    pure $ files ++ rest
 
 
 -- | Create a directory with permissions so that only the current user can view it.

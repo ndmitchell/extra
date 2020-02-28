@@ -46,7 +46,7 @@ testGen :: Testable prop => String -> prop -> IO ()
 testGen msg prop = testRaw msg $ do
     r <- quickCheckResult prop
     case r of
-        Success{} -> return ()
+        Success{} -> pure ()
         _ -> errorIO "Test failed"
 
 testRaw :: String -> IO () -> IO ()
@@ -87,7 +87,7 @@ instance (Show a, Eq a) => Eq (IO a) where
     a == b = unsafePerformIO $ do
         a <- try_ $ captureOutput a
         b <- try_ $ captureOutput b
-        if a == b then return True else
+        if a == b then pure True else
             error $ show ("IO values not equal", a, b)
 
 instance Show (IO a) where
@@ -96,10 +96,10 @@ instance Show (IO a) where
 instance Arbitrary a => Arbitrary (IO a) where
     arbitrary = do
         (prnt :: Maybe Int, thrw :: Maybe Int, res) <- arbitrary
-        return $ do
+        pure $ do
             whenJust prnt print
             whenJust thrw (fail . show)
-            return res
+            pure res
 
 instance Eq SomeException where
     a == b = show a == show b

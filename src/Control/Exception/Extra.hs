@@ -35,16 +35,16 @@ import Prelude
 
 -- | Fully evaluate an input String. If the String contains embedded exceptions it will produce @\<Exception\>@.
 --
--- > stringException "test"                           == return "test"
--- > stringException ("test" ++ undefined)            == return "test<Exception>"
--- > stringException ("test" ++ undefined ++ "hello") == return "test<Exception>"
--- > stringException ['t','e','s','t',undefined]      == return "test<Exception>"
+-- > stringException "test"                           == pure "test"
+-- > stringException ("test" ++ undefined)            == pure "test<Exception>"
+-- > stringException ("test" ++ undefined ++ "hello") == pure "test<Exception>"
+-- > stringException ['t','e','s','t',undefined]      == pure "test<Exception>"
 stringException :: String -> IO String
 stringException x = do
     r <- try_ $ evaluate $ list [] (\x xs -> x `seq` x:xs) x
     case r of
-        Left e -> return "<Exception>"
-        Right [] -> return []
+        Left e -> pure "<Exception>"
+        Right [] -> pure []
         Right (x:xs) -> (x:) <$> stringException xs
 
 
@@ -66,7 +66,7 @@ errorWithoutStackTrace = error
 -- | Ignore any exceptions thrown by the action.
 --
 -- > ignore (print 1)    == print 1
--- > ignore (fail "die") == return ()
+-- > ignore (fail "die") == pure ()
 ignore :: IO () -> IO ()
 ignore = void . try_
 
@@ -74,7 +74,7 @@ ignore = void . try_
 -- | An 'IO' action that when evaluated calls 'error', in the 'IO' monad.
 --   Note that while 'fail' in 'IO' raises an 'IOException', this function raises an 'ErrorCall' exception with a call stack.
 --
--- > catch (errorIO "Hello") (\(ErrorCall x) -> return x) == return "Hello"
+-- > catch (errorIO "Hello") (\(ErrorCall x) -> pure x) == pure "Hello"
 -- > seq (errorIO "foo") (print 1) == print 1
 errorIO :: Partial => String -> IO a
 errorIO x = withFrozenCallStack $ evaluate $ error x
@@ -103,7 +103,7 @@ retryBool p i x = do
     res <- tryBool p x
     case res of
         Left _ -> retryBool p (i-1) x
-        Right v -> return v
+        Right v -> pure v
 
 
 -- | A version of 'catch' without the 'Exception' context, restricted to 'SomeException',
@@ -135,7 +135,7 @@ tryJust_ = tryJust
 --   As an example:
 --
 -- @
--- readFileExists x == catchBool isDoesNotExistError (readFile \"myfile\") (const $ return \"\")
+-- readFileExists x == catchBool isDoesNotExistError (readFile \"myfile\") (const $ pure \"\")
 -- @
 catchBool :: Exception e => (e -> Bool) -> IO a -> (e -> IO a) -> IO a
 catchBool f a b = catchJust (bool f) a b

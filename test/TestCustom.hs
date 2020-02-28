@@ -16,14 +16,14 @@ testCustom = do
 
     testRaw "withTempFile" $ do
         xs <- replicateM 4 $ onceFork $ do
-            replicateM_ 100 $ withTempFile (const $ return ())
+            replicateM_ 100 $ withTempFile (const $ pure ())
             putChar '.'
         sequence_ xs
         putStrLn "done"
 
     testRaw "withTempDir" $ do
         xs <- replicateM 4 $ onceFork $ do
-            replicateM_ 100 $ withTempDir (const $ return ())
+            replicateM_ 100 $ withTempDir (const $ pure ())
             putChar '.'
         sequence_ xs
         putStrLn "done"

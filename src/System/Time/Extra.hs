@@ -26,18 +26,18 @@ type Seconds = Double
 
 -- | Sleep for a number of seconds.
 --
--- > fmap (round . fst) (duration $ sleep 1) == return 1
+-- > fmap (round . fst) (duration $ sleep 1) == pure 1
 sleep :: Seconds -> IO ()
 sleep = loopM $ \s ->
     -- important to handle both overflow and underflow vs Int
     if s < 0 then
-        return $ Right ()
+        pure $ Right ()
     else if s > 2000 then do
         threadDelay 2000000000 -- 2000 * 1e6
-        return $ Left $ s - 2000
+        pure $ Left $ s - 2000
     else do
         threadDelay $ ceiling $ s * 1000000
-        return $ Right ()
+        pure $ Right ()
 
 
 -- An internal type that is thrown as a dynamic exception to
@@ -52,19 +52,19 @@ instance Exception Timeout
 --   overflows the bounds of an 'Int'. In addition, the bug that negative
 --   timeouts run for ever has been fixed.
 --
--- > timeout (-3) (print 1) == return Nothing
+-- > timeout (-3) (print 1) == pure Nothing
 -- > timeout 0.1  (print 1) == fmap Just (print 1)
--- > do (t, _) <- duration $ timeout 0.1 $ sleep 1000; print t; return $ t < 1
--- > timeout 0.1  (sleep 2 >> print 1) == return Nothing
+-- > do (t, _) <- duration $ timeout 0.1 $ sleep 1000; print t; pure $ t < 1
+-- > timeout 0.1  (sleep 2 >> print 1) == pure Nothing
 timeout :: Seconds -> IO a -> IO (Maybe a)
 -- Copied from GHC with a few tweaks.
 timeout n f
-    | n <= 0 = return Nothing
+    | n <= 0 = pure Nothing
     | otherwise = do
         pid <- myThreadId
         ex  <- fmap Timeout newUnique
         handleBool (== ex)
-                   (const $ return Nothing)
+                   (const $ pure Nothing)
                    (bracket (forkIOWithUnmask $ \unmask -> unmask $ sleep n >> throwTo pid ex)
                             killThread
                             (\_ -> fmap Just f))
@@ -90,13 +90,13 @@ showDuration x
 -- | Call once to start, then call repeatedly to get the elapsed time since the first call.
 --   The time is guaranteed to be monotonic. This function is robust to system time changes.
 --
--- > do f <- offsetTime; xs <- replicateM 10 f; return $ xs == sort xs
+-- > do f <- offsetTime; xs <- replicateM 10 f; pure $ xs == sort xs
 offsetTime :: IO (IO Seconds)
 offsetTime = do
     start <- time
-    return $ do
+    pure $ do
         end <- time
-        return $ 1e-9 * fromIntegral (toNanoSecs $ end - start)
+        pure $ 1e-9 * fromIntegral (toNanoSecs $ end - start)
     where time = getTime Monotonic
 
 {-# DEPRECATED offsetTimeIncrease "Use 'offsetTime' instead, which is guaranteed to always increase." #-}
@@ -107,10 +107,10 @@ offsetTimeIncrease = offsetTime
 
 -- | Record how long a computation takes in 'Seconds'.
 --
--- > do (a,_) <- duration $ sleep 1; return $ a >= 1 && a <= 1.5
+-- > do (a,_) <- duration $ sleep 1; pure $ a >= 1 && a <= 1.5
 duration :: IO a -> IO (Seconds, a)
 duration act = do
     time <- offsetTime
     res <- act
     time <- time
-    return (time, res)
+    pure (time, res)
