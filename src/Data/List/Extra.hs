@@ -377,10 +377,13 @@ groupOn f = groupBy ((==) `on2` f)
     where (.*.) `on2` f = \x -> let fx = f x in \y -> fx .*. f y
 
 
--- | A version of 'nub' where the equality is done on some extracted value.
+-- | /DEPRECATED/ Use 'nubOrdOn', since this function is _O(n^2)_.
+--
+--   A version of 'nub' where the equality is done on some extracted value.
 --   @nubOn f@ is equivalent to @nubBy ((==) `on` f)@, but has the
 --   performance advantage of only evaluating @f@ once for each element in the
 --   input list.
+{-# DEPRECATED nubOn "Use nubOrdOn, since this function is O(n^2)" #-}
 nubOn :: Eq b => (a -> b) -> [a] -> [a]
 nubOn f = map snd . nubBy ((==) `on` fst) . map (\x -> let y = f x in y `seq` (y, x))
 
