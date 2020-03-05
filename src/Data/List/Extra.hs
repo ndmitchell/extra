@@ -29,7 +29,7 @@ module Data.List.Extra(
     nubSort, nubSortBy, nubSortOn,
     maximumOn, minimumOn,
     disjoint, allSame, anySame,
-    repeatedly, for, firstJust,
+    repeatedly, firstJust,
     concatUnzip, concatUnzip3,
     zipFrom, zipWithFrom,
     replace, merge, mergeBy,
@@ -58,13 +58,6 @@ repeatedly f [] = []
 repeatedly f as = b : repeatedly f as'
     where (b, as') = f as
 
-
--- | /DEPRECATED/ Use @flip map@ directly, since this function clashes with @Data.Traversable.for@.
---
---   Flipped version of 'map'.
-{-# DEPRECATED for "Use flip map directly, since this function clashes with Data.Traversable.for" #-}
-for :: [a] -> (a -> b) -> [b]
-for = flip map
 
 -- | Are two lists disjoint, with no elements in common.
 --

@@ -1,5 +1,6 @@
 Changelog for Extra
 
+*   #40, delete deprecated function for
 *   zipFrom now truncates lists, rather than error, just like zip
 1.6.21, released 2020-03-02
     #54, deprecate nubOn since its O(n^2). Use nubOrdOn
