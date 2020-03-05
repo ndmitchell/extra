@@ -1,4 +1,4 @@
-{-# LANGUAGE TupleSections, BangPatterns, ConstraintKinds #-}
+{-# LANGUAGE TupleSections, ConstraintKinds #-}
 
 -- | This module extends "Data.List" with extra functions of a similar nature.
 --   The package also exports the existing "Data.List" functions.
