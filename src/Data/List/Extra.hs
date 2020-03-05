@@ -211,20 +211,18 @@ splitAtEnd i xs = f xs (drop i xs)
 --   Never truncates the output - raises an error if the enumeration runs out.
 --
 -- > \i xs -> zip [i..] xs == zipFrom i xs
--- > zipFrom False [1..3] == undefined
-zipFrom :: (Partial, Enum a) => a -> [b] -> [(a, b)]
+-- > zipFrom False [1..3] == [(False,1),(True, 2)]
+zipFrom :: Enum a => a -> [b] -> [(a, b)]
 zipFrom = zipWithFrom (,)
 
 -- | 'zipFrom' generalised to any combining operation.
 --   Never truncates the output - raises an error if the enumeration runs out.
 --
 -- > \i xs -> zipWithFrom (,) i xs == zipFrom i xs
-zipWithFrom :: (Partial, Enum a) => (a -> b -> c) -> a -> [b] -> [c]
-zipWithFrom f a xs = go a xs
-    where
-        -- if we aren't strict in the accumulator, it's highly like to be a space leak
-        go !a [] = []
-        go !a (x:xs) = f a x : go (succ a) xs
+zipWithFrom :: Enum a => (a -> b -> c) -> a -> [b] -> [c]
+-- would love to deforest the intermediate [a..] list
+-- but would require Bounded and Eq as well, so better go for simplicit
+zipWithFrom f a = zipWith f [a..]
 
 
 -- | A merging of 'unzip' and 'concat'.

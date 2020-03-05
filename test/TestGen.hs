@@ -128,7 +128,7 @@ tests = do
     testGen "\\i xs -> uncurry (++) (splitAt i xs) == xs" $ \i xs -> uncurry (++) (splitAt i xs) == xs
     testGen "\\i xs -> splitAtEnd i xs == (dropEnd i xs, takeEnd i xs)" $ \i xs -> splitAtEnd i xs == (dropEnd i xs, takeEnd i xs)
     testGen "\\i xs -> zip [i..] xs == zipFrom i xs" $ \i xs -> zip [i..] xs == zipFrom i xs
-    testGen "zipFrom False [1..3] == undefined" $ erroneous $ zipFrom False [1..3]
+    testGen "zipFrom False [1..3] == [(False,1),(True, 2)]" $ zipFrom False [1..3] == [(False,1),(True, 2)]
     testGen "\\i xs -> zipWithFrom (,) i xs == zipFrom i xs" $ \i xs -> zipWithFrom (,) i xs == zipFrom i xs
     testGen "concatUnzip [(\"a\",\"AB\"),(\"bc\",\"C\")] == (\"abc\",\"ABC\")" $ concatUnzip [("a","AB"),("bc","C")] == ("abc","ABC")
     testGen "concatUnzip3 [(\"a\",\"AB\",\"\"),(\"bc\",\"C\",\"123\")] == (\"abc\",\"ABC\",\"123\")" $ concatUnzip3 [("a","AB",""),("bc","C","123")] == ("abc","ABC","123")
