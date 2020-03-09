@@ -76,6 +76,7 @@ ignore = void . try_
 --
 -- > catch (errorIO "Hello") (\(ErrorCall x) -> pure x) == pure "Hello"
 -- > seq (errorIO "foo") (print 1) == print 1
+{-# NOINLINE errorIO #-} -- otherwise GHC 8.4.1 seems to get upset
 errorIO :: Partial => String -> IO a
 errorIO x = withFrozenCallStack $ evaluate $ error x
 

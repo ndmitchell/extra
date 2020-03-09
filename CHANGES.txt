@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Add NOINLINE to errorIO to work around a GHC 8.4 bug
 1.7, released 2020-03-05
 *   #40, delete deprecated function for
 *   zipFrom now truncates lists, rather than error, just like zip
