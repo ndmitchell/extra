@@ -33,6 +33,7 @@ module Data.List.Extra(
     concatUnzip, concatUnzip3,
     zipFrom, zipWithFrom,
     replace, merge, mergeBy,
+    zipDefaultWith,
     ) where
 
 import Partial
@@ -729,6 +730,13 @@ nubOrdBy cmp xs = f E xs
     where f seen [] = []
           f seen (x:xs) | memberRB cmp x seen = f seen xs
                         | otherwise = x : f (insertRB cmp x seen) xs
+
+-- | Like 'zipWith' but pads with a padding value instead of stopping on the shortest list.
+zipDefaultWith :: a -> b -> (a -> b -> c) -> [a] -> [b] -> [c]
+zipDefaultWith _da _db _f []     []     = []
+zipDefaultWith  da  db  f (a:as) []     = f  a db : zipDefaultWith da db f as []
+zipDefaultWith  da  db  f []     (b:bs) = f da  b : zipDefaultWith da db f [] bs
+zipDefaultWith  da  db  f (a:as) (b:bs) = f  a  b : zipDefaultWith da db f as bs
 
 ---------------------------------------------------------------------
 -- OKASAKI RED BLACK TREE
