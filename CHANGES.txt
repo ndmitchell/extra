@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Mark modules that are empty as DEPRECATED
     Remove support for GHC 7.10
 1.7.1, released 2020-03-10
     Add NOINLINE to errorIO to work around a GHC 8.4 bug

@@ -1,9 +1,8 @@
 
--- | Extra functions for "System.Environment". All these functions are available in later GHC versions,
---   but this code works all the way back to GHC 7.2.
+-- | Extra functions for "System.Environment".
 --
 --   Currently this module has no functionality beyond "System.Environment".
-module System.Environment.Extra(
+module System.Environment.Extra  {-# DEPRECATED "Use Text.Read directly" #-} (
     module System.Environment,
     ) where
 
