@@ -6,13 +6,13 @@ import Control.Monad
 import System.IO.Extra
 import Data.IORef
 import TestUtil
-import Data.Typeable.Extra as X
+import Data.List.Extra as X
 
 
 testCustom :: IO ()
 testCustom = do
     -- check that Extra really does export these things
-    testGen "Extra export" $ Proxy == (X.Proxy :: Proxy ())
+    testGen "Extra export" $ X.sort [1] == [1]
 
     testRaw "withTempFile" $ do
         xs <- replicateM 4 $ onceFork $ do
