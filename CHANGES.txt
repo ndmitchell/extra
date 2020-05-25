@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #56, add zipWithLongest
     #57, make duration in MonadIO
     Simplify and optimise Barrier
     Mark modules that are empty as DEPRECATED

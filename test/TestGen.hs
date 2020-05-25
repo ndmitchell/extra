@@ -241,6 +241,9 @@ tests = do
     testGen "\\xs -> nubOrd xs == nub xs" $ \xs -> nubOrd xs == nub xs
     testGen "nubOrdOn length [\"a\",\"test\",\"of\",\"this\"] == [\"a\",\"test\",\"of\"]" $ nubOrdOn length ["a","test","of","this"] == ["a","test","of"]
     testGen "nubOrdBy (compare `on` length) [\"a\",\"test\",\"of\",\"this\"] == [\"a\",\"test\",\"of\"]" $ nubOrdBy (compare `on` length) ["a","test","of","this"] == ["a","test","of"]
+    testGen "zipWithLongest (,) \"a\" \"xyz\" == [(Just 'a', Just 'x'), (Nothing, Just 'y'), (Nothing, Just 'z')]" $ zipWithLongest (,) "a" "xyz" == [(Just 'a', Just 'x'), (Nothing, Just 'y'), (Nothing, Just 'z')]
+    testGen "zipWithLongest (,) \"a\" \"x\" == [(Just 'a', Just 'x')]" $ zipWithLongest (,) "a" "x" == [(Just 'a', Just 'x')]
+    testGen "zipWithLongest (,) \"\" \"x\" == [(Nothing, Just 'x')]" $ zipWithLongest (,) "" "x" == [(Nothing, Just 'x')]
     testGen "(1 :| [2,3]) |> 4 |> 5 == 1 :| [2,3,4,5]" $ (1 :| [2,3]) |> 4 |> 5 == 1 :| [2,3,4,5]
     testGen "[1,2,3] |: 4 |> 5 == 1 :| [2,3,4,5]" $ [1,2,3] |: 4 |> 5 == 1 :| [2,3,4,5]
     testGen "appendl (1 :| [2,3]) [4,5] == 1 :| [2,3,4,5]" $ appendl (1 :| [2,3]) [4,5] == 1 :| [2,3,4,5]

@@ -31,7 +31,7 @@ module Data.List.Extra(
     disjoint, allSame, anySame,
     repeatedly, firstJust,
     concatUnzip, concatUnzip3,
-    zipFrom, zipWithFrom,
+    zipFrom, zipWithFrom, zipWithLongest,
     replace, merge, mergeBy,
     ) where
 
@@ -769,3 +769,17 @@ balance (T R a x (T R b y c)) z d = T R (T B a x b) y (T B c z d)
 balance a x (T R b y (T R c z d)) = T R (T B a x b) y (T B c z d)
 balance a x (T R (T R b y c) z d) = T R (T B a x b) y (T B c z d)
 balance a x b = T B a x b
+
+
+-- | Like 'zipWith', but keep going to the longest value. The function
+--   argument will always be given at least one 'Just', and while both
+--   lists have items, two 'Just' values.
+--
+-- > zipWithLongest (,) "a" "xyz" == [(Just 'a', Just 'x'), (Nothing, Just 'y'), (Nothing, Just 'z')]
+-- > zipWithLongest (,) "a" "x" == [(Just 'a', Just 'x')]
+-- > zipWithLongest (,) "" "x" == [(Nothing, Just 'x')]
+zipWithLongest :: (Maybe a -> Maybe b -> c) -> [a] -> [b] -> [c]
+zipWithLongest f [] [] = []
+zipWithLongest f (x:xs) (y:ys) = f (Just x) (Just y) : zipWithLongest f xs ys
+zipWithLongest f [] ys = map (f Nothing . Just) ys
+zipWithLongest f xs [] = map ((`f` Nothing) . Just) xs
