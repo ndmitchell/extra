@@ -32,3 +32,12 @@ testCustom = do
         ref <- newIORef 2
         retry 5 $ do modifyIORef ref pred; whenM ((/=) 0 <$> readIORef ref) $ fail "die"
         (==== 0) <$> readIORef ref
+
+    testRaw "barrier" $ do
+        bar <- newBarrier
+        (==== Nothing) <$> waitBarrierMaybe bar
+        signalBarrier bar 1
+        (==== Just 1) <$> waitBarrierMaybe bar
+        (==== 1) <$> waitBarrier bar
+        Left _ <- try_ $ signalBarrier bar 2
+        pure ()
