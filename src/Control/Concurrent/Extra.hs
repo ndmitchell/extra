@@ -182,38 +182,26 @@ withVar (Var x) f = withMVar x f
 --   for it to complete. A barrier has similarities to a future or promise
 --   from other languages, has been known as an IVar in other Haskell work,
 --   and in some ways is like a manually managed thunk.
-newtype Barrier a = Barrier (Var (Either (MVar ()) a))
-    -- Either a Left empty MVar you should wait or a Right result
-    -- With base 4.7 and above readMVar is atomic so you probably can implement Barrier directly on MVar a
+newtype Barrier a = Barrier (MVar a)
 
 -- | Create a new 'Barrier'.
 newBarrier :: IO (Barrier a)
-newBarrier = fmap Barrier $ newVar . Left =<< newEmptyMVar
+newBarrier = Barrier <$> newEmptyMVar
 
 -- | Write a value into the Barrier, releasing anyone at 'waitBarrier'.
 --   Any subsequent attempts to signal the 'Barrier' will throw an exception.
 signalBarrier :: Partial => Barrier a -> a -> IO ()
-signalBarrier (Barrier var) v = mask_ $ -- use mask so never in an inconsistent state
-    join $ modifyVar var $ \x -> case x of
-        Left bar -> pure (Right v, putMVar bar ())
-        Right res -> error "Control.Concurrent.Extra.signalBarrier, attempt to signal a barrier that has already been signaled"
+signalBarrier (Barrier var) v = do
+    b <- tryPutMVar var v
+    unless b $ errorIO "Control.Concurrent.Extra.signalBarrier, attempt to signal a barrier that has already been signaled"
 
 
 -- | Wait until a barrier has been signaled with 'signalBarrier'.
 waitBarrier :: Barrier a -> IO a
-waitBarrier (Barrier var) = do
-    x <- readVar var
-    case x of
-        Right res -> pure res
-        Left bar -> do
-            readMVar bar
-            x <- readVar var
-            case x of
-                Right res -> pure res
-                Left bar -> error "Control.Concurrent.Extra, internal invariant violated in Barrier"
+waitBarrier (Barrier var) = readMVar var
 
 
 -- | A version of 'waitBarrier' that never blocks, returning 'Nothing'
 --   if the barrier has not yet been signaled.
 waitBarrierMaybe :: Barrier a -> IO (Maybe a)
-waitBarrierMaybe (Barrier bar) = eitherToMaybe <$> readVar bar
+waitBarrierMaybe (Barrier bar) = tryReadMVar bar
