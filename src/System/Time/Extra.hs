@@ -15,6 +15,7 @@ module System.Time.Extra(
 import Control.Concurrent
 import System.Clock
 import Numeric.Extra
+import Control.Monad.IO.Class
 import Control.Monad.Extra
 import Control.Exception.Extra
 import Data.Typeable
@@ -108,9 +109,9 @@ offsetTimeIncrease = offsetTime
 -- | Record how long a computation takes in 'Seconds'.
 --
 -- > do (a,_) <- duration $ sleep 1; pure $ a >= 1 && a <= 1.5
-duration :: IO a -> IO (Seconds, a)
+duration :: MonadIO m => m a -> m (Seconds, a)
 duration act = do
-    time <- offsetTime
+    time <- liftIO offsetTime
     res <- act
-    time <- time
+    time <- liftIO time
     pure (time, res)

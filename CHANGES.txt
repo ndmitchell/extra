@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #57, make duration in MonadIO
     Simplify and optimise Barrier
     Mark modules that are empty as DEPRECATED
     Remove support for GHC 7.10
