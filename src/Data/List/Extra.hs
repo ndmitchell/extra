@@ -28,7 +28,7 @@ module Data.List.Extra(
     nubOn, groupOn,
     nubSort, nubSortBy, nubSortOn,
     maximumOn, minimumOn,
-    disjoint, allSame, anySame,
+    disjoint, disjointOrd, disjointOrdBy, allSame, anySame,
     repeatedly, firstJust,
     concatUnzip, concatUnzip3,
     zipFrom, zipWithFrom, zipWithLongest,
@@ -65,6 +65,30 @@ repeatedly f as = b : repeatedly f as'
 -- > disjoint [1,2,3] [4,1] == False
 disjoint :: Eq a => [a] -> [a] -> Bool
 disjoint xs = null . intersect xs
+
+-- | /O((m+n) log m), m <= n/. Are two lists disjoint, with no elements in common.
+--
+-- > disjointOrd [1,2,3] [4,5] == True
+-- > disjointOrd [1,2,3] [4,1] == False
+disjointOrd :: Ord a => [a] -> [a] -> Bool
+disjointOrd = disjointOrdBy compare
+
+-- | A version of 'disjointOrd' with a custom predicate.
+--
+-- > disjointOrdBy (compare `on` (`mod` 7)) [1,2,3] [4,5] == True
+-- > disjointOrdBy (compare `on` (`mod` 7)) [1,2,3] [4,8] == False
+disjointOrdBy :: (a -> a -> Ordering) -> [a] -> [a] -> Bool
+disjointOrdBy cmp xs ys
+    | shorter xs ys = go xs ys
+    | otherwise = go ys xs
+  where
+    shorter _ [] = False
+    shorter [] _ = True
+    shorter (_:xs) (_:ys) = shorter xs ys
+
+    go xs = not . any (\a -> memberRB cmp a tree)
+      where
+        tree = foldl' (flip (insertRB cmp)) E xs
 
 -- | Is there any element which occurs more than once.
 --

@@ -81,6 +81,10 @@ tests = do
     testGen "\\xs -> repeatedly line1 xs == lines xs" $ \xs -> repeatedly line1 xs == lines xs
     testGen "disjoint [1,2,3] [4,5] == True" $ disjoint [1,2,3] [4,5] == True
     testGen "disjoint [1,2,3] [4,1] == False" $ disjoint [1,2,3] [4,1] == False
+    testGen "disjointOrd [1,2,3] [4,5] == True" $ disjointOrd [1,2,3] [4,5] == True
+    testGen "disjointOrd [1,2,3] [4,1] == False" $ disjointOrd [1,2,3] [4,1] == False
+    testGen "disjointOrdBy (compare `on` (`mod` 7)) [1,2,3] [4,5] == True" $ disjointOrdBy (compare `on` (`mod` 7)) [1,2,3] [4,5] == True
+    testGen "disjointOrdBy (compare `on` (`mod` 7)) [1,2,3] [4,8] == False" $ disjointOrdBy (compare `on` (`mod` 7)) [1,2,3] [4,8] == False
     testGen "anySame [1,1,2] == True" $ anySame [1,1,2] == True
     testGen "anySame [1,2,3] == False" $ anySame [1,2,3] == False
     testGen "anySame (1:2:1:undefined) == True" $ anySame (1:2:1:undefined) == True
