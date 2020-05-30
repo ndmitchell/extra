@@ -11,7 +11,7 @@ module Control.Monad.Extra(
     unit,
     maybeM, fromMaybeM, eitherM,
     -- * Loops
-    loop, loopM, whileM,
+    loop, loopM, whileM, whileJustM, untilJustM,
     -- * Lists
     partitionM, concatMapM, concatForM, mconcatMapM, mapMaybeM, findM, firstJustM,
     fold1M, fold1M_,
@@ -159,6 +159,26 @@ whileM :: Monad m => m Bool -> m ()
 whileM act = do
     b <- act
     when b $ whileM act
+
+-- | Keep running an operation until it becomes a 'Nothing', accumulating the
+--   monoid results inside the 'Just's as the result of the overall loop.
+whileJustM :: (Monad m, Monoid a) => m (Maybe a) -> m a
+whileJustM act = go mempty
+  where
+    go accum = do
+        res <- act
+        case res of
+            Nothing -> pure accum
+            Just r -> go (accum <> r)
+
+-- | Keep running an operation until it becomes a 'Just', then return the value
+--   inside the 'Just' as the result of the overall loop.
+untilJustM :: Monad m => m (Maybe a) -> m a
+untilJustM act = do
+    res <- act
+    case res of
+        Just r  -> pure r
+        Nothing -> untilJustM act
 
 -- Booleans
 
