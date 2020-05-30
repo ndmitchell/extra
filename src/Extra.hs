@@ -18,6 +18,9 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     -- * Data.Either.Extra
     -- | Extra functions available in @"Data.Either.Extra"@.
     fromLeft, fromRight, fromEither, fromLeft', fromRight', eitherToMaybe, maybeToEither, mapLeft, mapRight,
+    -- * Data.Function.Extra
+    -- | Extra functions available in @"Data.Function.Extra"@.
+    stateMod, stateGet, stArrowState, stArrowMod, stArrowGet,
     -- * Data.IORef.Extra
     -- | Extra functions available in @"Data.IORef.Extra"@.
     writeIORef', atomicWriteIORef', atomicModifyIORef_, atomicModifyIORef'_,
@@ -57,6 +60,7 @@ import Control.Concurrent.Extra
 import Control.Exception.Extra
 import Control.Monad.Extra
 import Data.Either.Extra
+import Data.Function.Extra
 import Data.IORef.Extra
 import Data.List.Extra
 import Data.List.NonEmpty.Extra hiding (cons, snoc, sortOn, union, unionBy, nubOrd, nubOrdBy, nubOrdOn)

@@ -48,6 +48,7 @@ library
         Control.Exception.Extra
         Control.Monad.Extra
         Data.Either.Extra
+        Data.Function.Extra
         Data.IORef.Extra
         Data.List.Extra
         Data.List.NonEmpty.Extra
