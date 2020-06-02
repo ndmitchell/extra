@@ -169,7 +169,7 @@ whileJustM act = go mempty
         res <- act
         case res of
             Nothing -> pure accum
-            Just r -> go (accum <> r)
+            Just r -> go $! (accum <> r) -- strict apply, otherwise space leaks
 
 -- | Keep running an operation until it becomes a 'Just', then return the value
 --   inside the 'Just' as the result of the overall loop.
