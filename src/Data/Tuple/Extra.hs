@@ -13,6 +13,7 @@ module Data.Tuple.Extra(
     firstM, secondM,
     -- * Operations on triple
     fst3, snd3, thd3,
+    first3, second3, third3,
     curry3, uncurry3
     ) where
 
@@ -90,3 +91,22 @@ curry3 f a b c = f (a,b,c)
 -- | Converts a curried function to a function on a triple.
 uncurry3 :: (a -> b -> c -> d) -> ((a, b, c) -> d)
 uncurry3 f ~(a,b,c) = f a b c
+
+
+-- | Update the first component of a triple.
+--
+-- > first3 succ (1,1,1) == (2,1,1)
+first3 :: (a -> a') -> (a, b, c) -> (a', b, c)
+first3 f (a,b,c) = (f a,b,c)
+
+-- | Update the second component of a triple.
+--
+-- > second3 succ (1,1,1) == (1,2,1)
+second3 :: (b -> b') -> (a, b, c) -> (a, b', c)
+second3 f (a,b,c) = (a,f b,c)
+
+-- | Update the third component of a triple.
+--
+-- > third3 succ (1,1,1) == (1,1,2)
+third3 :: (c -> c') -> (a, b, c) -> (a, b, c')
+third3 f (a,b,c) = (a,b,f c)

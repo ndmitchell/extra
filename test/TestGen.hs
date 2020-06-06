@@ -265,6 +265,9 @@ tests = do
     testGen "(succ &&& pred) 1 == (2,0)" $ (succ &&& pred) 1 == (2,0)
     testGen "dupe 12 == (12, 12)" $ dupe 12 == (12, 12)
     testGen "both succ (1,2) == (2,3)" $ both succ (1,2) == (2,3)
+    testGen "first3 succ (1,1,1) == (2,1,1)" $ first3 succ (1,1,1) == (2,1,1)
+    testGen "second3 succ (1,1,1) == (1,2,1)" $ second3 succ (1,1,1) == (1,2,1)
+    testGen "third3 succ (1,1,1) == (1,1,2)" $ third3 succ (1,1,1) == (1,1,2)
     testGen "\\x -> readVersion (showVersion x) == x" $ \x -> readVersion (showVersion x) == x
     testGen "readVersion \"hello\" == undefined" $ erroneous $ readVersion "hello"
     testGen "showDP 4 pi == \"3.1416\"" $ showDP 4 pi == "3.1416"

@@ -29,7 +29,7 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     (|:), (|>), appendl, appendr, maximum1, minimum1, maximumBy1, minimumBy1, maximumOn1, minimumOn1,
     -- * Data.Tuple.Extra
     -- | Extra functions available in @"Data.Tuple.Extra"@.
-    first, second, (***), (&&&), dupe, both, firstM, secondM, fst3, snd3, thd3, curry3, uncurry3,
+    first, second, (***), (&&&), dupe, both, firstM, secondM, fst3, snd3, thd3, first3, second3, third3, curry3, uncurry3,
     -- * Data.Version.Extra
     -- | Extra functions available in @"Data.Version.Extra"@.
     readVersion,
