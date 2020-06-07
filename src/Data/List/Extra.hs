@@ -760,29 +760,33 @@ nubOrdBy cmp xs = f E xs
 ---------------------------------------------------------------------
 -- OKASAKI RED BLACK TREE
 -- Taken from https://www.cs.kent.ac.uk/people/staff/smk/redblack/Untyped.hs
+-- But with the Color = R|B fused into the tree
 
-data Color = R | B deriving Show
-data RB a = E | T Color (RB a) a (RB a) deriving Show
+data RB a = E | T_R (RB a) a (RB a) | T_B (RB a) a (RB a) deriving Show
 
 {- Insertion and membership test as by Okasaki -}
 insertRB :: (a -> a -> Ordering) -> a -> RB a -> RB a
-insertRB cmp x s =
-    T B a z b
+insertRB cmp x s = case ins s of
+    T_R a z b -> T_B a z b
+    x -> x
     where
-    T _ a z b = ins s
-    ins E = T R E x E
-    ins s@(T B a y b) = case cmp x y of
+    ins E = T_R E x E
+    ins s@(T_B a y b) = case cmp x y of
         LT -> balance (ins a) y b
         GT -> balance a y (ins b)
         EQ -> s
-    ins s@(T R a y b) = case cmp x y of
-        LT -> T R (ins a) y b
-        GT -> T R a y (ins b)
+    ins s@(T_R a y b) = case cmp x y of
+        LT -> T_R (ins a) y b
+        GT -> T_R a y (ins b)
         EQ -> s
 
 memberRB :: (a -> a -> Ordering) -> a -> RB a -> Bool
 memberRB cmp x E = False
-memberRB cmp x (T _ a y b) = case cmp x y of
+memberRB cmp x (T_R a y b) = case cmp x y of
+    LT -> memberRB cmp x a
+    GT -> memberRB cmp x b
+    EQ -> True
+memberRB cmp x (T_B a y b) = case cmp x y of
     LT -> memberRB cmp x a
     GT -> memberRB cmp x b
     EQ -> True
@@ -790,12 +794,12 @@ memberRB cmp x (T _ a y b) = case cmp x y of
 {- balance: first equation is new,
    to make it work with a weaker invariant -}
 balance :: RB a -> a -> RB a -> RB a
-balance (T R a x b) y (T R c z d) = T R (T B a x b) y (T B c z d)
-balance (T R (T R a x b) y c) z d = T R (T B a x b) y (T B c z d)
-balance (T R a x (T R b y c)) z d = T R (T B a x b) y (T B c z d)
-balance a x (T R b y (T R c z d)) = T R (T B a x b) y (T B c z d)
-balance a x (T R (T R b y c) z d) = T R (T B a x b) y (T B c z d)
-balance a x b = T B a x b
+balance (T_R a x b) y (T_R c z d) = T_R (T_B a x b) y (T_B c z d)
+balance (T_R (T_R a x b) y c) z d = T_R (T_B a x b) y (T_B c z d)
+balance (T_R a x (T_R b y c)) z d = T_R (T_B a x b) y (T_B c z d)
+balance a x (T_R b y (T_R c z d)) = T_R (T_B a x b) y (T_B c z d)
+balance a x (T_R (T_R b y c) z d) = T_R (T_B a x b) y (T_B c z d)
+balance a x b = T_B a x b
 
 
 -- | Like 'zipWith', but keep going to the longest value. The function
