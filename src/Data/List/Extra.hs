@@ -772,8 +772,8 @@ insertRB cmp x s = case ins s of
     where
     ins E = T_R E x E
     ins s@(T_B a y b) = case cmp x y of
-        LT -> balance (ins a) y b
-        GT -> balance a y (ins b)
+        LT -> lbalance (ins a) y b
+        GT -> rbalance a y (ins b)
         EQ -> s
     ins s@(T_R a y b) = case cmp x y of
         LT -> T_R (ins a) y b
@@ -793,13 +793,15 @@ memberRB cmp x (T_B a y b) = case cmp x y of
 
 {- balance: first equation is new,
    to make it work with a weaker invariant -}
-balance :: RB a -> a -> RB a -> RB a
-balance (T_R a x b) y (T_R c z d) = T_R (T_B a x b) y (T_B c z d)
-balance (T_R (T_R a x b) y c) z d = T_R (T_B a x b) y (T_B c z d)
-balance (T_R a x (T_R b y c)) z d = T_R (T_B a x b) y (T_B c z d)
-balance a x (T_R b y (T_R c z d)) = T_R (T_B a x b) y (T_B c z d)
-balance a x (T_R (T_R b y c) z d) = T_R (T_B a x b) y (T_B c z d)
-balance a x b = T_B a x b
+lbalance, rbalance :: RB a -> a -> RB a -> RB a
+lbalance (T_R a x b) y (T_R c z d) = T_R (T_B a x b) y (T_B c z d)
+lbalance (T_R (T_R a x b) y c) z d = T_R (T_B a x b) y (T_B c z d)
+lbalance (T_R a x (T_R b y c)) z d = T_R (T_B a x b) y (T_B c z d)
+lbalance a x b = T_B a x b
+rbalance (T_R a x b) y (T_R c z d) = T_R (T_B a x b) y (T_B c z d)
+rbalance a x (T_R b y (T_R c z d)) = T_R (T_B a x b) y (T_B c z d)
+rbalance a x (T_R (T_R b y c) z d) = T_R (T_B a x b) y (T_B c z d)
+rbalance a x b = T_B a x b
 
 
 -- | Like 'zipWith', but keep going to the longest value. The function
