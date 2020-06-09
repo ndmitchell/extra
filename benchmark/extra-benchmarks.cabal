@@ -1,0 +1,22 @@
+Name:           extra-benchmarks
+Version:        0.1
+License:        BSD3
+License-File:   LICENSE
+author:         Neil Mitchell <ndmitchell@gmail.com>
+maintainer:     Neil Mitchell <ndmitchell@gmail.com>
+copyright:      Neil Mitchell 2014-2019
+Cabal-Version:  >= 1.2
+Build-Type:     Simple
+
+Executable bench
+  Main-Is: Main.hs
+
+  Build-Depends:
+    base >= 2 && < 5,
+    criterion,
+    extra
+
+  Ghc-Options:
+    -O2
+
+  Other-Modules:
