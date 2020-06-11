@@ -1,6 +1,6 @@
 Changelog for Extra
 
-    #61, slightly optimise nubOrd
+    #61, optimise nubOrd (10% or so)
     Add first3, second3, third3
 1.7.3, released 2020-05-30
     #58, add disjointOrd and disjointOrdBy
