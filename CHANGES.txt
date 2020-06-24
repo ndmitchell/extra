@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #59, add whileJustM and untilJustM
     #61, optimise nubOrd (10% or so)
     Add first3, second3, third3
 1.7.3, released 2020-05-30
