@@ -88,7 +88,7 @@ onceFork act = do
 --
 -- @
 -- lock <- 'newLock'
--- let output = 'withLock' . putStrLn
+-- let output = 'withLock' lock . putStrLn
 -- forkIO $ do ...; output \"hello\"
 -- forkIO $ do ...; output \"world\"
 -- @
