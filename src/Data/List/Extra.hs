@@ -28,6 +28,8 @@ module Data.List.Extra(
     nubOn, groupOn,
     nubSort, nubSortBy, nubSortOn,
     maximumOn, minimumOn,
+    sum', product',
+    sumOn', productOn',
     disjoint, disjointOrd, disjointOrdBy, allSame, anySame,
     repeatedly, firstJust,
     concatUnzip, concatUnzip3,
@@ -454,6 +456,26 @@ groupSortOn f = map (map snd) . groupBy ((==) `on` fst) . sortBy (compare `on` f
 groupSortBy :: (a -> a -> Ordering) -> [a] -> [[a]]
 groupSortBy f = groupBy (\a b -> f a b == EQ) . sortBy f
 
+
+-- | A strict version of 'sum'.
+sum' :: (Num a) => [a] -> a
+sum' = foldl' (+) 0
+
+-- | A strict version of 'sum', using a custom valuation function.
+--
+-- > sumOn' f [a, b, c] == f a + f b + f c
+sumOn' :: (Num b) => (a -> b) -> [a] -> b
+sumOn' f = foldl' (\acc x -> acc + f x) 0
+
+-- | A strict version of 'product'.
+product' :: (Num a) => [a] -> a
+product' = foldl' (*) 1
+
+-- | A strict version of 'product', using a custom valuation function.
+--
+-- > productOn' f [a, b, c] == f a * f b * f c
+productOn' :: (Num b) => (a -> b) -> [a] -> b
+productOn' f = foldl' (\acc x -> acc + f x) 0
 
 -- | Merge two lists which are assumed to be ordered.
 --
