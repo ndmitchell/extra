@@ -21,3 +21,7 @@ When producing a library of extra functions I have been guided by a few principl
 ## Base versions
 
 A mapping between `base` versions and GHC compiler versions can be found [here](https://wiki.haskell.org/Base_package#Versions).
+
+## Contributing
+
+My general contribution preferences are [available here](https://github.com/ndmitchell/neil#contributions). In addition, this repo contains some generated code which is checked in, namely [src/Extra.hs](src/Extra.hs) and [test/TestGen.hs](test/TestGen.hs). You can generate those files by either running `runhaskell Generate.hs` or `ghci` (which uses the [`.ghci` file](.ghci)) and typing `:generate`. All PR's should contain regenerated versions of those files.
