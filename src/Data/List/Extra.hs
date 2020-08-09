@@ -458,6 +458,8 @@ groupSortBy f = groupBy (\a b -> f a b == EQ) . sortBy f
 
 
 -- | A strict version of 'sum'.
+--
+-- > sum' [1, 2, 3] == 6
 sum' :: (Num a) => [a] -> a
 sum' = foldl' (+) 0
 
