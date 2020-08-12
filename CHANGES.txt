@@ -1,5 +1,6 @@
 Changelog for Extra
 
+1.7.5, released 2020-08-12
     #65, add Data.Foldable.Extra
     #65, add sum', product', sumOn' and productOn'
 1.7.4, released 2020-07-15
