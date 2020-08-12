@@ -458,6 +458,8 @@ groupSortBy f = groupBy (\a b -> f a b == EQ) . sortBy f
 
 
 -- | A strict version of 'sum'.
+--   Unlike 'sum' this function is always strict in the `Num` argument,
+--   whereas the standard version is only strict if the optimiser kicks in.
 --
 -- > sum' [1, 2, 3] == 6
 sum' :: (Num a) => [a] -> a
@@ -465,17 +467,19 @@ sum' = foldl' (+) 0
 
 -- | A strict version of 'sum', using a custom valuation function.
 --
--- > sumOn' f [a, b, c] == f a + f b + f c
+-- > sumOn' read ["1", "2", "3"] == 6
 sumOn' :: (Num b) => (a -> b) -> [a] -> b
 sumOn' f = foldl' (\acc x -> acc + f x) 0
 
 -- | A strict version of 'product'.
+--
+-- > product' [1, 2, 4] == 8
 product' :: (Num a) => [a] -> a
 product' = foldl' (*) 1
 
 -- | A strict version of 'product', using a custom valuation function.
 --
--- > productOn' f [a, b, c] == f a * f b * f c
+-- > productOn' read ["1", "2", "4"] == 8
 productOn' :: (Num b) => (a -> b) -> [a] -> b
 productOn' f = foldl' (\acc x -> acc * f x) 1
 
