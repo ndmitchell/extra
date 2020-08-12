@@ -477,7 +477,7 @@ product' = foldl' (*) 1
 --
 -- > productOn' f [a, b, c] == f a * f b * f c
 productOn' :: (Num b) => (a -> b) -> [a] -> b
-productOn' f = foldl' (\acc x -> acc + f x) 0
+productOn' f = foldl' (\acc x -> acc * f x) 1
 
 -- | Merge two lists which are assumed to be ordered.
 --
