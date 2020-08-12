@@ -172,6 +172,9 @@ tests = do
     testGen "\\xs -> concatMap snd (groupSort xs) == map snd (sortOn fst xs)" $ \xs -> concatMap snd (groupSort xs) == map snd (sortOn fst xs)
     testGen "groupSortOn length [\"test\",\"of\",\"sized\",\"item\"] == [[\"of\"],[\"test\",\"item\"],[\"sized\"]]" $ groupSortOn length ["test","of","sized","item"] == [["of"],["test","item"],["sized"]]
     testGen "groupSortBy (compare `on` length) [\"test\",\"of\",\"sized\",\"item\"] == [[\"of\"],[\"test\",\"item\"],[\"sized\"]]" $ groupSortBy (compare `on` length) ["test","of","sized","item"] == [["of"],["test","item"],["sized"]]
+    testGen "sum' [1, 2, 3] == 6" $ sum' [1, 2, 3] == 6
+    testGen "sumOn' f [a, b, c] == f a + f b + f c" $ sumOn' f [a, b, c] == f a + f b + f c
+    testGen "productOn' f [a, b, c] == f a * f b * f c" $ productOn' f [a, b, c] == f a * f b * f c
     testGen "merge \"ace\" \"bd\" == \"abcde\"" $ merge "ace" "bd" == "abcde"
     testGen "\\xs ys -> merge (sort xs) (sort ys) == sort (xs ++ ys)" $ \xs ys -> merge (sort xs) (sort ys) == sort (xs ++ ys)
     testGen "replace \"el\" \"_\" \"Hello Bella\" == \"H_lo B_la\"" $ replace "el" "_" "Hello Bella" == "H_lo B_la"
