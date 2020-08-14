@@ -1,5 +1,8 @@
 module Data.Foldable.Extra
-    ( sumOn'
+    ( module Data.Foldable
+    , sum'
+    , product'
+    , sumOn'
     , productOn'
     ) where
 
