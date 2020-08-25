@@ -21,7 +21,7 @@ module System.IO.Extra(
     fileEq,
     ) where
 
-import System.IO
+import System.IO hiding (hGetContents', readFile')
 import Control.Concurrent.Extra
 import Control.Monad.Extra
 import Control.Exception.Extra as E
