@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #67, defer to System.IO readFile', hGetContents' in GHC 9.0
 1.7.6, released 2020-08-21
     #66, add lots of functions to Data.Foldable.Extra (anyM etc)
 1.7.5, released 2020-08-12

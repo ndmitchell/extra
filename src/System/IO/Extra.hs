@@ -1,4 +1,5 @@
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE ScopedTypeVariables, CPP #-}
+{-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- | More IO functions. The functions include ones for reading files with specific encodings,
 --   strictly reading files, and writing files with encodings. There are also some simple
@@ -21,7 +22,7 @@ module System.IO.Extra(
     fileEq,
     ) where
 
-import System.IO hiding (hGetContents', readFile')
+import System.IO
 import Control.Concurrent.Extra
 import Control.Monad.Extra
 import Control.Exception.Extra as E
@@ -61,6 +62,9 @@ readFileBinary file = do
 
 -- Strict file reading
 
+#if __GLASGOW_HASKELL__ < 811
+-- readFile' and hGetContents' were added in GHC 9.0
+
 -- | A strict version of 'hGetContents'.
 hGetContents' :: Handle -> IO String
 hGetContents' h = do
@@ -75,6 +79,8 @@ hGetContents' h = do
 -- > \(filter isHexDigit -> s) -> fmap (== s) $ withTempFile $ \file -> do writeFile file s; readFile' file
 readFile' :: FilePath -> IO String
 readFile' file = withFile file ReadMode hGetContents'
+
+#endif
 
 -- | A strict version of 'readFileEncoding', see 'readFile'' for details.
 readFileEncoding' :: TextEncoding -> FilePath -> IO String
