@@ -70,9 +70,8 @@ writeFileBinaryChanged file x = do
         writeFileBinary file x
 
 hidden :: String -> [String]
-hidden "Data.List.NonEmpty.Extra" = [ "cons", "snoc", "sortOn", "union", "unionBy"
-                                    , "nubOrd", "nubOrdBy", "nubOrdOn"
-                                    ]
+hidden "Data.List.NonEmpty.Extra" = words
+    "cons snoc sortOn union unionBy nubOrd nubOrdBy nubOrdOn"
 hidden _ = []
 
 notHidden :: String -> String -> Bool
