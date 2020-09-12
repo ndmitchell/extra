@@ -19,7 +19,7 @@ main :: IO ()
 main = do
     src <- readFile "extra.cabal"
     let mods = filter (isSuffixOf ".Extra") $ map trim $ lines src
-    ifaces <- forM mods $ \mod -> do
+    ifaces <- forM (mods \\ exclude) $ \mod -> do
         src <- readFile $ joinPath ("src" : split (== '.') mod) <.> "hs"
         let funcs = filter validIdentifier $ takeWhile (/= "where") $
                     words $ replace "," " " $ drop1 $ dropWhile (/= '(') $
@@ -68,6 +68,9 @@ writeFileBinaryChanged file x = do
     old <- ifM (doesFileExist file) (Just <$> readFileBinary' file) (pure Nothing)
     when (Just x /= old) $
         writeFileBinary file x
+
+exclude :: [String]
+exclude = ["Data.Foldable.Extra"] -- because all their imports clash
 
 hidden :: String -> [String]
 hidden "Data.List.NonEmpty.Extra" = words
