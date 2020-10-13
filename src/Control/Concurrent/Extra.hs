@@ -4,13 +4,13 @@
 --
 --   This module includes three new types of 'MVar', namely 'Lock' (no associated value),
 --   'Var' (never empty) and 'Barrier' (filled at most once). See
---   <httpd://neilmitchell.blogspot.co.uk/2012/06/flavours-of-mvar_04.html this blog post>
+--   <https://neilmitchell.blogspot.co.uk/2012/06/flavours-of-mvar_04.html this blog post>
 --   for examples and justification.
 --
 --   If you need greater control of exceptions and threads
 --   see the <https://hackage.haskell.org/package/slave-thread slave-thread> package.
 --   If you need elaborate relationships between threads
---   see the <httdp://hackage.haskell.org/package/async async> package.
+--   see the <https://hackage.haskell.org/package/async async> package.
 module Control.Concurrent.Extra(
     module Control.Concurrent,
     withNumCapabilities,
