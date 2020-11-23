@@ -1,8 +1,8 @@
 on:
-  - push:
-  - pull_request:
-  - schedule:
-    - cron:  '0 3 * * 6' # 3am Saturday
+  push:
+  pull_request:
+  schedule:
+  - cron:  '0 3 * * 6' # 3am Saturday
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -13,8 +13,8 @@ jobs:
         os: [ubuntu-latest]
         ghc: ['8.10', '8.8', '8.6', '8.4', '8.2', '8.0']
         include:
-          - os: windows-latest
-          - os: macOS-latest
+        - os: windows-latest
+        - os: macOS-latest
 
     steps:
     - run: git config --global core.autocrlf false
