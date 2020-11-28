@@ -62,7 +62,7 @@ compareLength :: (Ord b, Num b, Foldable f) => f a -> b -> Ordering
 compareLength = foldr (\_ acc n -> if n > 0 then acc (n - 1) else GT) (compare 0)
 
 -- | Lazily compare the length of two 'Foldable's.
-comparingLength :: Foldable f => f a -> f b -> Ordering
+comparingLength :: (Foldable f1, Foldable f2) => f1 a -> f2 b -> Ordering
 comparingLength x y = go (toList x) (toList y)
   where
     go [] [] = EQ
