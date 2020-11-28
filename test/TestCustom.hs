@@ -1,3 +1,4 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module TestCustom(testCustom) where
 
@@ -5,8 +6,10 @@ import Control.Concurrent.Extra
 import Control.Monad
 import System.IO.Extra
 import Data.IORef
+import Data.Ord
 import TestUtil
 import Data.List.Extra as X
+import Data.Foldable.Extra
 
 
 testCustom :: IO ()
@@ -41,3 +44,6 @@ testCustom = do
         (==== 1) <$> waitBarrier bar
         Left _ <- try_ $ signalBarrier bar 2
         pure ()
+
+    testGen "`compareLength` works like `compare . length`" $ \(xs :: [Int]) n -> compareLength xs n == compare (length xs) n
+    testGen "`comparingLength` works like `comparing length`" $ \(xs :: [Int]) (ys :: [Int]) -> comparingLength xs ys == comparing length xs ys
