@@ -47,6 +47,7 @@ library
         Control.Concurrent.Extra
         Control.Exception.Extra
         Control.Monad.Extra
+        Data.Bool.Extra
         Data.Foldable.Extra
         Data.Either.Extra
         Data.IORef.Extra
