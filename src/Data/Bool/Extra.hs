@@ -13,8 +13,8 @@ infix 1 <?, ?>, `justIf`
 --
 -- `(<?)` has a lower fixity than both `(&&)` and `(||)`, to avoid overbracketing.
 --
--- > val `justIf` True == Just val
--- > val `justIf` False == Nothing
+-- > justIf 5 True == Just 5
+-- > justIf 5 False == Nothing
 justIf :: a -> Bool -> Maybe a
 justIf a b = if b then Just a else Nothing
 

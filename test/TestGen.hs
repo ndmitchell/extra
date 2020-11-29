@@ -58,8 +58,8 @@ tests = do
     testGen "findM (Just . isUpper) \"teST\"             == Just (Just 'S')" $ findM (Just . isUpper) "teST"             == Just (Just 'S')
     testGen "findM (Just . isUpper) \"test\"             == Just Nothing" $ findM (Just . isUpper) "test"             == Just Nothing
     testGen "findM (Just . const True) [\"x\",undefined] == Just (Just \"x\")" $ findM (Just . const True) ["x",undefined] == Just (Just "x")
-    testGen "val `justIf` True == Just val" $ val `justIf` True == Just val
-    testGen "val `justIf` False == Nothing" $ val `justIf` False == Nothing
+    testGen "justIf 5 True == Just 5" $ justIf 5 True == Just 5
+    testGen "justIf 5 False == Nothing" $ justIf 5 False == Nothing
     testGen "fromLeft 1 (Left 3) == 3" $ fromLeft 1 (Left 3) == 3
     testGen "fromLeft 1 (Right \"foo\") == 1" $ fromLeft 1 (Right "foo") == 1
     testGen "fromRight 1 (Right 3) == 3" $ fromRight 1 (Right 3) == 3
