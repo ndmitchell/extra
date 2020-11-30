@@ -44,7 +44,6 @@ library
         Partial
     exposed-modules:
         Extra
-        Control.Applicative.Extra
         Control.Concurrent.Extra
         Control.Exception.Extra
         Control.Monad.Extra

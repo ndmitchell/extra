@@ -7,6 +7,7 @@
 module Control.Monad.Extra(
     module Control.Monad,
     whenJust, whenJustM,
+    pureIf,
     whenMaybe, whenMaybeM,
     unit,
     maybeM, fromMaybeM, eitherM,
@@ -40,6 +41,9 @@ whenJustM :: Monad m => m (Maybe a) -> (a -> m ()) -> m ()
 -- Can't reuse whenMaybe on GHC 7.8 or lower because Monad does not imply Applicative
 whenJustM mg f = maybeM (pure ()) f mg
 
+-- | A generalized version of 'Data.Bool.Extra.justIf'.
+pureIf :: (Alternative m) => Bool -> a -> m a
+pureIf b a = if b then pure a else empty
 
 -- | Like 'when', but return either 'Nothing' if the predicate was 'False',
 --   of 'Just' with the result of the computation.
@@ -55,7 +59,6 @@ whenMaybeM :: Monad m => m Bool -> m a -> m (Maybe a)
 whenMaybeM mb x = do
     b <- mb
     if b then liftM Just x else pure Nothing
-
 
 -- | The identity function which requires the inner argument to be @()@. Useful for functions
 --   with overloaded return types.

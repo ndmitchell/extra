@@ -14,7 +14,6 @@ import Test.QuickCheck
 import System.IO.Unsafe
 import Text.Show.Functions()
 
-import Control.Applicative.Extra as X
 import Control.Concurrent.Extra as X
 import Control.Exception.Extra as X
 import Control.Monad.Extra as X

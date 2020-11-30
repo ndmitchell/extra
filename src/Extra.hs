@@ -6,9 +6,6 @@
 --   Most users should import the specific modules (e.g. @"Data.List.Extra"@), which
 --   also reexport their non-@Extra@ modules (e.g. @"Data.List"@).
 module Extra {-# DEPRECATED "This module is provided as documentation of all new functions, you should import the more specific modules directly." #-} (
-    -- * Control.Applicative.Extra
-    -- | Extra functions available in @"Control.Applicative.Extra"@.
-    pureIf,
     -- * Control.Concurrent.Extra
     -- | Extra functions available in @"Control.Concurrent.Extra"@.
     withNumCapabilities, once, onceFork, Lock, newLock, withLock, withLockTry, Var, newVar, readVar, writeVar, modifyVar, modifyVar_, withVar, Barrier, newBarrier, signalBarrier, waitBarrier, waitBarrierMaybe,
@@ -17,7 +14,7 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     Partial, retry, retryBool, errorWithoutStackTrace, showException, stringException, errorIO, ignore, catch_, handle_, try_, catchJust_, handleJust_, tryJust_, catchBool, handleBool, tryBool,
     -- * Control.Monad.Extra
     -- | Extra functions available in @"Control.Monad.Extra"@.
-    whenJust, whenJustM, whenMaybe, whenMaybeM, unit, maybeM, fromMaybeM, eitherM, loop, loopM, whileM, whileJustM, untilJustM, partitionM, concatMapM, concatForM, mconcatMapM, mapMaybeM, findM, firstJustM, fold1M, fold1M_, whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
+    whenJust, whenJustM, pureIf, whenMaybe, whenMaybeM, unit, maybeM, fromMaybeM, eitherM, loop, loopM, whileM, whileJustM, untilJustM, partitionM, concatMapM, concatForM, mconcatMapM, mapMaybeM, findM, firstJustM, fold1M, fold1M_, whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
     -- * Data.Bool.Extra
     -- | Extra functions available in @"Data.Bool.Extra"@.
     justIf,
@@ -59,7 +56,6 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     Seconds, sleep, timeout, showDuration, offsetTime, offsetTimeIncrease, duration,
     ) where
 
-import Control.Applicative.Extra
 import Control.Concurrent.Extra
 import Control.Exception.Extra
 import Control.Monad.Extra
