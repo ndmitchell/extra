@@ -6,6 +6,7 @@ module TestGen(tests) where
 import TestUtil
 import qualified Data.List
 import qualified Data.List.NonEmpty.Extra
+import qualified Data.Ord
 import Test.QuickCheck.Instances.Semigroup ()
 default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))
 tests :: IO ()
@@ -252,6 +253,15 @@ tests = do
     testGen "zipWithLongest (,) \"a\" \"xyz\" == [(Just 'a', Just 'x'), (Nothing, Just 'y'), (Nothing, Just 'z')]" $ zipWithLongest (,) "a" "xyz" == [(Just 'a', Just 'x'), (Nothing, Just 'y'), (Nothing, Just 'z')]
     testGen "zipWithLongest (,) \"a\" \"x\" == [(Just 'a', Just 'x')]" $ zipWithLongest (,) "a" "x" == [(Just 'a', Just 'x')]
     testGen "zipWithLongest (,) \"\" \"x\" == [(Nothing, Just 'x')]" $ zipWithLongest (,) "" "x" == [(Nothing, Just 'x')]
+    testGen "compareLength [1,2,3] 1 == GT" $ compareLength [1,2,3] 1 == GT
+    testGen "compareLength [1,2] 2 == EQ" $ compareLength [1,2] 2 == EQ
+    testGen "\\(xs :: [Int]) n -> compareLength xs n == compare (length xs) n" $ \(xs :: [Int]) n -> compareLength xs n == compare (length xs) n
+    testGen "compareLength (1:2:3:undefined) 2 == GT" $ compareLength (1:2:3:undefined) 2 == GT
+    testGen "comparingLength [1,2,3] [False] == GT" $ comparingLength [1,2,3] [False] == GT
+    testGen "comparingLength [1,2] \"ab\" == EQ" $ comparingLength [1,2] "ab" == EQ
+    testGen "\\(xs :: [Int]) (ys :: [Int]) -> comparingLength xs ys == Data.Ord.comparing length xs ys" $ \(xs :: [Int]) (ys :: [Int]) -> comparingLength xs ys == Data.Ord.comparing length xs ys
+    testGen "comparingLength [1,2] (1:2:3:undefined) == LT" $ comparingLength [1,2] (1:2:3:undefined) == LT
+    testGen "comparingLength (1:2:3:undefined) [1,2] == GT" $ comparingLength (1:2:3:undefined) [1,2] == GT
     testGen "(1 :| [2,3]) |> 4 |> 5 == 1 :| [2,3,4,5]" $ (1 :| [2,3]) |> 4 |> 5 == 1 :| [2,3,4,5]
     testGen "[1,2,3] |: 4 |> 5 == 1 :| [2,3,4,5]" $ [1,2,3] |: 4 |> 5 == 1 :| [2,3,4,5]
     testGen "appendl (1 :| [2,3]) [4,5] == 1 :| [2,3,4,5]" $ appendl (1 :| [2,3]) [4,5] == 1 :| [2,3,4,5]
