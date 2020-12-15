@@ -41,7 +41,12 @@ whenJustM :: Monad m => m (Maybe a) -> (a -> m ()) -> m ()
 -- Can't reuse whenMaybe on GHC 7.8 or lower because Monad does not imply Applicative
 whenJustM mg f = maybeM (pure ()) f mg
 
--- | A generalized version of 'Data.Bool.Extra.justIf'.
+-- | Return either a `pure` value if a condition is `True`, otherwise `empty`.
+--
+-- > pureIf @Maybe True  5 == Just 5
+-- > pureIf @Maybe False 5 == Nothing
+-- > pureIf @[]    True  5 == [5]
+-- > pureIf @[]    False 5 == []
 pureIf :: (Alternative m) => Bool -> a -> m a
 pureIf b a = if b then pure a else empty
 

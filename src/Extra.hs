@@ -15,9 +15,6 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     -- * Control.Monad.Extra
     -- | Extra functions available in @"Control.Monad.Extra"@.
     whenJust, whenJustM, pureIf, whenMaybe, whenMaybeM, unit, maybeM, fromMaybeM, eitherM, loop, loopM, whileM, whileJustM, untilJustM, partitionM, concatMapM, concatForM, mconcatMapM, mapMaybeM, findM, firstJustM, fold1M, fold1M_, whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
-    -- * Data.Bool.Extra
-    -- | Extra functions available in @"Data.Bool.Extra"@.
-    justIf,
     -- * Data.Either.Extra
     -- | Extra functions available in @"Data.Either.Extra"@.
     fromLeft, fromRight, fromEither, fromLeft', fromRight', eitherToMaybe, maybeToEither, mapLeft, mapRight,
@@ -59,7 +56,6 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
 import Control.Concurrent.Extra
 import Control.Exception.Extra
 import Control.Monad.Extra
-import Data.Bool.Extra
 import Data.Either.Extra
 import Data.IORef.Extra
 import Data.List.Extra

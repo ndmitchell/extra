@@ -29,6 +29,10 @@ tests = do
     testGen "retry 3 (fail \"die\") == fail \"die\"" $ retry 3 (fail "die") == fail "die"
     testGen "whenJust Nothing  print == pure ()" $ whenJust Nothing  print == pure ()
     testGen "whenJust (Just 1) print == print 1" $ whenJust (Just 1) print == print 1
+    testGen "pureIf @Maybe True  5 == Just 5" $ pureIf @Maybe True  5 == Just 5
+    testGen "pureIf @Maybe False 5 == Nothing" $ pureIf @Maybe False 5 == Nothing
+    testGen "pureIf @[]    True  5 == [5]" $ pureIf @[]    True  5 == [5]
+    testGen "pureIf @[]    False 5 == []" $ pureIf @[]    False 5 == []
     testGen "whenMaybe True  (print 1) == fmap Just (print 1)" $ whenMaybe True  (print 1) == fmap Just (print 1)
     testGen "whenMaybe False (print 1) == pure Nothing" $ whenMaybe False (print 1) == pure Nothing
     testGen "\\(x :: Maybe ()) -> unit x == x" $ \(x :: Maybe ()) -> unit x == x
@@ -58,8 +62,6 @@ tests = do
     testGen "findM (Just . isUpper) \"teST\"             == Just (Just 'S')" $ findM (Just . isUpper) "teST"             == Just (Just 'S')
     testGen "findM (Just . isUpper) \"test\"             == Just Nothing" $ findM (Just . isUpper) "test"             == Just Nothing
     testGen "findM (Just . const True) [\"x\",undefined] == Just (Just \"x\")" $ findM (Just . const True) ["x",undefined] == Just (Just "x")
-    testGen "justIf True  5 == Just 5" $ justIf True  5 == Just 5
-    testGen "justIf False 5 == Nothing" $ justIf False 5 == Nothing
     testGen "fromLeft 1 (Left 3) == 3" $ fromLeft 1 (Left 3) == 3
     testGen "fromLeft 1 (Right \"foo\") == 1" $ fromLeft 1 (Right "foo") == 1
     testGen "fromRight 1 (Right 3) == 3" $ fromRight 1 (Right 3) == 3
