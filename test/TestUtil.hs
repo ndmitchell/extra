@@ -17,7 +17,6 @@ import Text.Show.Functions()
 import Control.Concurrent.Extra as X
 import Control.Exception.Extra as X
 import Control.Monad.Extra as X
-import Data.Bool.Extra as X
 import Data.Char as X
 import Data.Either.Extra as X
 import Data.Function as X
