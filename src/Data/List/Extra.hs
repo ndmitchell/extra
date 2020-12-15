@@ -19,7 +19,7 @@ module Data.List.Extra(
     breakOn, breakOnEnd, splitOn, split, chunksOf,
     -- * Basics
     headDef, lastDef, notNull, list, unsnoc, cons, snoc,
-    drop1, dropEnd1, mconcatMap,
+    drop1, dropEnd1, mconcatMap, compareLength, comparingLength,
     -- * Enum operations
     enumerate,
     -- * List operations
@@ -46,6 +46,7 @@ import Data.Tuple.Extra
 import Data.Monoid
 import Numeric
 import Data.Functor
+import Data.Foldable
 import Prelude
 
 
@@ -198,7 +199,9 @@ enumerate = [minBound..maxBound]
 -- > \i xs -> takeEnd i xs `isSuffixOf` xs
 -- > \i xs -> length (takeEnd i xs) == min (max 0 i) (length xs)
 takeEnd :: Int -> [a] -> [a]
-takeEnd i xs = f xs (drop i xs)
+takeEnd i xs
+    | i <= 0 = []
+    | otherwise = f xs (drop i xs)
     where f (x:xs) (y:ys) = f xs ys
           f xs _ = xs
 
@@ -211,7 +214,9 @@ takeEnd i xs = f xs (drop i xs)
 -- > \i xs -> length (dropEnd i xs) == max 0 (length xs - max 0 i)
 -- > \i -> take 3 (dropEnd 5 [i..]) == take 3 [i..]
 dropEnd :: Int -> [a] -> [a]
-dropEnd i xs = f xs (drop i xs)
+dropEnd i xs
+    | i <= 0 = xs
+    | otherwise = f xs (drop i xs)
     where f (x:xs) (y:ys) = x : f xs ys
           f _ _ = []
 
@@ -224,7 +229,9 @@ dropEnd i xs = f xs (drop i xs)
 -- > \i xs -> uncurry (++) (splitAt i xs) == xs
 -- > \i xs -> splitAtEnd i xs == (dropEnd i xs, takeEnd i xs)
 splitAtEnd :: Int -> [a] -> ([a], [a])
-splitAtEnd i xs = f xs (drop i xs)
+splitAtEnd i xs
+    | i <= 0 = (xs, [])
+    | otherwise = f xs (drop i xs)
     where f (x:xs) (y:ys) = first (x:) $ f xs ys
           f xs _ = ([], xs)
 
@@ -844,3 +851,26 @@ zipWithLongest f [] [] = []
 zipWithLongest f (x:xs) (y:ys) = f (Just x) (Just y) : zipWithLongest f xs ys
 zipWithLongest f [] ys = map (f Nothing . Just) ys
 zipWithLongest f xs [] = map ((`f` Nothing) . Just) xs
+
+-- | Lazily compare the length of a 'Foldable' with a number.
+--
+-- > compareLength [1,2,3] 1 == GT
+-- > compareLength [1,2] 2 == EQ
+-- > \(xs :: [Int]) n -> compareLength xs n == compare (length xs) n
+-- > compareLength (1:2:3:undefined) 2 == GT
+compareLength :: (Ord b, Num b, Foldable f) => f a -> b -> Ordering
+compareLength = foldr (\_ acc n -> if n > 0 then acc (n - 1) else GT) (compare 0)
+
+-- | Lazily compare the length of two 'Foldable's.
+-- > comparingLength [1,2,3] [False] == GT
+-- > comparingLength [1,2] "ab" == EQ
+-- > \(xs :: [Int]) (ys :: [Int]) -> comparingLength xs ys == Data.Ord.comparing length xs ys
+-- > comparingLength [1,2] (1:2:3:undefined) == LT
+-- > comparingLength (1:2:3:undefined) [1,2] == GT
+comparingLength :: (Foldable f1, Foldable f2) => f1 a -> f2 b -> Ordering
+comparingLength x y = go (toList x) (toList y)
+  where
+    go [] [] = EQ
+    go [] (_:_) = LT
+    go (_:_) [] = GT
+    go (_:xs) (_:ys) = go xs ys

@@ -51,6 +51,7 @@ main = do
         ,"import TestUtil"
         ,"import qualified Data.List"
         ,"import qualified Data.List.NonEmpty.Extra"
+        ,"import qualified Data.Ord"
         ,"import Test.QuickCheck.Instances.Semigroup ()"
         ,"default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))"
         ,"tests :: IO ()"
