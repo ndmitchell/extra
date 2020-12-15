@@ -30,6 +30,10 @@ tests = do
     testGen "retry 3 (fail \"die\") == fail \"die\"" $ retry 3 (fail "die") == fail "die"
     testGen "whenJust Nothing  print == pure ()" $ whenJust Nothing  print == pure ()
     testGen "whenJust (Just 1) print == print 1" $ whenJust (Just 1) print == print 1
+    testGen "pureIf @Maybe True  5 == Just 5" $ pureIf @Maybe True  5 == Just 5
+    testGen "pureIf @Maybe False 5 == Nothing" $ pureIf @Maybe False 5 == Nothing
+    testGen "pureIf @[]    True  5 == [5]" $ pureIf @[]    True  5 == [5]
+    testGen "pureIf @[]    False 5 == []" $ pureIf @[]    False 5 == []
     testGen "whenMaybe True  (print 1) == fmap Just (print 1)" $ whenMaybe True  (print 1) == fmap Just (print 1)
     testGen "whenMaybe False (print 1) == pure Nothing" $ whenMaybe False (print 1) == pure Nothing
     testGen "\\(x :: Maybe ()) -> unit x == x" $ \(x :: Maybe ()) -> unit x == x

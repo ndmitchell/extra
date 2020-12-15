@@ -14,7 +14,7 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     Partial, retry, retryBool, errorWithoutStackTrace, showException, stringException, errorIO, ignore, catch_, handle_, try_, catchJust_, handleJust_, tryJust_, catchBool, handleBool, tryBool,
     -- * Control.Monad.Extra
     -- | Extra functions available in @"Control.Monad.Extra"@.
-    whenJust, whenJustM, whenMaybe, whenMaybeM, unit, maybeM, fromMaybeM, eitherM, loop, loopM, whileM, whileJustM, untilJustM, partitionM, concatMapM, concatForM, mconcatMapM, mapMaybeM, findM, firstJustM, fold1M, fold1M_, whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
+    whenJust, whenJustM, pureIf, whenMaybe, whenMaybeM, unit, maybeM, fromMaybeM, eitherM, loop, loopM, whileM, whileJustM, untilJustM, partitionM, concatMapM, concatForM, mconcatMapM, mapMaybeM, findM, firstJustM, fold1M, fold1M_, whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
     -- * Data.Either.Extra
     -- | Extra functions available in @"Data.Either.Extra"@.
     fromLeft, fromRight, fromEither, fromLeft', fromRight', eitherToMaybe, maybeToEither, mapLeft, mapRight,
