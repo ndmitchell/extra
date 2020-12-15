@@ -1,7 +1,7 @@
 -- GENERATED CODE - DO NOT MODIFY
 -- See Generate.hs for details of how to generate
 
-{-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables, ViewPatterns #-}
+{-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables, TypeApplications, ViewPatterns #-}
 module TestGen(tests) where
 import TestUtil
 import qualified Data.List
