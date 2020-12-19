@@ -1,5 +1,6 @@
 Changelog for Extra
 
+1.7.9, released 2020-12-19
     #72, add pureIf
     #73, make takeEnd, dropEnd, splitAtEnd: return immediately if i <= 0
     #71, add compareLength and comparingLength
