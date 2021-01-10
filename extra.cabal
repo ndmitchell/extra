@@ -48,10 +48,12 @@ library
         Control.Exception.Extra
         Control.Monad.Extra
         Data.Foldable.Extra
+        Data.Function.Extra
         Data.Either.Extra
         Data.IORef.Extra
         Data.List.Extra
         Data.List.NonEmpty.Extra
+        Data.Monoid.Extra
         Data.Tuple.Extra
         Data.Typeable.Extra
         Data.Version.Extra

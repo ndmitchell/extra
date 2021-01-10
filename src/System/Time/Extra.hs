@@ -5,22 +5,24 @@
 --   from "Data.Time.Clock", but in quite different ways.
 --
 --   Throughout, time is measured in 'Seconds', which is a type alias for 'Double'.
-module System.Time.Extra(
+module System.Time.Extra (
     Seconds,
-    sleep, timeout,
+    sleep,
+    timeout,
     showDuration,
-    offsetTime, offsetTimeIncrease, duration
-    ) where
+    offsetTime,
+    offsetTimeIncrease,
+    duration,
+) where
 
-import Control.Concurrent
-import System.Clock
-import Numeric.Extra
-import Control.Monad.IO.Class
-import Control.Monad.Extra
-import Control.Exception.Extra
-import Data.Typeable
-import Data.Unique
-
+import Control.Concurrent (forkIOWithUnmask, killThread, myThreadId, threadDelay, throwTo)
+import Control.Exception.Extra (Exception, bracket, handleBool)
+import Control.Monad.Extra (loopM)
+import Control.Monad.IO.Class (MonadIO (..))
+import Data.Typeable (Typeable)
+import Data.Unique (Unique, newUnique)
+import Numeric.Extra (showDP)
+import System.Clock (Clock (..), getTime, toNanoSecs)
 
 -- | A type alias for seconds, which are stored as 'Double'.
 type Seconds = Double
@@ -31,23 +33,23 @@ type Seconds = Double
 sleep :: Seconds -> IO ()
 sleep = loopM $ \s ->
     -- important to handle both overflow and underflow vs Int
-    if s < 0 then
-        pure $ Right ()
-    else if s > 2000 then do
-        threadDelay 2000000000 -- 2000 * 1e6
-        pure $ Left $ s - 2000
-    else do
-        threadDelay $ ceiling $ s * 1000000
-        pure $ Right ()
+    if s < 0
+        then pure $ Right ()
+        else
+            if s > 2000
+                then do
+                    threadDelay 2000000000 -- 2000 * 1e6
+                    pure $ Left $ s - 2000
+                else do
+                    threadDelay $ ceiling $ s * 1000000
+                    pure $ Right ()
 
+-- | An internal type that is thrown as a dynamic exception to
+--   interrupt the running IO computation when the timeout has expired.
+newtype Timeout = Timeout Unique deriving (Eq, Typeable)
 
--- An internal type that is thrown as a dynamic exception to
--- interrupt the running IO computation when the timeout has
--- expired.
-newtype Timeout = Timeout Unique deriving (Eq,Typeable)
 instance Show Timeout where show _ = "<<timeout>>"
 instance Exception Timeout
-
 
 -- | A version of 'System.Timeout.timeout' that takes 'Seconds' and never
 --   overflows the bounds of an 'Int'. In addition, the bug that negative
@@ -63,13 +65,15 @@ timeout n f
     | n <= 0 = pure Nothing
     | otherwise = do
         pid <- myThreadId
-        ex  <- fmap Timeout newUnique
-        handleBool (== ex)
-                   (const $ pure Nothing)
-                   (bracket (forkIOWithUnmask $ \unmask -> unmask $ sleep n >> throwTo pid ex)
-                            killThread
-                            (\_ -> fmap Just f))
-
+        ex <- fmap Timeout newUnique
+        handleBool
+            (== ex)
+            (const $ pure Nothing)
+            ( bracket
+                (forkIOWithUnmask ($ sleep n >> throwTo pid ex))
+                killThread
+                (const $ Just <$> f)
+            )
 
 -- | Show a number of seconds, typically a duration, in a suitable manner with
 --   reasonable precision for a human.
@@ -83,10 +87,10 @@ showDuration x
     | x >= 3600 = f (x / 60) "h" "m"
     | x >= 60 = f x "m" "s"
     | otherwise = showDP 2 x ++ "s"
-    where
-        f x m s = show ms ++ m ++ ['0' | ss < 10] ++ show ss ++ s
-            where (ms,ss) = round x `divMod` 60
-
+  where
+    f x m s = show ms ++ m ++ ['0' | ss < 10] ++ show ss ++ s
+      where
+        (ms, ss) = round x `divMod` 60
 
 -- | Call once to start, then call repeatedly to get the elapsed time since the first call.
 --   The time is guaranteed to be monotonic. This function is robust to system time changes.
@@ -98,13 +102,13 @@ offsetTime = do
     pure $ do
         end <- time
         pure $ 1e-9 * fromIntegral (toNanoSecs $ end - start)
-    where time = getTime Monotonic
-
-{-# DEPRECATED offsetTimeIncrease "Use 'offsetTime' instead, which is guaranteed to always increase." #-}
+  where
+    time = getTime Monotonic
 
 -- | A synonym for 'offsetTime'.
 offsetTimeIncrease :: IO (IO Seconds)
 offsetTimeIncrease = offsetTime
+{-# DEPRECATED offsetTimeIncrease "Use 'offsetTime' instead, which is guaranteed to always increase." #-}
 
 -- | Record how long a computation takes in 'Seconds'.
 --

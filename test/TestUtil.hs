@@ -1,40 +1,44 @@
-{-# LANGUAGE ScopedTypeVariables, FlexibleInstances #-}
-{-# OPTIONS_GHC -fno-warn-orphans #-} -- OK because a test module
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+-- OK because a test module
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
-module TestUtil
-    (runTests
-    ,testGen, testRaw
-    ,erroneous, erroneousIO
-    ,(====), (==>)
-    ,ASCIIString(..)
-    ,module X
-    ) where
+module TestUtil (
+    runTests,
+    testGen,
+    testRaw,
+    erroneous,
+    erroneousIO,
+    (====),
+    (==>),
+    ASCIIString (..),
+    module X,
+) where
 
-import Test.QuickCheck
 import System.IO.Unsafe
-import Text.Show.Functions()
+import Test.QuickCheck
+import Text.Show.Functions ()
 
 import Control.Concurrent.Extra as X
 import Control.Exception.Extra as X
 import Control.Monad.Extra as X
 import Data.Char as X
 import Data.Either.Extra as X
-import Data.Function as X
+import Data.Function.Extra as X
 import Data.IORef.Extra as X
 import Data.List.Extra as X hiding (union, unionBy)
-import Data.List.NonEmpty.Extra as X (NonEmpty(..), (|>), (|:), appendl, appendr, union, unionBy)
+import Data.List.NonEmpty.Extra as X (NonEmpty (..), appendl, appendr, union, unionBy, (|:), (|>))
 import Data.Maybe as X
-import Data.Monoid as X
+import Data.Monoid.Extra as X
 import Data.Tuple.Extra as X
 import Data.Version.Extra as X
 import Numeric.Extra as X
 import System.Directory.Extra as X
 import System.FilePath as X
-import System.Info.Extra as X
 import System.IO.Extra as X
+import System.Info.Extra as X
 import System.Process.Extra as X
 import System.Time.Extra as X
-
 
 {-# NOINLINE testCount #-}
 testCount :: IORef Int
@@ -51,8 +55,7 @@ testRaw :: String -> IO () -> IO ()
 testRaw msg test = do
     putStrLn msg
     test
-    modifyIORef testCount (+1)
-
+    modifyIORef testCount (+ 1)
 
 erroneous :: Show a => a -> Bool
 erroneous x = unsafePerformIO $ fmap isLeft $ try_ $ evaluate $ length $ show x
@@ -85,8 +88,9 @@ instance (Show a, Eq a) => Eq (IO a) where
     a == b = unsafePerformIO $ do
         a <- try_ $ captureOutput a
         b <- try_ $ captureOutput b
-        if a == b then pure True else
-            error $ show ("IO values not equal", a, b)
+        if a == b
+            then pure True
+            else error $ show ("IO values not equal", a, b)
 
 instance Show (IO a) where
     show _ = "<<IO>>"

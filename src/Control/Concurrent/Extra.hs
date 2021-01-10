@@ -1,4 +1,5 @@
-{-# LANGUAGE TupleSections, ConstraintKinds #-}
+{-# LANGUAGE ConstraintKinds #-}
+{-# LANGUAGE TupleSections #-}
 
 -- | Extra functions for "Control.Concurrent".
 --
@@ -11,62 +12,77 @@
 --   see the <https://hackage.haskell.org/package/slave-thread slave-thread> package.
 --   If you need elaborate relationships between threads
 --   see the <https://hackage.haskell.org/package/async async> package.
-module Control.Concurrent.Extra(
+module Control.Concurrent.Extra (
     module Control.Concurrent,
     withNumCapabilities,
-    once, onceFork,
+    once,
+    onceFork,
+
     -- * Lock
-    Lock, newLock, withLock, withLockTry,
+    Lock,
+    newLock,
+    withLock,
+    withLockTry,
+
     -- * Var
-    Var, newVar, readVar, writeVar, modifyVar, modifyVar_, withVar,
+    Var,
+    newVar,
+    readVar,
+    writeVar,
+    modifyVar,
+    modifyVar_,
+    withVar,
+
     -- * Barrier
-    Barrier, newBarrier, signalBarrier, waitBarrier, waitBarrierMaybe,
-    ) where
+    Barrier,
+    newBarrier,
+    signalBarrier,
+    waitBarrier,
+    waitBarrierMaybe,
+) where
 
 import Control.Concurrent
-import Control.Exception.Extra
-import Control.Monad.Extra
-import Data.Maybe
-import Data.Either.Extra
-import Data.Functor
-import Prelude
-
+import Control.Exception.Extra (Partial, bracket, bracket_, errorIO, mask, throwIO, try_)
+import Control.Monad.Extra (eitherM, join, unless, when)
+import Data.Maybe (Maybe (..), isJust)
 
 -- | On GHC 7.6 and above with the @-threaded@ flag, brackets a call to 'setNumCapabilities'.
 --   On lower versions (which lack 'setNumCapabilities') this function just runs the argument action.
 withNumCapabilities :: Int -> IO a -> IO a
 withNumCapabilities new act | rtsSupportsBoundThreads = do
     old <- getNumCapabilities
-    if old == new then act else
-        bracket_ (setNumCapabilities new) (setNumCapabilities old) act
+    if old == new
+        then act
+        else bracket_ (setNumCapabilities new) (setNumCapabilities old) act
 withNumCapabilities _ act = act
-
 
 -- | Given an action, produce a wrapped action that runs at most once.
 --   If the function raises an exception, the same exception will be reraised each time.
 --
--- > let x ||| y = do t1 <- onceFork x; t2 <- onceFork y; t1; t2
+-- > let x |||| y = do t1 <- onceFork x; t2 <- onceFork y; t1; t2
 -- > \(x :: IO Int) -> void (once x) == pure ()
 -- > \(x :: IO Int) -> join (once x) == x
 -- > \(x :: IO Int) -> (do y <- once x; y; y) == x
--- > \(x :: IO Int) -> (do y <- once x; y ||| y) == x
+-- > \(x :: IO Int) -> (do y <- once x; y |||| y) == x
 once :: IO a -> IO (IO a)
 once act = do
     var <- newVar OncePending
     let run = either throwIO pure
-    pure $ mask $ \unmask -> join $ modifyVar var $ \v -> case v of
-        OnceDone x -> pure (v, unmask $ run x)
-        OnceRunning x -> pure (v, unmask $ run =<< waitBarrier x)
-        OncePending -> do
-            b <- newBarrier
-            pure $ (OnceRunning b,) $ do
-                res <- try_ $ unmask act
-                signalBarrier b res
-                modifyVar_ var $ \_ -> pure $ OnceDone res
-                run res
+    pure $
+        mask $ \unmask -> join $
+            modifyVar var $ \v -> case v of
+                OnceDone x -> pure (v, unmask $ run x)
+                OnceRunning x -> pure (v, unmask $ run =<< waitBarrier x)
+                OncePending -> do
+                    b <- newBarrier
+                    pure $
+                        (OnceRunning b,) $ do
+                            res <- try_ $ unmask act
+                            signalBarrier b res
+                            modifyVar_ var $ \_ -> pure $ OnceDone res
+                            run res
 
 data Once a = OncePending | OnceRunning (Barrier a) | OnceDone a
-
 
 -- | Like 'once', but immediately starts running the computation on a background thread.
 --
@@ -77,7 +93,6 @@ onceFork act = do
     bar <- newBarrier
     forkFinally act $ signalBarrier bar
     pure $ eitherM throwIO pure $ waitBarrier bar
-
 
 ---------------------------------------------------------------------
 -- LOCK
@@ -97,7 +112,6 @@ onceFork act = do
 --   do not get interleaved. This use of 'MVar' never blocks on a put. It is permissible,
 --   but rare, that a withLock contains a withLock inside it - but if so,
 --   watch out for deadlocks.
-
 newtype Lock = Lock (MVar ())
 
 -- | Create a new 'Lock'.
@@ -112,11 +126,11 @@ withLock (Lock x) = withMVar x . const
 -- | Like 'withLock' but will never block. If the operation cannot be executed
 --   immediately it will return 'Nothing'.
 withLockTry :: Lock -> IO a -> IO (Maybe a)
-withLockTry (Lock m) act = bracket
-    (tryTakeMVar m)
-    (\v -> when (isJust v) $ putMVar m ())
-    (\v -> if isJust v then fmap Just act else pure Nothing)
-
+withLockTry (Lock m) act =
+    bracket
+        (tryTakeMVar m)
+        (\v -> when (isJust v) $ putMVar m ())
+        (\v -> if isJust v then fmap Just act else pure Nothing)
 
 ---------------------------------------------------------------------
 -- VAR
@@ -154,17 +168,16 @@ writeVar v x = modifyVar_ v $ const $ pure x
 
 -- | Modify a 'Var' producing a new value and a return result.
 modifyVar :: Var a -> (a -> IO (a, b)) -> IO b
-modifyVar (Var x) f = modifyMVar x f
+modifyVar (Var x) = modifyMVar x
 
 -- | Modify a 'Var', a restricted version of 'modifyVar'.
 modifyVar_ :: Var a -> (a -> IO a) -> IO ()
-modifyVar_ (Var x) f = modifyMVar_ x f
+modifyVar_ (Var x) = modifyMVar_ x
 
 -- | Perform some operation using the value in the 'Var',
 --   a restricted version of 'modifyVar'.
 withVar :: Var a -> (a -> IO b) -> IO b
-withVar (Var x) f = withMVar x f
-
+withVar (Var x) = withMVar x
 
 ---------------------------------------------------------------------
 -- BARRIER
@@ -195,11 +208,9 @@ signalBarrier (Barrier var) v = do
     b <- tryPutMVar var v
     unless b $ errorIO "Control.Concurrent.Extra.signalBarrier, attempt to signal a barrier that has already been signaled"
 
-
 -- | Wait until a barrier has been signaled with 'signalBarrier'.
 waitBarrier :: Barrier a -> IO a
 waitBarrier (Barrier var) = readMVar var
-
 
 -- | A version of 'waitBarrier' that never blocks, returning 'Nothing'
 --   if the barrier has not yet been signaled.
