@@ -1,4 +1,7 @@
-{-# LANGUAGE ScopedTypeVariables, CPP, ConstraintKinds #-}
+{-# LANGUAGE CPP #-}
+{-# LANGUAGE ConstraintKinds #-}
+{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- | Extra functions for "Control.Exception".
@@ -7,31 +10,36 @@
 --
 --   If you want to use a safer set of exceptions see the
 --   <https://hackage.haskell.org/package/safe-exceptions safe-exceptions> package.
-module Control.Exception.Extra(
+module Control.Exception.Extra (
     module Control.Exception,
     Partial,
-    retry, retryBool,
+    retry,
+    retryBool,
     errorWithoutStackTrace,
-    showException, stringException,
+    showException,
+    stringException,
     errorIO,
+
     -- * Exception catching/ignoring
     ignore,
-    catch_, handle_, try_,
-    catchJust_, handleJust_, tryJust_,
-    catchBool, handleBool, tryBool
-    ) where
+    catch_,
+    handle_,
+    try_,
+    catchJust_,
+    handleJust_,
+    tryJust_,
+    catchBool,
+    handleBool,
+    tryBool,
+) where
 
 #if __GLASGOW_HASKELL__ >= 800
-import GHC.Stack
+import GHC.Stack (withFrozenCallStack)
 #endif
 
 import Control.Exception
-import Control.Monad
-import Data.List.Extra
-import Data.Functor
-import Partial
-import Prelude
-
+import Control.Monad (void, (<=<))
+import Partial (Partial)
 
 -- | Fully evaluate an input String. If the String contains embedded exceptions it will produce @\<Exception\>@.
 --
@@ -40,13 +48,13 @@ import Prelude
 -- > stringException ("test" ++ undefined ++ "hello") == pure "test<Exception>"
 -- > stringException ['t','e','s','t',undefined]      == pure "test<Exception>"
 stringException :: String -> IO String
-stringException x = do
-    r <- try_ $ evaluate $ list [] (\x xs -> x `seq` x:xs) x
-    case r of
-        Left e -> pure "<Exception>"
-        Right [] -> pure []
-        Right (x:xs) -> (x:) <$> stringException xs
-
+stringException =
+    either
+        (const $ pure "<Exception>")
+        (\case [] -> pure []; (x : xs) -> (x :) <$> stringException xs)
+        <=< try_
+            . evaluate
+            . (\case [] -> []; y : ys -> y `seq` y : ys)
 
 -- | Show a value, but if the result contains exceptions, produce
 --   @\<Exception\>@. Defined as @'stringException' . show@.
@@ -55,13 +63,11 @@ stringException x = do
 showException :: Show e => e -> IO String
 showException = stringException . show
 
-
 #if __GLASGOW_HASKELL__ < 800
 -- | A variant of 'error' that does not produce a stack trace.
 errorWithoutStackTrace :: String -> a
 errorWithoutStackTrace = error
 #endif
-
 
 -- | Ignore any exceptions thrown by the action.
 --
@@ -69,7 +75,6 @@ errorWithoutStackTrace = error
 -- > ignore (fail "die") == pure ()
 ignore :: IO () -> IO ()
 ignore = void . try_
-
 
 -- | An 'IO' action that when evaluated calls 'error', in the 'IO' monad.
 --   Note that while 'fail' in 'IO' raises an 'IOException', this function raises an 'ErrorCall' exception with a call stack.
@@ -84,7 +89,6 @@ errorIO x = withFrozenCallStack $ evaluate $ error x
 withFrozenCallStack :: a -> a
 withFrozenCallStack = id
 #endif
-
 
 -- | Retry an operation at most /n/ times (/n/ must be positive).
 --   If the operation fails the /n/th time it will throw that final exception.
@@ -103,9 +107,8 @@ retryBool p 1 x = x
 retryBool p i x = do
     res <- tryBool p x
     case res of
-        Left _ -> retryBool p (i-1) x
+        Left _ -> retryBool p (i -1) x
         Right v -> pure v
-
 
 -- | A version of 'catch' without the 'Exception' context, restricted to 'SomeException',
 --   so catches all exceptions.
@@ -139,15 +142,15 @@ tryJust_ = tryJust
 -- readFileExists x == catchBool isDoesNotExistError (readFile \"myfile\") (const $ pure \"\")
 -- @
 catchBool :: Exception e => (e -> Bool) -> IO a -> (e -> IO a) -> IO a
-catchBool f a b = catchJust (bool f) a b
+catchBool = catchJust . bool
 
 -- | Like 'catchBool' but for 'handle'.
 handleBool :: Exception e => (e -> Bool) -> (e -> IO a) -> IO a -> IO a
-handleBool f a b = handleJust (bool f) a b
+handleBool = handleJust . bool
 
 -- | Like 'catchBool' but for 'try'.
 tryBool :: Exception e => (e -> Bool) -> IO a -> IO (Either e a)
-tryBool f a = tryJust (bool f) a
+tryBool = tryJust . bool
 
 bool :: (e -> Bool) -> (e -> Maybe e)
 bool f x = if f x then Just x else Nothing

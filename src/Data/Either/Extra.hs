@@ -1,4 +1,5 @@
-{-# LANGUAGE CPP, ConstraintKinds #-}
+{-# LANGUAGE CPP #-}
+{-# LANGUAGE ConstraintKinds #-}
 {-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- | This module extends "Data.Either" with extra operations, particularly
@@ -7,17 +8,24 @@
 --
 --   If you need more 'Either' functions see the
 --   <https://hackage.haskell.org/package/either either>.
-module Data.Either.Extra(
+module Data.Either.Extra (
     module Data.Either,
-    fromLeft, fromRight, fromEither,
-    fromLeft', fromRight',
-    eitherToMaybe, maybeToEither,
-    mapLeft, mapRight,
-    ) where
+    fromLeft,
+    fromRight,
+    fromEither,
+    fromLeft',
+    fromRight',
+    eitherToMaybe,
+    maybeToEither,
+    mapLeft,
+    mapRight,
+    (|||),
+    (+++),
+) where
 
+import Data.Bifunctor (Bifunctor (bimap))
 import Data.Either
 import Partial
-
 
 #if __GLASGOW_HASKELL__ < 801
 
@@ -39,7 +47,6 @@ fromRight b _         = b
 
 #endif
 
-
 -- | The 'fromLeft'' function extracts the element out of a 'Left' and
 --   throws an error if its argument is 'Right'.
 --   Much like 'fromJust', using this function in polished code is usually a bad idea.
@@ -60,7 +67,6 @@ fromRight' :: Partial => Either l r -> r
 fromRight' (Right x) = x
 fromRight' _ = error "fromRight', given a Left"
 
-
 -- | Pull the value out of an 'Either' where both alternatives
 --   have the same type.
 --
@@ -69,15 +75,13 @@ fromRight' _ = error "fromRight', given a Left"
 fromEither :: Either a a -> a
 fromEither = either id id
 
-
 -- | Given a 'Maybe', convert it to an 'Either', providing a suitable
 --   value for the 'Left' should the value be 'Nothing'.
 --
 -- > \a b -> maybeToEither a (Just b) == Right b
 -- > \a -> maybeToEither a Nothing == Left a
 maybeToEither :: a -> Maybe b -> Either a b
-maybeToEither a (Just b) = Right b
-maybeToEither a Nothing = Left a
+maybeToEither a = maybe (Left a) Right
 
 -- | Given an 'Either', convert it to a 'Maybe', where 'Left' becomes 'Nothing'.
 --
@@ -86,14 +90,13 @@ maybeToEither a Nothing = Left a
 eitherToMaybe :: Either a b -> Maybe b
 eitherToMaybe = either (const Nothing) Just
 
-
 -- | The 'mapLeft' function takes a function and applies it to an Either value
 -- iff the value takes the form @'Left' _@.
 --
 -- > mapLeft show (Left 1) == Left "1"
 -- > mapLeft show (Right True) == Right True
 mapLeft :: (a -> c) -> Either a b -> Either c b
-mapLeft f = either (Left . f) Right
+mapLeft = (+++ id)
 
 -- | The 'mapRight' function takes a function and applies it to an Either value
 -- iff the value takes the form @'Right' _@.
@@ -101,4 +104,18 @@ mapLeft f = either (Left . f) Right
 -- > mapRight show (Left 1) == Left 1
 -- > mapRight show (Right True) == Right "True"
 mapRight :: (b -> c) -> Either a b -> Either a c
-mapRight = fmap
+mapRight = (id +++)
+
+-- | An infix version of `either`.
+--
+-- > (pred ||| succ) (Left 5) == 4
+-- > (pred ||| succ) (Right 5) == 6
+(|||) :: (a -> c) -> (b -> c) -> Either a b -> c
+(|||) = either
+
+-- | A combination of `mapLeft` and `mapRight`. The categorical dual of `(***)`.
+--
+-- > (pred +++ succ) (Left 5) == mapLeft pred (Left 5)
+-- > (pred +++ succ) (Right 5) == mapRight succ (Right 5)
+(+++) :: (a -> c) -> (b -> d) -> Either a b -> Either c d
+(+++) = bimap

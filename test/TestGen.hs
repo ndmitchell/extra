@@ -11,11 +11,11 @@ import Test.QuickCheck.Instances.Semigroup ()
 default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))
 tests :: IO ()
 tests = do
-    let x ||| y = do t1 <- onceFork x; t2 <- onceFork y; t1; t2
+    let x |||| y = do t1 <- onceFork x; t2 <- onceFork y; t1; t2
     testGen "\\(x :: IO Int) -> void (once x) == pure ()" $ \(x :: IO Int) -> void (once x) == pure ()
     testGen "\\(x :: IO Int) -> join (once x) == x" $ \(x :: IO Int) -> join (once x) == x
     testGen "\\(x :: IO Int) -> (do y <- once x; y; y) == x" $ \(x :: IO Int) -> (do y <- once x; y; y) == x
-    testGen "\\(x :: IO Int) -> (do y <- once x; y ||| y) == x" $ \(x :: IO Int) -> (do y <- once x; y ||| y) == x
+    testGen "\\(x :: IO Int) -> (do y <- once x; y |||| y) == x" $ \(x :: IO Int) -> (do y <- once x; y |||| y) == x
     testGen "\\(x :: IO Int) -> join (onceFork x) == x" $ \(x :: IO Int) -> join (onceFork x) == x
     testGen "\\(x :: IO Int) -> (do a <- onceFork x; a; a) == x" $ \(x :: IO Int) -> (do a <- onceFork x; a; a) == x
     testGen "stringException \"test\"                           == pure \"test\"" $ stringException "test"                           == pure "test"
@@ -81,6 +81,10 @@ tests = do
     testGen "mapLeft show (Right True) == Right True" $ mapLeft show (Right True) == Right True
     testGen "mapRight show (Left 1) == Left 1" $ mapRight show (Left 1) == Left 1
     testGen "mapRight show (Right True) == Right \"True\"" $ mapRight show (Right True) == Right "True"
+    testGen "(pred ||| succ) (Left 5) == 4" $ (pred ||| succ) (Left 5) == 4
+    testGen "(pred ||| succ) (Right 5) == 6" $ (pred ||| succ) (Right 5) == 6
+    testGen "(pred +++ succ) (Left 5) == mapLeft pred (Left 5)" $ (pred +++ succ) (Left 5) == mapLeft pred (Left 5)
+    testGen "(pred +++ succ) (Right 5) == mapRight succ (Right 5)" $ (pred +++ succ) (Right 5) == mapRight succ (Right 5)
     testGen "\\xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs" $ \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
     testGen "\\xs -> repeatedly word1 (trim xs) == words xs" $ \xs -> repeatedly word1 (trim xs) == words xs
     testGen "\\xs -> repeatedly line1 xs == lines xs" $ \xs -> repeatedly line1 xs == lines xs
@@ -190,7 +194,7 @@ tests = do
     testGen "breakEnd isLower \"youRE\" == (\"you\",\"RE\")" $ breakEnd isLower "youRE" == ("you","RE")
     testGen "breakEnd isLower \"youre\" == (\"youre\",\"\")" $ breakEnd isLower "youre" == ("youre","")
     testGen "breakEnd isLower \"YOURE\" == (\"\",\"YOURE\")" $ breakEnd isLower "YOURE" == ("","YOURE")
-    testGen "\\f xs -> breakEnd (not . f) xs == spanEnd f  xs" $ \f xs -> breakEnd (not . f) xs == spanEnd f  xs
+    testGen "\\f xs -> breakEnd (not . f) xs == spanEnd f xs" $ \f xs -> breakEnd (not . f) xs == spanEnd f xs
     testGen "spanEnd isUpper \"youRE\" == (\"you\",\"RE\")" $ spanEnd isUpper "youRE" == ("you","RE")
     testGen "spanEnd (not . isSpace) \"x y z\" == (\"x y \",\"z\")" $ spanEnd (not . isSpace) "x y z" == ("x y ","z")
     testGen "\\f xs -> uncurry (++) (spanEnd f xs) == xs" $ \f xs -> uncurry (++) (spanEnd f xs) == xs
@@ -257,15 +261,6 @@ tests = do
     testGen "zipWithLongest (,) \"a\" \"xyz\" == [(Just 'a', Just 'x'), (Nothing, Just 'y'), (Nothing, Just 'z')]" $ zipWithLongest (,) "a" "xyz" == [(Just 'a', Just 'x'), (Nothing, Just 'y'), (Nothing, Just 'z')]
     testGen "zipWithLongest (,) \"a\" \"x\" == [(Just 'a', Just 'x')]" $ zipWithLongest (,) "a" "x" == [(Just 'a', Just 'x')]
     testGen "zipWithLongest (,) \"\" \"x\" == [(Nothing, Just 'x')]" $ zipWithLongest (,) "" "x" == [(Nothing, Just 'x')]
-    testGen "compareLength [1,2,3] 1 == GT" $ compareLength [1,2,3] 1 == GT
-    testGen "compareLength [1,2] 2 == EQ" $ compareLength [1,2] 2 == EQ
-    testGen "\\(xs :: [Int]) n -> compareLength xs n == compare (length xs) n" $ \(xs :: [Int]) n -> compareLength xs n == compare (length xs) n
-    testGen "compareLength (1:2:3:undefined) 2 == GT" $ compareLength (1:2:3:undefined) 2 == GT
-    testGen "comparingLength [1,2,3] [False] == GT" $ comparingLength [1,2,3] [False] == GT
-    testGen "comparingLength [1,2] \"ab\" == EQ" $ comparingLength [1,2] "ab" == EQ
-    testGen "\\(xs :: [Int]) (ys :: [Int]) -> comparingLength xs ys == Data.Ord.comparing length xs ys" $ \(xs :: [Int]) (ys :: [Int]) -> comparingLength xs ys == Data.Ord.comparing length xs ys
-    testGen "comparingLength [1,2] (1:2:3:undefined) == LT" $ comparingLength [1,2] (1:2:3:undefined) == LT
-    testGen "comparingLength (1:2:3:undefined) [1,2] == GT" $ comparingLength (1:2:3:undefined) [1,2] == GT
     testGen "(1 :| [2,3]) |> 4 |> 5 == 1 :| [2,3,4,5]" $ (1 :| [2,3]) |> 4 |> 5 == 1 :| [2,3,4,5]
     testGen "[1,2,3] |: 4 |> 5 == 1 :| [2,3,4,5]" $ [1,2,3] |: 4 |> 5 == 1 :| [2,3,4,5]
     testGen "appendl (1 :| [2,3]) [4,5] == 1 :| [2,3,4,5]" $ appendl (1 :| [2,3]) [4,5] == 1 :| [2,3,4,5]
@@ -275,6 +270,14 @@ tests = do
     testGen "\\xs -> Data.List.NonEmpty.Extra.nubOrd xs == Data.List.NonEmpty.Extra.nub xs" $ \xs -> Data.List.NonEmpty.Extra.nubOrd xs == Data.List.NonEmpty.Extra.nub xs
     testGen "Data.List.NonEmpty.Extra.nubOrdBy (compare `on` Data.List.length) (\"a\" :| [\"test\",\"of\",\"this\"]) == \"a\" :| [\"test\",\"of\"]" $ Data.List.NonEmpty.Extra.nubOrdBy (compare `on` Data.List.length) ("a" :| ["test","of","this"]) == "a" :| ["test","of"]
     testGen "Data.List.NonEmpty.Extra.nubOrdOn Data.List.length (\"a\" :| [\"test\",\"of\",\"this\"]) == \"a\" :| [\"test\",\"of\"]" $ Data.List.NonEmpty.Extra.nubOrdOn Data.List.length ("a" :| ["test","of","this"]) == "a" :| ["test","of"]
+    testGen "memptyNothing \"\" == Nothing" $ memptyNothing "" == Nothing
+    testGen "memptyNothing \"abc\" == Just \"abc\"" $ memptyNothing "abc" == Just "abc"
+    testGen "memptyNothing (Sum 0) == Nothing" $ memptyNothing (Sum 0) == Nothing
+    testGen "memptyNothing (Sum 1) == Just (Sum 1)" $ memptyNothing (Sum 1) == Just (Sum 1)
+    testGen "memptyIf True \"abc\" == \"\"" $ memptyIf True "abc" == ""
+    testGen "memptyIf False \"abc\" == \"abc\"" $ memptyIf False "abc" == "abc"
+    testGen "memptyIf True (Sum 1) == Sum 0" $ memptyIf True (Sum 1) == Sum 0
+    testGen "memptyIf False (Sum 1) == Sum 1" $ memptyIf False (Sum 1) == Sum 1
     testGen "first succ (1,\"test\") == (2,\"test\")" $ first succ (1,"test") == (2,"test")
     testGen "second reverse (1,\"test\") == (1,\"tset\")" $ second reverse (1,"test") == (1,"tset")
     testGen "firstM (\\x -> [x-1, x+1]) (1,\"test\") == [(0,\"test\"),(2,\"test\")]" $ firstM (\x -> [x-1, x+1]) (1,"test") == [(0,"test"),(2,"test")]

@@ -2,18 +2,31 @@
 
 -- | Extra functions for working with 'NonEmpty' lists. The package
 --   also exports the existing "Data.List.NonEmpty" functions.
-module Data.List.NonEmpty.Extra(
+module Data.List.NonEmpty.Extra (
     module Data.List.NonEmpty,
-    (|:), (|>), snoc,
-    appendl, appendr,
-    sortOn, union, unionBy,
-    nubOrd, nubOrdBy, nubOrdOn,
-    maximum1, minimum1, maximumBy1, minimumBy1, maximumOn1, minimumOn1
-    ) where
+    (|:),
+    (|>),
+    snoc,
+    appendl,
+    appendr,
+    sortOn,
+    union,
+    unionBy,
+    nubOrd,
+    nubOrdBy,
+    nubOrdOn,
+    maximum1,
+    minimum1,
+    maximumBy1,
+    minimumBy1,
+    maximumOn1,
+    minimumOn1,
+) where
 
-import           Data.Function
-import qualified Data.List.Extra as List
-import           Data.List.NonEmpty
+import Data.Foldable.Extra (maximumBy, minimumBy)
+import Data.Function (on)
+import qualified Data.List.Extra as LX
+import Data.List.NonEmpty
 
 #if __GLASGOW_HASKELL__ <= 802
 import Data.Semigroup ((<>))
@@ -35,7 +48,7 @@ snoc = (|>)
 --
 -- > [1,2,3] |: 4 |> 5 == 1 :| [2,3,4,5]
 (|:) :: [a] -> a -> NonEmpty a
-(|:) xs x = foldr cons (pure x) xs
+(|:) = flip (foldr cons . pure)
 
 -- | Append a list to a non-empty list.
 --
@@ -47,13 +60,13 @@ appendl (x :| xs) l = x :| (xs ++ l)
 --
 -- > appendr [1,2,3] (4 :| [5]) == 1 :| [2,3,4,5]
 appendr :: [a] -> NonEmpty a -> NonEmpty a
-appendr l nel = foldr cons nel l
+appendr = flip (foldr cons)
 
 -- | Sort by comparing the results of a function applied to each element.
 --   The sort is stable, and the function is evaluated only once for
 --   each element.
 sortOn :: Ord b => (a -> b) -> NonEmpty a -> NonEmpty a
-sortOn f = fromList . List.sortOn f . toList
+sortOn f = fromList . LX.sortOn f . toList
 
 -- | Return the union of two non-empty lists. Duplicates, and elements of the
 --   first list, are removed from the the second list, but if the first list
@@ -74,40 +87,40 @@ nubOrd = nubOrdBy compare
 --
 -- > Data.List.NonEmpty.Extra.nubOrdBy (compare `on` Data.List.length) ("a" :| ["test","of","this"]) == "a" :| ["test","of"]
 nubOrdBy :: (a -> a -> Ordering) -> NonEmpty a -> NonEmpty a
-nubOrdBy cmp = fromList . List.nubOrdBy cmp . toList
+nubOrdBy cmp = fromList . LX.nubOrdBy cmp . toList
 
 -- | @nubOrdOn@ for 'NonEmpty'. Behaves the same as 'Data.List.Extra.nubOrdOn'.
 --
 -- > Data.List.NonEmpty.Extra.nubOrdOn Data.List.length ("a" :| ["test","of","this"]) == "a" :| ["test","of"]
 nubOrdOn :: Ord b => (a -> b) -> NonEmpty a -> NonEmpty a
-nubOrdOn f = fromList . List.nubOrdOn f . toList
+nubOrdOn f = fromList . LX.nubOrdOn f . toList
 
 -- | The non-overloaded version of 'union'.
 unionBy :: (a -> a -> Bool) -> NonEmpty a -> NonEmpty a -> NonEmpty a
-unionBy eq xs ys = fromList $ List.unionBy eq (toList xs) (toList ys)
+unionBy eq = (fromList .) . (LX.unionBy eq `on` toList)
 
 -- | The largest element of a non-empty list.
 maximum1 :: Ord a => NonEmpty a -> a
-maximum1 = List.maximum
+maximum1 = maximum
 
 -- | The least element of a non-empty list.
 minimum1 :: Ord a => NonEmpty a -> a
-minimum1 = List.minimum
+minimum1 = minimum
 
 -- | The largest element of a non-empty list with respect to the given
 --   comparison function.
 maximumBy1 :: (a -> a -> Ordering) -> NonEmpty a -> a
-maximumBy1 = List.maximumBy
+maximumBy1 = maximumBy
 
 -- | The least element of a non-empty list with respect to the given
 --   comparison function.
 minimumBy1 :: (a -> a -> Ordering) -> NonEmpty a -> a
-minimumBy1 = List.minimumBy
+minimumBy1 = minimumBy
 
 -- | A version of 'maximum1' where the comparison is done on some extracted value.
 maximumOn1 :: Ord b => (a -> b) -> NonEmpty a -> a
-maximumOn1 f = maximumBy1 (compare `on` f)
+maximumOn1 = maximumBy1 . on compare
 
 -- | A version of 'minimum1' where the comparison is done on some extracted value.
 minimumOn1 :: Ord b => (a -> b) -> NonEmpty a -> a
-minimumOn1 f = minimumBy1 (compare `on` f)
+minimumOn1 = minimumBy1 . on compare

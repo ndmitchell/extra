@@ -15,18 +15,24 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     -- * Control.Monad.Extra
     -- | Extra functions available in @"Control.Monad.Extra"@.
     whenJust, whenJustM, pureIf, whenMaybe, whenMaybeM, unit, maybeM, fromMaybeM, eitherM, loop, loopM, whileM, whileJustM, untilJustM, partitionM, concatMapM, concatForM, mconcatMapM, mapMaybeM, findM, firstJustM, fold1M, fold1M_, whenM, unlessM, ifM, notM, (||^), (&&^), orM, andM, anyM, allM,
+    -- * Data.Function.Extra
+    -- | Extra functions available in @"Data.Function.Extra"@.
+    on2,
     -- * Data.Either.Extra
     -- | Extra functions available in @"Data.Either.Extra"@.
-    fromLeft, fromRight, fromEither, fromLeft', fromRight', eitherToMaybe, maybeToEither, mapLeft, mapRight,
+    fromLeft, fromRight, fromEither, fromLeft', fromRight', eitherToMaybe, maybeToEither, mapLeft, mapRight, (|||), (+++),
     -- * Data.IORef.Extra
     -- | Extra functions available in @"Data.IORef.Extra"@.
     writeIORef', atomicWriteIORef', atomicModifyIORef_, atomicModifyIORef'_,
     -- * Data.List.Extra
     -- | Extra functions available in @"Data.List.Extra"@.
-    lower, upper, trim, trimStart, trimEnd, word1, line1, escapeHTML, escapeJSON, unescapeHTML, unescapeJSON, dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd, dropWhileEnd', takeWhileEnd, stripSuffix, stripInfix, stripInfixEnd, dropPrefix, dropSuffix, wordsBy, linesBy, breakOn, breakOnEnd, splitOn, split, chunksOf, headDef, lastDef, notNull, list, unsnoc, cons, snoc, drop1, dropEnd1, mconcatMap, compareLength, comparingLength, enumerate, groupSort, groupSortOn, groupSortBy, nubOrd, nubOrdBy, nubOrdOn, nubOn, groupOn, nubSort, nubSortBy, nubSortOn, maximumOn, minimumOn, sum', product', sumOn', productOn', disjoint, disjointOrd, disjointOrdBy, allSame, anySame, repeatedly, firstJust, concatUnzip, concatUnzip3, zipFrom, zipWithFrom, zipWithLongest, replace, merge, mergeBy,
+    lower, upper, trim, trimStart, trimEnd, word1, line1, escapeHTML, escapeJSON, unescapeHTML, unescapeJSON, dropEnd, takeEnd, splitAtEnd, breakEnd, spanEnd, dropWhileEnd', takeWhileEnd, stripSuffix, stripInfix, stripInfixEnd, dropPrefix, dropSuffix, wordsBy, linesBy, breakOn, breakOnEnd, splitOn, split, chunksOf, headDef, lastDef, notNull, list, unsnoc, cons, snoc, drop1, dropEnd1, mconcatMap, enumerate, groupSort, groupSortOn, groupSortBy, nubOrd, nubOrdBy, nubOrdOn, nubOn, groupOn, nubSort, nubSortBy, nubSortOn, maximumOn, minimumOn, sum', product', sumOn', productOn', disjoint, disjointOrd, disjointOrdBy, allSame, anySame, repeatedly, firstJust, concatUnzip, concatUnzip3, zipFrom, zipWithFrom, zipWithLongest, replace, merge, mergeBy,
     -- * Data.List.NonEmpty.Extra
     -- | Extra functions available in @"Data.List.NonEmpty.Extra"@.
     (|:), (|>), appendl, appendr, maximum1, minimum1, maximumBy1, minimumBy1, maximumOn1, minimumOn1,
+    -- * Data.Monoid.Extra
+    -- | Extra functions available in @"Data.Monoid.Extra"@.
+    memptyNothing, memptyIf,
     -- * Data.Tuple.Extra
     -- | Extra functions available in @"Data.Tuple.Extra"@.
     first, second, (***), (&&&), dupe, both, firstM, secondM, fst3, snd3, thd3, first3, second3, third3, curry3, uncurry3,
@@ -56,10 +62,12 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
 import Control.Concurrent.Extra
 import Control.Exception.Extra
 import Control.Monad.Extra
+import Data.Function.Extra
 import Data.Either.Extra
 import Data.IORef.Extra
 import Data.List.Extra
 import Data.List.NonEmpty.Extra hiding (cons, snoc, sortOn, union, unionBy, nubOrd, nubOrdBy, nubOrdOn)
+import Data.Monoid.Extra
 import Data.Tuple.Extra
 import Data.Version.Extra
 import Numeric.Extra

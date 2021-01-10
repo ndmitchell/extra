@@ -7,7 +7,7 @@ license-file:       LICENSE
 category:           Development
 author:             Neil Mitchell <ndmitchell@gmail.com>
 maintainer:         Neil Mitchell <ndmitchell@gmail.com>
-copyright:          Neil Mitchell 2014-2020
+copyright:          Neil Mitchell 2014-2021
 synopsis:           Extra functions I use.
 description:
     A library of extra functions for the standard Haskell libraries. Most functions are simple additions, filling out missing functionality. A few functions are available in later versions of GHC, but this package makes them available back to GHC 7.2.
@@ -48,10 +48,12 @@ library
         Control.Exception.Extra
         Control.Monad.Extra
         Data.Foldable.Extra
+        Data.Function.Extra
         Data.Either.Extra
         Data.IORef.Extra
         Data.List.Extra
         Data.List.NonEmpty.Extra
+        Data.Monoid.Extra
         Data.Tuple.Extra
         Data.Typeable.Extra
         Data.Version.Extra

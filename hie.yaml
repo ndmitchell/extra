@@ -1,0 +1,7 @@
+cradle:
+  cabal:
+    - path: "src"
+      component: "lib:extra"
+
+    - path: "test"
+      component: "extra:test:extra-test"
