@@ -1,6 +1,7 @@
 module Data.Function.Extra (
     module Data.Function,
     on2,
+    applyN,
 ) where
 
 import Data.Function

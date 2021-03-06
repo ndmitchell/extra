@@ -8,7 +8,7 @@ bi-functor's branch
     Data.Either.Extra
         exports (|||) and (+++) analogues from Control.Arrow,
             like Data.Tuple.Extra exports (&&&) and (***)
-    Data.Function.Extra (on2)
+    Data.Function.Extra (on2, applyN)
     Data.List.Extra
         Now specializes Data.Foldable.Extra functions (sumOn' and friends),
             rather than re-implementing them
@@ -22,7 +22,6 @@ bi-functor's branch
 
     TODO:
         doctests for Data.Foldable.Extra, make sure they don't clash with Data.List.Extra
-        Remove support for GHC versions < 8.0
 
 1.7.9, released 2020-12-19
     #72, add pureIf
