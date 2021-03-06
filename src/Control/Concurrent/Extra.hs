@@ -43,8 +43,8 @@ module Control.Concurrent.Extra (
 
 import Control.Concurrent
 import Control.Exception.Extra (Partial, bracket, bracket_, errorIO, mask, throwIO, try_)
-import Control.Monad.Extra (eitherM, join, unless, when)
-import Data.Maybe (Maybe (..), isJust)
+import Control.Monad.Extra (eitherM, join, unless, void, when)
+import Data.Maybe (isJust)
 
 -- | On GHC 7.6 and above with the @-threaded@ flag, brackets a call to 'setNumCapabilities'.
 --   On lower versions (which lack 'setNumCapabilities') this function just runs the argument action.
@@ -91,7 +91,7 @@ data Once a = OncePending | OnceRunning (Barrier a) | OnceDone a
 onceFork :: IO a -> IO (IO a)
 onceFork act = do
     bar <- newBarrier
-    forkFinally act $ signalBarrier bar
+    void $ forkFinally act $ signalBarrier bar
     pure $ eitherM throwIO pure $ waitBarrier bar
 
 ---------------------------------------------------------------------

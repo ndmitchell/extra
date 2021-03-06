@@ -96,14 +96,14 @@ withFrozenCallStack = id
 -- > retry 1 (print "x")  == print "x"
 -- > retry 3 (fail "die") == fail "die"
 retry :: Int -> IO a -> IO a
-retry i x | i <= 0 = error "Control.Exception.Extra.retry: count must be 1 or more"
-retry i x = retryBool (\(e :: SomeException) -> True) i x
+retry i _ | i <= 0 = error "Control.Exception.Extra.retry: count must be 1 or more"
+retry i x = retryBool (\(_ :: SomeException) -> True) i x
 
 -- | Retry an operation at most /n/ times (/n/ must be positive), while the exception value and type match a predicate.
 --   If the operation fails the /n/th time it will throw that final exception.
 retryBool :: Exception e => (e -> Bool) -> Int -> IO a -> IO a
-retryBool p i x | i <= 0 = error "Control.Exception.Extra.retryBool: count must be 1 or more"
-retryBool p 1 x = x
+retryBool _ i _ | i <= 0 = error "Control.Exception.Extra.retryBool: count must be 1 or more"
+retryBool _ 1 x = x
 retryBool p i x = do
     res <- tryBool p x
     case res of

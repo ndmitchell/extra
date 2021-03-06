@@ -52,9 +52,9 @@ import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (Ptr)
 import GHC.IO.Handle (hDuplicate, hDuplicateTo)
 import System.Directory.Extra (createDirectoryPrivate, getTemporaryDirectory, removeDirectoryRecursive, removeFile)
-import System.FilePath (FilePath, (</>))
+import System.FilePath ((</>))
 import System.IO
-import System.IO.Error (IOError, isAlreadyExistsError)
+import System.IO.Error (isAlreadyExistsError)
 import System.IO.Unsafe (unsafePerformIO)
 
 -- File reading
@@ -140,11 +140,11 @@ captureOutput act = withTempFile $ \file ->
         out <- readFile' file
         pure (out, res)
   where
-    clone out h act = do
+    clone out h action = do
         buf <- hGetBuffering out
         out2 <- hDuplicate out
         hDuplicateTo h out
-        act `finally` do
+        action `finally` do
             hDuplicateTo out2 out
             hClose out2
             hSetBuffering out buf
@@ -167,7 +167,6 @@ tempRef :: IORef Int
 tempRef =
     unsafePerformIO $
         newIORef
-            . fromIntegral
             . read
             . reverse
             . filter isDigit
@@ -223,13 +222,13 @@ newTempDirWithin tmpdir = do
     del <- once $ ignore $ removeDirectoryRecursive dir
     pure (dir, del)
   where
-    create tmpdir = do
+    create tempdir = do
         v <- tempUnique
-        let dir = tmpdir </> "extra-dir-" ++ show v
+        let dir = tempdir </> "extra-dir-" ++ show v
         catchBool
             isAlreadyExistsError
             (createDirectoryPrivate dir >> pure dir)
-            $ const (create tmpdir)
+            $ const (create tempdir)
 
 -- | Create a temporary directory inside the system temporary directory.
 --   The directory will be deleted after the action completes.

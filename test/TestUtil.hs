@@ -15,10 +15,6 @@ module TestUtil (
     module X,
 ) where
 
-import System.IO.Unsafe
-import Test.QuickCheck
-import Text.Show.Functions ()
-
 import Control.Concurrent.Extra as X
 import Control.Exception.Extra as X
 import Control.Monad.Extra as X
@@ -36,9 +32,12 @@ import Numeric.Extra as X
 import System.Directory.Extra as X
 import System.FilePath as X
 import System.IO.Extra as X
+import System.IO.Unsafe
 import System.Info.Extra as X
 import System.Process.Extra as X
 import System.Time.Extra as X
+import Test.QuickCheck
+import Text.Show.Functions ()
 
 {-# NOINLINE testCount #-}
 testCount :: IORef Int
@@ -86,9 +85,9 @@ instance Testable a => Testable (IO a) where
 -- So we print out full information on failure
 instance (Show a, Eq a) => Eq (IO a) where
     a == b = unsafePerformIO $ do
-        a <- try_ $ captureOutput a
-        b <- try_ $ captureOutput b
-        if a == b
+        ao <- try_ $ captureOutput a
+        bo <- try_ $ captureOutput b
+        if ao == bo
             then pure True
             else error $ show ("IO values not equal", a, b)
 

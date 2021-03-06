@@ -88,9 +88,9 @@ showDuration x
     | x >= 60 = f x "m" "s"
     | otherwise = showDP 2 x ++ "s"
   where
-    f x m s = show ms ++ m ++ ['0' | ss < 10] ++ show ss ++ s
+    f y m s = show ms ++ m ++ ['0' | ss < 10] ++ show ss ++ s
       where
-        (ms, ss) = round x `divMod` 60
+        (ms, ss) = (round y :: Integer) `divMod` 60
 
 -- | Call once to start, then call repeatedly to get the elapsed time since the first call.
 --   The time is guaranteed to be monotonic. This function is robust to system time changes.
@@ -115,7 +115,7 @@ offsetTimeIncrease = offsetTime
 -- > do (a,_) <- duration $ sleep 1; pure $ a >= 1 && a <= 1.5
 duration :: MonadIO m => m a -> m (Seconds, a)
 duration act = do
-    time <- liftIO offsetTime
+    otime <- liftIO offsetTime
     res <- act
-    time <- liftIO time
+    time <- liftIO otime
     pure (time, res)

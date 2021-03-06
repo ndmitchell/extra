@@ -47,11 +47,10 @@ module Control.Monad.Extra (
     allM,
 ) where
 
-import Control.Applicative (Alternative (empty), Applicative (liftA2), liftA3)
+import Control.Applicative (Alternative (empty), Applicative (liftA2))
 import Control.Monad
 import Control.Monad.Fix (fix)
 import Data.Bifunctor (first, second)
-import Data.Bool (bool)
 import Data.Foldable (Foldable (fold))
 import Partial (Partial)
 
@@ -116,7 +115,7 @@ eitherM = ((=<<) .) . either
 -- > fold1M (\x y -> Just $ x + y) [1, 2, 3] == Just 6
 fold1M :: (Partial, Monad m) => (a -> a -> m a) -> [a] -> m a
 fold1M f (x : xs) = foldM f x xs
-fold1M f xs = error "fold1M: empty list"
+fold1M _ _ = error "fold1M: empty list"
 
 -- | Like 'fold1M' but discards the result.
 fold1M_ :: (Partial, Monad m) => (a -> a -> m a) -> [a] -> m ()
@@ -271,5 +270,5 @@ findM p = foldr (ifM <$> p <*> (pure . Just)) (pure Nothing)
 
 -- | Like 'findM', but also allows you to compute some additional information in the predicate.
 firstJustM :: (Monad m) => (a -> m (Maybe b)) -> [a] -> m (Maybe b)
-firstJustM p [] = pure Nothing
+firstJustM _ [] = pure Nothing
 firstJustM p (x : xs) = maybeM (firstJustM p xs) (pure . Just) (p x)

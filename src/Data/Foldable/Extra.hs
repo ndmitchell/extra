@@ -11,13 +11,13 @@ module Data.Foldable.Extra (
     andM,
     findM,
     firstJustM,
+    foldMapM,
     compareLength,
     comparingLength,
     maximumOn,
     minimumOn,
 ) where
 
-import Control.Applicative (Applicative (liftA2))
 import qualified Control.Monad.Extra as MX
 import Data.Foldable
 import Data.Tuple.Extra ((&&&))

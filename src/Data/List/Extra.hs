@@ -109,7 +109,7 @@ import Partial (Partial)
 -- > \xs -> repeatedly word1 (trim xs) == words xs
 -- > \xs -> repeatedly line1 xs == lines xs
 repeatedly :: ([a] -> (b, [a])) -> [a] -> [b]
-repeatedly f [] = []
+repeatedly _ [] = []
 repeatedly f as = b : repeatedly f as'
   where
     (b, as') = f as
@@ -140,9 +140,9 @@ disjointOrdBy cmp xs ys
     | FX.comparingLength xs ys == LT = go xs ys
     | otherwise = go ys xs
   where
-    go xs = not . any (\a -> memberRB cmp a tree)
+    go zs = not . any (\a -> memberRB cmp a tree)
       where
-        tree = foldl' (flip (insertRB cmp)) E xs
+        tree = foldl' (flip (insertRB cmp)) E zs
 
 -- | Is there any element which occurs more than once.
 --
@@ -155,7 +155,7 @@ anySame :: Eq a => [a] -> Bool
 anySame = f []
   where
     f seen (x : xs) = x `elem` seen || f (x : seen) xs
-    f seen [] = False
+    f _ [] = False
 
 -- | Are all elements the same.
 --
@@ -199,8 +199,8 @@ notNull = FX.notNull
 -- > list 1 (\v _ -> v - 2) []      == 1
 -- > \nil cons xs -> maybe nil (uncurry cons) (uncons xs) == list nil cons xs
 list :: b -> (a -> [a] -> b) -> [a] -> b
-list nil cons [] = nil
-list nil cons (x : xs) = cons x xs
+list n _ [] = n
+list _ c (x : xs) = c x xs
 
 -- | If the list is empty returns 'Nothing', otherwise returns the 'init' and the 'last'.
 --
@@ -244,8 +244,8 @@ takeEnd i xs
     | i <= 0 = []
     | otherwise = f xs (drop i xs)
   where
-    f (x : xs) (y : ys) = f xs ys
-    f xs _ = xs
+    f (_ : ys) (_ : zs) = f ys zs
+    f ys _ = ys
 
 -- | Drop a number of elements from the end of the list.
 --
@@ -260,7 +260,7 @@ dropEnd i xs
     | i <= 0 = xs
     | otherwise = f xs (drop i xs)
   where
-    f (x : xs) (y : ys) = x : f xs ys
+    f (y : ys) (_ : zs) = y : f ys zs
     f _ _ = []
 
 -- | @'splitAtEnd' n xs@ returns a split where the second element tries to
@@ -275,8 +275,8 @@ splitAtEnd i xs
     | i <= 0 = (xs, [])
     | otherwise = f xs (drop i xs)
   where
-    f (x : xs) (y : ys) = first (x :) $ f xs ys
-    f xs _ = ([], xs)
+    f (y : ys) (_ : zs) = first (y :) $ f ys zs
+    f ys _ = ([], ys)
 
 -- | 'zip' against an enumeration.
 --   Never truncates the output - raises an error if the enumeration runs out.
@@ -388,11 +388,11 @@ escapeHTML = concatMap $ \case
 -- > \xs -> unescapeHTML (escapeHTML xs) == xs
 unescapeHTML :: String -> String
 unescapeHTML ('&' : xs)
-    | Just xs <- stripPrefix "lt;" xs = '<' : unescapeHTML xs
-    | Just xs <- stripPrefix "gt;" xs = '>' : unescapeHTML xs
-    | Just xs <- stripPrefix "amp;" xs = '&' : unescapeHTML xs
-    | Just xs <- stripPrefix "quot;" xs = '\"' : unescapeHTML xs
-    | Just xs <- stripPrefix "#39;" xs = '\'' : unescapeHTML xs
+    | Just ys <- stripPrefix "lt;" xs = '<' : unescapeHTML ys
+    | Just ys <- stripPrefix "gt;" xs = '>' : unescapeHTML ys
+    | Just ys <- stripPrefix "amp;" xs = '&' : unescapeHTML ys
+    | Just ys <- stripPrefix "quot;" xs = '\"' : unescapeHTML ys
+    | Just ys <- stripPrefix "#39;" xs = '\'' : unescapeHTML ys
 unescapeHTML (x : xs) = x : unescapeHTML xs
 unescapeHTML [] = []
 
@@ -433,6 +433,7 @@ unescapeJSON ('\\' : x : xs) = case x of
          in if length a == 4
                 then let [(i, "")] = readHex a in chr i : unescapeJSON b
                 else 'u' : unescapeJSON xs
+    _ -> unescapeJSON (x : xs)
 unescapeJSON (x : xs) = x : unescapeJSON xs
 unescapeJSON [] = []
 
@@ -456,13 +457,13 @@ nubOn f = map snd . nubBy ((==) `on` fst) . map (\x -> let y = f x in y `seq` (y
 -- > maximumOn id [] == undefined
 -- > maximumOn length ["test","extra","a"] == "extra"
 maximumOn :: (Partial, Ord b) => (a -> b) -> [a] -> a
-maximumOn f [] = error "Data.List.Extra.maximumOn: empty list"
+maximumOn _ [] = error "Data.List.Extra.maximumOn: empty list"
 maximumOn f (x : xs) = g x (f x) xs
   where
-    g v mv [] = v
-    g v mv (x : xs)
-        | mx > mv = g x mx xs
-        | otherwise = g v mv xs
+    g v _ [] = v
+    g v mv (y : ys)
+        | mx > mv = g y mx ys
+        | otherwise = g v mv ys
       where
         mx = f x
 
@@ -529,8 +530,8 @@ merge = mergeBy compare
 
 -- | Like 'merge', but with a custom ordering function.
 mergeBy :: (a -> a -> Ordering) -> [a] -> [a] -> [a]
-mergeBy f xs [] = xs
-mergeBy f [] ys = ys
+mergeBy _ xs [] = xs
+mergeBy _ [] ys = ys
 mergeBy f (x : xs) (y : ys)
     | f x y /= GT = x : mergeBy f xs (y : ys)
     | otherwise = y : mergeBy f (x : xs) ys
@@ -546,7 +547,7 @@ replace :: (Partial, Eq a) => [a] -> [a] -> [a] -> [a]
 replace [] _ _ = error "Extra.replace, first argument cannot be empty"
 replace from to xs | Just ys <- stripPrefix from xs = to ++ replace from to ys
 replace from to (x : xs) = x : replace from to xs
-replace from to [] = []
+replace _ _ [] = []
 
 -- | Break, but from the end.
 --
@@ -585,13 +586,13 @@ wordsBy f s = case dropWhile f s of
 -- > \s -> linesBy (== '\n') s == lines s
 -- > linesBy (== ';') "my;list;here;" == ["my","list","here"]
 linesBy :: (a -> Bool) -> [a] -> [[a]]
-linesBy f [] = []
-linesBy f s = cons $ case break f s of
+linesBy _ [] = []
+linesBy f zs = g $ case break f zs of
     (l, s) -> (l,) $ case s of
         [] -> []
-        _ : s -> linesBy f s
+        _ : ys -> linesBy f ys
   where
-    cons ~(h, t) = h : t -- to fix a space leak, see the GHC defn of lines
+    g ~(h, t) = h : t -- to fix a space leak, see the GHC defn of lines
 
 -- | Find the first element of a list for which the operation returns 'Just', along
 --   with the result of the operation. Like 'find' but useful where the function also
@@ -642,7 +643,7 @@ mconcatMap = foldMap
 -- > \needle haystack -> let (prefix,match) = breakOn needle haystack in prefix ++ match == haystack
 breakOn :: Eq a => [a] -> [a] -> ([a], [a])
 breakOn needle haystack | needle `isPrefixOf` haystack = ([], haystack)
-breakOn needle [] = ([], [])
+breakOn _ [] = ([], [])
 breakOn needle (x : xs) = first (x :) $ breakOn needle xs
 
 -- | Similar to 'breakOn', but searches from the end of the
@@ -683,9 +684,9 @@ splitOn needle haystack = a : if null b then [] else splitOn needle $ drop (leng
 -- > split (== ':') "::xyz:abc::123::" == ["","","xyz","abc","","123","",""]
 -- > split (== ',') "my,list,here" == ["my","list","here"]
 split :: (a -> Bool) -> [a] -> [[a]]
-split f [] = [[]]
+split _ [] = [[]]
 split f (x : xs) | f x = [] : split f xs
-split f (x : xs) | y : ys <- split f xs = (x : y) : ys
+split f (x : xs) = let y : ys = split f xs in (x : y) : ys
 
 -- | A version of 'dropWhileEnd' but with different strictness properties.
 --   The function 'dropWhileEnd' can be used on an infinite list and tests the property
@@ -740,7 +741,7 @@ stripSuffix a b = reverse <$> stripPrefix (reverse a) (reverse b)
 -- > stripInfix "/" "foobar"   == Nothing
 stripInfix :: Eq a => [a] -> [a] -> Maybe ([a], [a])
 stripInfix needle haystack | Just rest <- stripPrefix needle haystack = Just ([], rest)
-stripInfix needle [] = Nothing
+stripInfix _ [] = Nothing
 stripInfix needle (x : xs) = first (x :) <$> stripInfix needle xs
 
 -- | Similar to 'stripInfix', but searches from the end of the
@@ -758,7 +759,7 @@ stripInfixEnd needle haystack = both reverse . swap <$> stripInfix (reverse need
 -- > chunksOf 8 ""        == []
 -- > chunksOf 0 "test"    == undefined
 chunksOf :: Partial => Int -> [a] -> [[a]]
-chunksOf i xs | i <= 0 = error $ "chunksOf, number must be positive, got " ++ show i
+chunksOf i _ | i <= 0 = error $ "chunksOf, number must be positive, got " ++ show i
 chunksOf i xs = repeatedly (splitAt i) xs
 
 -- | /O(n log n)/. The 'nubSort' function sorts and removes duplicate elements from a list.
@@ -806,12 +807,12 @@ nubOrdOn f = map snd . nubOrdBy (compare `on` fst) . map (f &&& id)
 --
 -- > nubOrdBy (compare `on` length) ["a","test","of","this"] == ["a","test","of"]
 nubOrdBy :: (a -> a -> Ordering) -> [a] -> [a]
-nubOrdBy cmp xs = f E xs
+nubOrdBy cmp = f E
   where
-    f seen [] = []
-    f seen (x : xs)
-        | memberRB cmp x seen = f seen xs
-        | otherwise = x : f (insertRB cmp x seen) xs
+    f _ [] = []
+    f seen (y : ys)
+        | memberRB cmp y seen = f seen ys
+        | otherwise = y : f (insertRB cmp y seen) ys
 
 ---------------------------------------------------------------------
 -- OKASAKI RED BLACK TREE
@@ -824,20 +825,20 @@ data RB a = E | T_R (RB a) a (RB a) | T_B (RB a) a (RB a) deriving (Show)
 insertRB :: (a -> a -> Ordering) -> a -> RB a -> RB a
 insertRB cmp x s = case ins s of
     T_R a z b -> T_B a z b
-    x -> x
+    y -> y
   where
     ins E = T_R E x E
-    ins s@(T_B a y b) = case cmp x y of
+    ins t@(T_B a y b) = case cmp x y of
         LT -> lbalance (ins a) y b
         GT -> rbalance a y (ins b)
-        EQ -> s
-    ins s@(T_R a y b) = case cmp x y of
+        EQ -> t
+    ins t@(T_R a y b) = case cmp x y of
         LT -> T_R (ins a) y b
         GT -> T_R a y (ins b)
-        EQ -> s
+        EQ -> t
 
 memberRB :: (a -> a -> Ordering) -> a -> RB a -> Bool
-memberRB cmp x E = False
+memberRB _ _ E = False
 memberRB cmp x (T_R a y b) = case cmp x y of
     LT -> memberRB cmp x a
     GT -> memberRB cmp x b
@@ -867,7 +868,7 @@ rbalance a x b = T_B a x b
 -- > zipWithLongest (,) "a" "x" == [(Just 'a', Just 'x')]
 -- > zipWithLongest (,) "" "x" == [(Nothing, Just 'x')]
 zipWithLongest :: (Maybe a -> Maybe b -> c) -> [a] -> [b] -> [c]
-zipWithLongest f [] [] = []
+zipWithLongest _ [] [] = []
 zipWithLongest f (x : xs) (y : ys) = f (Just x) (Just y) : zipWithLongest f xs ys
 zipWithLongest f [] ys = map (f Nothing . Just) ys
 zipWithLongest f xs [] = map ((`f` Nothing) . Just) xs
