@@ -80,7 +80,7 @@ test-suite extra-test
     if !os(windows)
         build-depends: unix
     hs-source-dirs: test
-    ghc-options: -Wall -main-is Test -threaded "-with-rtsopts=-N4 -K1K"
+    ghc-options: -main-is Test -threaded "-with-rtsopts=-N4 -K1K"
     main-is:        Test.hs
     other-modules:
         TestCustom
