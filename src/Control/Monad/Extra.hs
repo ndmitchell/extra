@@ -1,4 +1,5 @@
 {-# LANGUAGE ConstraintKinds #-}
+{-# OPTIONS_GHC -Wno-unused-imports #-}
 
 -- | Extra functions for "Control.Monad".
 --   These functions provide looping, list operations and booleans.
@@ -47,7 +48,7 @@ module Control.Monad.Extra (
     allM,
 ) where
 
-import Control.Applicative (Alternative (empty), Applicative (liftA2))
+import Control.Applicative (Alternative (empty), liftA2)
 import Control.Monad
 import Control.Monad.Fix (fix)
 import Data.Bifunctor (first, second)
@@ -179,7 +180,7 @@ whileM = fix (whenM <*>)
 -- | Keep running an operation until it becomes a 'Nothing', accumulating the
 --   monoid results inside the 'Just's as the result of the overall loop.
 whileJustM :: (Monad m, Monoid a) => m (Maybe a) -> m a
-whileJustM act = fix ((($ act) .) . (maybeM <$> pure <*>) . (. (<>)) . (.) . ($!)) mempty
+whileJustM act = fix ((($ act) .) . (maybeM <$> pure <*>) . (. mappend) . (.) . ($!)) mempty
 
 -- | Keep running an operation until it becomes a 'Just', then return the value
 --   inside the 'Just' as the result of the overall loop.
