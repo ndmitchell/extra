@@ -15,7 +15,7 @@ Tentatively 1.8.0, maybe 2.0.0?
     -   on2 for saving computations
     -   applyN :: Integral n => n -> (a -> a) -> (a -> a)
     -   #63, applyWhen :: Bool -> (a -> a) -> (a -> a)
-    -   #60, (.:)
+    -   #60, (.:) :: (c -> d) -> (a -> b -> c) -> (a -> b -> d)
 *   Data.List.Extra
     -   specializes Data.Foldable.Extra functions (sum' and friends, maximumOn, minimumOn, firstJust), rather than re-implementing them (mostly to fix the doctests and also for code deduplication)
     -   deprecate mconcatMap in favour of foldMap

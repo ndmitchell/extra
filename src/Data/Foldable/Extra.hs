@@ -1,5 +1,3 @@
-{-# LANGUAGE TypeApplications #-}
-
 module Data.Foldable.Extra (
     module Data.Foldable,
     notNull,
