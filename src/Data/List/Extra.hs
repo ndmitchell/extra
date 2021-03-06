@@ -625,9 +625,6 @@ dropEnd1 (x : xs) = foldr (\z f y -> y : f z) (const []) xs x
 -- | Version on `concatMap` generalised to a `Monoid` rather than just a list.
 --
 --   DEPRECATED: Use 'foldMap' instead.
---
--- > mconcatMap Sum [1,2,3] == Sum 6
--- > \f xs -> mconcatMap f xs == concatMap f xs
 mconcatMap :: Monoid b => (a -> b) -> [a] -> b
 mconcatMap = foldMap
 {-# DEPRECATED mconcatMap "use foldMap" #-}

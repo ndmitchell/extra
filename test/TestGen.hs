@@ -6,7 +6,6 @@ module TestGen(tests) where
 import TestUtil
 import qualified Data.List
 import qualified Data.List.NonEmpty.Extra
-import qualified Data.Ord
 import Test.QuickCheck.Instances.Semigroup ()
 default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))
 tests :: IO ()
@@ -212,8 +211,6 @@ tests = do
     testGen "dropEnd1 \"\"         == \"\"" $ dropEnd1 ""         == ""
     testGen "dropEnd1 \"test\"     == \"tes\"" $ dropEnd1 "test"     == "tes"
     testGen "\\xs -> dropEnd 1 xs == dropEnd1 xs" $ \xs -> dropEnd 1 xs == dropEnd1 xs
-    testGen "mconcatMap Sum [1,2,3] == Sum 6" $ mconcatMap Sum [1,2,3] == Sum 6
-    testGen "\\f xs -> mconcatMap f xs == concatMap f xs" $ \f xs -> mconcatMap f xs == concatMap f xs
     testGen "breakOn \"::\" \"a::b::c\" == (\"a\", \"::b::c\")" $ breakOn "::" "a::b::c" == ("a", "::b::c")
     testGen "breakOn \"/\" \"foobar\"   == (\"foobar\", \"\")" $ breakOn "/" "foobar"   == ("foobar", "")
     testGen "\\needle haystack -> let (prefix,match) = breakOn needle haystack in prefix ++ match == haystack" $ \needle haystack -> let (prefix,match) = breakOn needle haystack in prefix ++ match == haystack
