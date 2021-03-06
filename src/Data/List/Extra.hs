@@ -462,10 +462,10 @@ maximumOn f (x : xs) = g x (f x) xs
   where
     g v _ [] = v
     g v mv (y : ys)
-        | mx > mv = g y mx ys
+        | my > mv = g y my ys
         | otherwise = g v mv ys
       where
-        mx = f x
+        my = f y
 
 -- | A version of 'minimum' where the comparison is done on some extracted value.
 --   Raises an error if the list is empty. Only calls the function once per element.
