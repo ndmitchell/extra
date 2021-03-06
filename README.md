@@ -1,11 +1,11 @@
 # Extra [![Hackage version](https://img.shields.io/hackage/v/extra.svg?label=Hackage)](https://hackage.haskell.org/package/extra) [![Stackage version](https://www.stackage.org/package/extra/badge/nightly?label=Stackage)](https://www.stackage.org/package/extra) [![Build status](https://img.shields.io/github/workflow/status/ndmitchell/extra/ci.svg)](https://github.com/ndmitchell/extra/actions)
 
-A library of extra functions for the standard Haskell libraries. Most functions are simple additions, filling out missing functionality. A few functions are available in later versions of GHC, but this package makes them available back to GHC 7.10. A few examples:
+A library of extra functions for the standard Haskell libraries. Most functions are simple additions, filling out missing functionality. A few functions are available in later versions of GHC, but this package makes them available back to GHC 8.0. A few examples:
 
 * `Control.Monad.Extra.concatMapM` provides a monadic version of `concatMap`, in the same way that `mapM` is a monadic version of `map`.
 * `Data.Tuple.Extra.fst3` provides a function to get the first element of a triple.
 * `Control.Exception.Extra.retry` provides a function that retries an `IO` action a number of times.
-* `Data.Either.Extra.fromLeft` is a function available in GHC 8.0 and above. On GHC 8.0 and above this package reexports the version from `Data.Either` while on GHC 7.10 and below it defines an equivalent version.
+* `Data.Monoid.Extra.memptyIf` provides a function that returns `mempty` instead of the provided valued if a test succeeds.
 
 The module `Extra` documents all functions provided by this library. Modules such as `Data.List.Extra` provide extra functions over `Data.List` and also reexport `Data.List`. Users are recommended to replace `Data.List` imports with `Data.List.Extra` if they need the extra functionality.
 

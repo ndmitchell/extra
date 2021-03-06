@@ -20,7 +20,7 @@ main = do
 
     let mods = filter (isSuffixOf ".Extra") $ map trim $ lines src
 
-    ifaces <- forM (mods \\ exclude) $ \mod -> do
+    ifaces <- forM mods $ \mod -> do
         src <- readFile $ joinPath ("src" : split (== '.') mod) <.> "hs"
         let funcs =
                 filter validIdentifier
@@ -68,6 +68,7 @@ main = do
             , "import TestUtil"
             , "import qualified Data.List"
             , "import qualified Data.List.NonEmpty.Extra"
+            , "import qualified Data.Ord"
             , "import Test.QuickCheck.Instances.Semigroup ()"
             , "default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))"
             , "tests :: IO ()"
@@ -87,11 +88,9 @@ writeFileBinaryChanged file x = do
     when (Just x /= old) $
         writeFileBinary file x
 
-exclude :: [String]
-exclude = ["Data.Foldable.Extra"] -- because all their imports clash
-
 hidden :: String -> [String]
 hidden "Data.List.NonEmpty.Extra" = words "cons snoc sortOn union unionBy nubOrd nubOrdBy nubOrdOn"
+hidden "Data.List.Extra" = words "sum' product' sumOn' productOn' maximumOn minimumOn notNull firstJust"
 hidden _ = []
 
 notHidden :: String -> String -> Bool

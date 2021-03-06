@@ -1,6 +1,7 @@
 {-# LANGUAGE ConstraintKinds #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TypeApplications #-}
 
 -- | This module extends "Data.List" with extra functions of a similar nature.
 --   The package also exports the existing "Data.List" functions.
@@ -97,7 +98,7 @@ import Data.Char (chr, isControl, isSpace, ord, toLower, toUpper)
 import qualified Data.Foldable.Extra as FX
 import Data.Function.Extra (on, on2)
 import Data.List
-import Data.Maybe (fromMaybe, listToMaybe, mapMaybe)
+import Data.Maybe (fromMaybe, listToMaybe)
 import Data.Tuple.Extra (both, first, second, swap, (&&&), (***))
 import Numeric (readHex, showHex)
 import Partial (Partial)
@@ -186,10 +187,6 @@ lastDef = foldl (\_ x -> x) -- I know this looks weird, but apparently this is t
 {-# INLINE lastDef #-}
 
 -- | A composition of 'not' and 'null'.
---
--- > notNull []  == False
--- > notNull [1] == True
--- > \xs -> notNull xs == not (null xs)
 notNull :: [a] -> Bool
 notNull = FX.notNull
 
@@ -453,25 +450,11 @@ nubOn f = map snd . nubBy ((==) `on` fst) . map (\x -> let y = f x in y `seq` (y
 
 -- | A version of 'maximum' where the comparison is done on some extracted value.
 --   Raises an error if the list is empty. Only calls the function once per element.
---
--- > maximumOn id [] == undefined
--- > maximumOn length ["test","extra","a"] == "extra"
 maximumOn :: (Partial, Ord b) => (a -> b) -> [a] -> a
-maximumOn _ [] = error "Data.List.Extra.maximumOn: empty list"
-maximumOn f (x : xs) = g x (f x) xs
-  where
-    g v _ [] = v
-    g v mv (y : ys)
-        | my > mv = g y my ys
-        | otherwise = g v mv ys
-      where
-        my = f y
+maximumOn = FX.maximumOn
 
 -- | A version of 'minimum' where the comparison is done on some extracted value.
 --   Raises an error if the list is empty. Only calls the function once per element.
---
--- > minimumOn id [] == undefined
--- > minimumOn length ["test","extra","a"] == "a"
 minimumOn :: (Partial, Ord b) => (a -> b) -> [a] -> a
 minimumOn = FX.minimumOn
 
@@ -498,26 +481,18 @@ groupSortBy f = groupBy (((== EQ) .) . f) . sortBy f
 -- | A strict version of 'sum'.
 --   Unlike 'sum' this function is always strict in the `Num` argument,
 --   whereas the standard version is only strict if the optimiser kicks in.
---
--- > sum' [1, 2, 3] == 6
 sum' :: (Num a) => [a] -> a
 sum' = FX.sum'
 
 -- | A strict version of 'sum', using a custom valuation function.
---
--- > sumOn' read ["1", "2", "3"] == 6
 sumOn' :: (Num b) => (a -> b) -> [a] -> b
 sumOn' = FX.sumOn'
 
 -- | A strict version of 'product'.
---
--- > product' [1, 2, 4] == 8
 product' :: (Num a) => [a] -> a
 product' = FX.product'
 
 -- | A strict version of 'product', using a custom valuation function.
---
--- > productOn' read ["1", "2", "4"] == 8
 productOn' :: (Num b) => (a -> b) -> [a] -> b
 productOn' = FX.productOn'
 
@@ -596,13 +571,10 @@ linesBy f zs = g $ case break f zs of
 
 -- | Find the first element of a list for which the operation returns 'Just', along
 --   with the result of the operation. Like 'find' but useful where the function also
---   computes some expensive information that can be reused. Particular useful
+--   computes some expensive information that can be reused. Particularly useful
 --   when the function is monadic, see 'firstJustM'.
---
--- > firstJust id [Nothing,Just 3]  == Just 3
--- > firstJust id [Nothing,Nothing] == Nothing
 firstJust :: (a -> Maybe b) -> [a] -> Maybe b
-firstJust f = listToMaybe . mapMaybe f
+firstJust = FX.firstJust
 
 -- | Equivalent to @drop 1@, but likely to be faster and a single lexeme.
 --

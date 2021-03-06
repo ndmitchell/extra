@@ -30,8 +30,6 @@ module Control.Monad.Extra (
     concatForM,
     mconcatMapM,
     mapMaybeM,
-    findM,
-    firstJustM,
     fold1M,
     fold1M_,
 
@@ -42,10 +40,6 @@ module Control.Monad.Extra (
     notM,
     (||^),
     (&&^),
-    orM,
-    andM,
-    anyM,
-    allM,
 ) where
 
 import Control.Applicative (Alternative (empty), liftA2)
@@ -226,50 +220,3 @@ notM = fmap not
 -- > Just True  &&^ Just False == Just False
 (&&^) :: (Monad m) => m Bool -> m Bool -> m Bool
 a &&^ b = ifM a b (pure False)
-
--- | A version of 'any' lifted to a monad. Retains the short-circuiting behaviour.
---
--- > anyM Just [False,True ,undefined] == Just True
--- > anyM Just [False,False,undefined] == undefined
--- > \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
-anyM :: (Monad m) => (a -> m Bool) -> [a] -> m Bool
-anyM p = foldr ((||^) . p) (pure False)
-
--- | A version of 'all' lifted to a monad. Retains the short-circuiting behaviour.
---
--- > allM Just [True,False,undefined] == Just False
--- > allM Just [True,True ,undefined] == undefined
--- > \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
-allM :: (Monad m) => (a -> m Bool) -> [a] -> m Bool
-allM p = foldr ((&&^) . p) (pure True)
-
--- | A version of 'or' lifted to a monad. Retains the short-circuiting behaviour.
---
--- > orM [Just False,Just True ,undefined] == Just True
--- > orM [Just False,Just False,undefined] == undefined
--- > \xs -> Just (or xs) == orM (map Just xs)
-orM :: (Monad m) => [m Bool] -> m Bool
-orM = anyM id
-
--- | A version of 'and' lifted to a monad. Retains the short-circuiting behaviour.
---
--- > andM [Just True,Just False,undefined] == Just False
--- > andM [Just True,Just True ,undefined] == undefined
--- > \xs -> Just (and xs) == andM (map Just xs)
-andM :: (Monad m) => [m Bool] -> m Bool
-andM = allM id
-
--- Searching
-
--- | Like 'find', but where the test can be monadic.
---
--- > findM (Just . isUpper) "teST"             == Just (Just 'S')
--- > findM (Just . isUpper) "test"             == Just Nothing
--- > findM (Just . const True) ["x",undefined] == Just (Just "x")
-findM :: (Monad m) => (a -> m Bool) -> [a] -> m (Maybe a)
-findM p = foldr (ifM <$> p <*> (pure . Just)) (pure Nothing)
-
--- | Like 'findM', but also allows you to compute some additional information in the predicate.
-firstJustM :: (Monad m) => (a -> m (Maybe b)) -> [a] -> m (Maybe b)
-firstJustM _ [] = pure Nothing
-firstJustM p (x : xs) = maybeM (firstJustM p xs) (pure . Just) (p x)

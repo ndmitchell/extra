@@ -1,3 +1,5 @@
+{-# LANGUAGE TypeApplications #-}
+
 module Data.Foldable.Extra (
     module Data.Foldable,
     notNull,
@@ -10,6 +12,7 @@ module Data.Foldable.Extra (
     orM,
     andM,
     findM,
+    firstJust,
     firstJustM,
     foldMapM,
     compareLength,
@@ -20,6 +23,7 @@ module Data.Foldable.Extra (
 
 import qualified Control.Monad.Extra as MX
 import Data.Foldable
+import Data.Functor.Identity (Identity (..))
 import Data.Tuple.Extra ((&&&))
 import Partial (Partial)
 
@@ -27,49 +31,88 @@ import Partial (Partial)
 --
 -- > notNull []  == False
 -- > notNull [1] == True
--- > \xs -> notNull xs == not (null xs)
+-- > \(xs :: [Int]) -> notNull xs == not (null xs)
 notNull :: (Foldable f) => f a -> Bool
 notNull = not . null
 
 -- | A generalization of 'Data.List.Extra.sum'' to 'Foldable' instances.
+--
+-- > sum' [1, 2, 3] == 6
 sum' :: (Foldable f, Num a) => f a -> a
 sum' = foldl' (+) 0
 
 -- | A generalization of 'Data.List.Extra.product'' to 'Foldable' instances.
+--
+-- > product' [1, 2, 4] == 8
 product' :: (Foldable f, Num a) => f a -> a
 product' = foldl' (*) 1
 
 -- | A generalization of 'Data.List.Extra.sumOn'' to 'Foldable' instances.
+--
+-- > sumOn' read ["1", "2", "3"] == 6
 sumOn' :: (Foldable f, Num b) => (a -> b) -> f a -> b
 sumOn' f = foldl' ((. f) . (+)) 0
 
 -- | A generalization of 'Data.List.Extra.productOn'' to 'Foldable' instances.
+--
+-- > productOn' read ["1", "2", "4"] == 8
 productOn' :: (Foldable f, Num b) => (a -> b) -> f a -> b
 productOn' f = foldl' ((. f) . (*)) 1
 
--- | A generalization of 'Control.Monad.Extra.anyM' to 'Foldable' instances. Retains the short-circuiting behaviour.
+-- | A version of 'any' lifted to a monad. Retains the short-circuiting behaviour.
+--
+-- > anyM Just [False,True ,undefined] == Just True
+-- > anyM Just [False,False,undefined] == undefined
+-- > \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
 anyM :: (Foldable f, Monad m) => (a -> m Bool) -> f a -> m Bool
 anyM p = foldr ((MX.||^) . p) (pure False)
 
--- | A generalization of 'Control.Monad.Extra.allM' to 'Foldable' instances. Retains the short-circuiting behaviour.
+-- | A version of 'all' lifted to a monad. Retains the short-circuiting behaviour.
+--
+-- > allM Just [True,False,undefined] == Just False
+-- > allM Just [True,True ,undefined] == undefined
+-- > \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
 allM :: (Foldable f, Monad m) => (a -> m Bool) -> f a -> m Bool
 allM p = foldr ((MX.&&^) . p) (pure True)
 
--- | A generalization of 'Control.Monad.Extra.orM' to 'Foldable' instances. Retains the short-circuiting behaviour.
+-- | A version of 'or' lifted to a monad. Retains the short-circuiting behaviour.
+--
+-- > orM [Just False,Just True ,undefined] == Just True
+-- > orM [Just False,Just False,undefined] == undefined
+-- > \xs -> Just (or xs) == orM (map Just xs)
 orM :: (Foldable f, Monad m) => f (m Bool) -> m Bool
 orM = anyM id
 
--- | A generalization of 'Control.Monad.Extra.andM' to 'Foldable' instances. Retains the short-circuiting behaviour.
+-- | A version of 'and' lifted to a monad. Retains the short-circuiting behaviour.
+--
+-- > andM [Just True,Just False,undefined] == Just False
+-- > andM [Just True,Just True ,undefined] == undefined
+-- > \xs -> Just (and xs) == andM (map Just xs)
 andM :: (Foldable f, Monad m) => f (m Bool) -> m Bool
 andM = allM id
 
--- | A generalization of 'Control.Monad.Extra.findM' to 'Foldable' instances.
+-- | Like 'find', but where the test can be monadic.
+--
+-- > findM (Just . isUpper) "teST"             == Just (Just 'S')
+-- > findM (Just . isUpper) "test"             == Just Nothing
+-- > findM (Just . const True) ["x",undefined] == Just (Just "x")
 findM :: (Foldable f, Monad m) => (a -> m Bool) -> f a -> m (Maybe a)
 findM p = foldr (MX.ifM <$> p <*> (pure . Just)) (pure Nothing)
 
--- | A generalization of 'Control.Monad.Extra.firstJustM' to 'Foldable' instances.
+-- | Find the first element of a `Foldable` for which the operation returns 'Just', along
+--   with the result of the operation. Like `find` but useful where the function also
+--   computes some expensive information that can be reused.
+--
+-- > firstJust id [Nothing,Just 3]  == Just 3
+-- > firstJust id [Nothing,Nothing] == Nothing
+firstJust :: (Foldable f) => (a -> Maybe b) -> f a -> Maybe b
+firstJust p = runIdentity . firstJustM (Identity . p)
+
+-- | Like 'findM', but also allows you to compute some additional information in the predicate.
+--
+-- > firstJustM (\a -> [if a > 0 then Just a else Nothing]) [-1, 0, 1] == [Just 1]
 firstJustM :: (Foldable f, Monad m) => (a -> m (Maybe b)) -> f a -> m (Maybe b)
-firstJustM p = MX.firstJustM p . toList
+firstJustM p = foldl' (\mmb a -> MX.maybeM (p a) (pure . Just) mmb) (pure Nothing)
 
 -- | A generalization of 'Control.Monad.Extra.mconcatMapM' to 'Traversable' instances.
 foldMapM :: (Traversable t, Applicative m, Monoid b) => (a -> m b) -> t a -> m b

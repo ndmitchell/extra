@@ -6,6 +6,7 @@ module TestGen(tests) where
 import TestUtil
 import qualified Data.List
 import qualified Data.List.NonEmpty.Extra
+import qualified Data.Ord
 import Test.QuickCheck.Instances.Semigroup ()
 default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))
 tests :: IO ()
@@ -47,6 +48,13 @@ tests = do
     testGen "Just False &&^ undefined  == Just False" $ Just False &&^ undefined  == Just False
     testGen "Just True  &&^ Just True  == Just True" $ Just True  &&^ Just True  == Just True
     testGen "Just True  &&^ Just False == Just False" $ Just True  &&^ Just False == Just False
+    testGen "notNull []  == False" $ notNull []  == False
+    testGen "notNull [1] == True" $ notNull [1] == True
+    testGen "\\(xs :: [Int]) -> notNull xs == not (null xs)" $ \(xs :: [Int]) -> notNull xs == not (null xs)
+    testGen "sum' [1, 2, 3] == 6" $ sum' [1, 2, 3] == 6
+    testGen "product' [1, 2, 4] == 8" $ product' [1, 2, 4] == 8
+    testGen "sumOn' read [\"1\", \"2\", \"3\"] == 6" $ sumOn' read ["1", "2", "3"] == 6
+    testGen "productOn' read [\"1\", \"2\", \"4\"] == 8" $ productOn' read ["1", "2", "4"] == 8
     testGen "anyM Just [False,True ,undefined] == Just True" $ anyM Just [False,True ,undefined] == Just True
     testGen "anyM Just [False,False,undefined] == undefined" $ erroneous $ anyM Just [False,False,undefined]
     testGen "\\(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)" $ \(f :: Int -> Maybe Bool) xs -> anyM f xs == orM (map f xs)
@@ -62,6 +70,22 @@ tests = do
     testGen "findM (Just . isUpper) \"teST\"             == Just (Just 'S')" $ findM (Just . isUpper) "teST"             == Just (Just 'S')
     testGen "findM (Just . isUpper) \"test\"             == Just Nothing" $ findM (Just . isUpper) "test"             == Just Nothing
     testGen "findM (Just . const True) [\"x\",undefined] == Just (Just \"x\")" $ findM (Just . const True) ["x",undefined] == Just (Just "x")
+    testGen "firstJust id [Nothing,Just 3]  == Just 3" $ firstJust id [Nothing,Just 3]  == Just 3
+    testGen "firstJust id [Nothing,Nothing] == Nothing" $ firstJust id [Nothing,Nothing] == Nothing
+    testGen "firstJustM (\\a -> [if a > 0 then Just a else Nothing]) [-1, 0, 1] == [Just 1]" $ firstJustM (\a -> [if a > 0 then Just a else Nothing]) [-1, 0, 1] == [Just 1]
+    testGen "compareLength [1,2,3] 1 == GT" $ compareLength [1,2,3] 1 == GT
+    testGen "compareLength [1,2] 2 == EQ" $ compareLength [1,2] 2 == EQ
+    testGen "\\(xs :: [Int]) n -> compareLength xs n == compare (length xs) n" $ \(xs :: [Int]) n -> compareLength xs n == compare (length xs) n
+    testGen "compareLength (1:2:3:undefined) 2 == GT" $ compareLength (1:2:3:undefined) 2 == GT
+    testGen "comparingLength [1,2,3] [False] == GT" $ comparingLength [1,2,3] [False] == GT
+    testGen "comparingLength [1,2] \"ab\" == EQ" $ comparingLength [1,2] "ab" == EQ
+    testGen "\\(xs :: [Int]) (ys :: [Int]) -> comparingLength xs ys == Data.Ord.comparing length xs ys" $ \(xs :: [Int]) (ys :: [Int]) -> comparingLength xs ys == Data.Ord.comparing length xs ys
+    testGen "comparingLength [1,2] (1:2:3:undefined) == LT" $ comparingLength [1,2] (1:2:3:undefined) == LT
+    testGen "comparingLength (1:2:3:undefined) [1,2] == GT" $ comparingLength (1:2:3:undefined) [1,2] == GT
+    testGen "maximumOn id [] == undefined" $ erroneous $ maximumOn id []
+    testGen "maximumOn length [\"test\",\"extra\",\"a\"] == \"extra\"" $ maximumOn length ["test","extra","a"] == "extra"
+    testGen "minimumOn id [] == undefined" $ erroneous $ minimumOn id []
+    testGen "minimumOn length [\"test\",\"extra\",\"a\"] == \"a\"" $ minimumOn length ["test","extra","a"] == "a"
     testGen "fromLeft 1 (Left 3) == 3" $ fromLeft 1 (Left 3) == 3
     testGen "fromLeft 1 (Right \"foo\") == 1" $ fromLeft 1 (Right "foo") == 1
     testGen "fromRight 1 (Right 3) == 3" $ fromRight 1 (Right 3) == 3
@@ -110,9 +134,6 @@ tests = do
     testGen "lastDef 1 []      == 1" $ lastDef 1 []      == 1
     testGen "lastDef 1 [2,3,4] == 4" $ lastDef 1 [2,3,4] == 4
     testGen "\\x xs -> lastDef x xs == last (x:xs)" $ \x xs -> lastDef x xs == last (x:xs)
-    testGen "notNull []  == False" $ notNull []  == False
-    testGen "notNull [1] == True" $ notNull [1] == True
-    testGen "\\xs -> notNull xs == not (null xs)" $ \xs -> notNull xs == not (null xs)
     testGen "list 1 (\\v _ -> v - 2) [5,6,7] == 3" $ list 1 (\v _ -> v - 2) [5,6,7] == 3
     testGen "list 1 (\\v _ -> v - 2) []      == 1" $ list 1 (\v _ -> v - 2) []      == 1
     testGen "\\nil cons xs -> maybe nil (uncurry cons) (uncons xs) == list nil cons xs" $ \nil cons xs -> maybe nil (uncurry cons) (uncons xs) == list nil cons xs
@@ -171,19 +192,11 @@ tests = do
     testGen "escapeJSON \"\\ttab\\nnewline\\\\\" == \"\\\\ttab\\\\nnewline\\\\\\\\\"" $ escapeJSON "\ttab\nnewline\\" == "\\ttab\\nnewline\\\\"
     testGen "escapeJSON \"\\ESC[0mHello\" == \"\\\\u001b[0mHello\"" $ escapeJSON "\ESC[0mHello" == "\\u001b[0mHello"
     testGen "\\xs -> unescapeJSON (escapeJSON xs) == xs" $ \xs -> unescapeJSON (escapeJSON xs) == xs
-    testGen "maximumOn id [] == undefined" $ erroneous $ maximumOn id []
-    testGen "maximumOn length [\"test\",\"extra\",\"a\"] == \"extra\"" $ maximumOn length ["test","extra","a"] == "extra"
-    testGen "minimumOn id [] == undefined" $ erroneous $ minimumOn id []
-    testGen "minimumOn length [\"test\",\"extra\",\"a\"] == \"a\"" $ minimumOn length ["test","extra","a"] == "a"
     testGen "groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,\"t\"),(2,\"es\"),(3,\"t\")]" $ groupSort [(1,'t'),(3,'t'),(2,'e'),(2,'s')] == [(1,"t"),(2,"es"),(3,"t")]
     testGen "\\xs -> map fst (groupSort xs) == sort (nub (map fst xs))" $ \xs -> map fst (groupSort xs) == sort (nub (map fst xs))
     testGen "\\xs -> concatMap snd (groupSort xs) == map snd (sortOn fst xs)" $ \xs -> concatMap snd (groupSort xs) == map snd (sortOn fst xs)
     testGen "groupSortOn length [\"test\",\"of\",\"sized\",\"item\"] == [[\"of\"],[\"test\",\"item\"],[\"sized\"]]" $ groupSortOn length ["test","of","sized","item"] == [["of"],["test","item"],["sized"]]
     testGen "groupSortBy (compare `on` length) [\"test\",\"of\",\"sized\",\"item\"] == [[\"of\"],[\"test\",\"item\"],[\"sized\"]]" $ groupSortBy (compare `on` length) ["test","of","sized","item"] == [["of"],["test","item"],["sized"]]
-    testGen "sum' [1, 2, 3] == 6" $ sum' [1, 2, 3] == 6
-    testGen "sumOn' read [\"1\", \"2\", \"3\"] == 6" $ sumOn' read ["1", "2", "3"] == 6
-    testGen "product' [1, 2, 4] == 8" $ product' [1, 2, 4] == 8
-    testGen "productOn' read [\"1\", \"2\", \"4\"] == 8" $ productOn' read ["1", "2", "4"] == 8
     testGen "merge \"ace\" \"bd\" == \"abcde\"" $ merge "ace" "bd" == "abcde"
     testGen "\\xs ys -> merge (sort xs) (sort ys) == sort (xs ++ ys)" $ \xs ys -> merge (sort xs) (sort ys) == sort (xs ++ ys)
     testGen "replace \"el\" \"_\" \"Hello Bella\" == \"H_lo B_la\"" $ replace "el" "_" "Hello Bella" == "H_lo B_la"
@@ -203,8 +216,6 @@ tests = do
     testGen "linesBy (== ':') \"::xyz:abc::123::\" == [\"\",\"\",\"xyz\",\"abc\",\"\",\"123\",\"\"]" $ linesBy (== ':') "::xyz:abc::123::" == ["","","xyz","abc","","123",""]
     testGen "\\s -> linesBy (== '\\n') s == lines s" $ \s -> linesBy (== '\n') s == lines s
     testGen "linesBy (== ';') \"my;list;here;\" == [\"my\",\"list\",\"here\"]" $ linesBy (== ';') "my;list;here;" == ["my","list","here"]
-    testGen "firstJust id [Nothing,Just 3]  == Just 3" $ firstJust id [Nothing,Just 3]  == Just 3
-    testGen "firstJust id [Nothing,Nothing] == Nothing" $ firstJust id [Nothing,Nothing] == Nothing
     testGen "drop1 \"\"         == \"\"" $ drop1 ""         == ""
     testGen "drop1 \"test\"     == \"est\"" $ drop1 "test"     == "est"
     testGen "\\xs -> drop 1 xs == drop1 xs" $ \xs -> drop 1 xs == drop1 xs

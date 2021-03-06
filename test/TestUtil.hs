@@ -20,9 +20,10 @@ import Control.Exception.Extra as X
 import Control.Monad.Extra as X
 import Data.Char as X
 import Data.Either.Extra as X
+import Data.Foldable.Extra as X
 import Data.Function.Extra as X
 import Data.IORef.Extra as X
-import Data.List.Extra as X hiding (union, unionBy)
+import Data.List.Extra as X hiding (firstJust, maximumOn, minimumOn, notNull, product', productOn', sum', sumOn', union, unionBy)
 import Data.List.NonEmpty.Extra as X (NonEmpty (..), appendl, appendr, union, unionBy, (|:), (|>))
 import Data.Maybe as X
 import Data.Monoid.Extra as X
