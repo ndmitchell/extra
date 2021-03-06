@@ -55,7 +55,6 @@ library
         Data.List.NonEmpty.Extra
         Data.Monoid.Extra
         Data.Tuple.Extra
-        Data.Typeable.Extra
         Data.Version.Extra
         Numeric.Extra
         System.Directory.Extra
@@ -64,7 +63,6 @@ library
         System.IO.Extra
         System.Process.Extra
         System.Time.Extra
-        Text.Read.Extra
 
 test-suite extra-test
     type:            exitcode-stdio-1.0

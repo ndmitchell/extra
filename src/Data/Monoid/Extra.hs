@@ -18,7 +18,7 @@ import Data.Monoid
 memptyNothing :: (Eq a, Monoid a) => a -> Maybe a
 memptyNothing a = pureIf (a /= mempty) a
 
--- | Return `mempty` instead of the given value if the test fails.
+-- | Return `mempty` instead of the given value if the test succeeds.
 --
 -- > memptyIf True "abc" == ""
 -- > memptyIf False "abc" == "abc"
