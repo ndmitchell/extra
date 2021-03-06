@@ -86,6 +86,10 @@ tests = do
     testGen "maximumOn length [\"test\",\"extra\",\"a\"] == \"extra\"" $ maximumOn length ["test","extra","a"] == "extra"
     testGen "minimumOn id [] == undefined" $ erroneous $ minimumOn id []
     testGen "minimumOn length [\"test\",\"extra\",\"a\"] == \"a\"" $ minimumOn length ["test","extra","a"] == "a"
+    testGen "\\x y -> y >= 0 ==> applyN y succ x == x + y" $ \x y -> y >= 0 ==> applyN y succ x == x + y
+    testGen "\\x -> applyWhen True succ x == x + 1" $ \x -> applyWhen True succ x == x + 1
+    testGen "\\b x -> applyWhen b succ x == applyN (fromEnum b) succ x" $ \b x -> applyWhen b succ x == applyN (fromEnum b) succ x
+    testGen "\\x y -> (succ .: (+)) x y == (x + y) + 1" $ \x y -> (succ .: (+)) x y == (x + y) + 1
     testGen "fromLeft 1 (Left 3) == 3" $ fromLeft 1 (Left 3) == 3
     testGen "fromLeft 1 (Right \"foo\") == 1" $ fromLeft 1 (Right "foo") == 1
     testGen "fromRight 1 (Right 3) == 3" $ fromRight 1 (Right 3) == 3

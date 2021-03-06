@@ -1,27 +1,34 @@
 Changelog for Extra
 
-bi-functor's branch
-    Control.Monad.Extra
-        Relax constraints to Applicative where possible,
-            in anticipation of dropping support for GHC < 8.0
-        Deprecate mconcatMapM in favour of Data.Foldable.Extra.foldMapM
-        Move andM, orM, anyM, allM, findM, firstJustM to Data.Foldable.Extra
-    Data.Either.Extra
-        exports (|||) and (+++) analogues from Control.Arrow,
-            like Data.Tuple.Extra exports (&&&) and (***)
-    Dat.Foldable.Extra
-        moved Control.Monad.Extra and Data.List.Extra functions
-        make doctests work without clashing
-    Data.Function.Extra (on2, applyN)
-    Data.List.Extra
-        Now specializes Data.Foldable.Extra functions (sumOn' and friends, maximumOn, minimumOn, firstJust), rather than re-implementing them
-        Deprecate Data.List.Extra.mconcatMap in favour of base's foldMap
-        Move compareLength and comparingLength to Data.Foldable.Extra
-    Data.Monoid.Extra (memptyNothing, memptyIf)
-
-    Miscellaneous
-        Explicit imports, except for re-exported modules
-        Linting and formatting
+Tentatively 1.8.0, maybe 2.0.0?
+*   Control.Monad.Extra
+    -   relax constraints to Applicative where possible, since we no longer support GHC < 8.0
+    -   deprecate mconcatMapM in favour of Data.Foldable.Extra.foldMapM
+    -   move andM, orM, anyM, allM, findM, firstJustM to Data.Foldable.Extra
+    -   kinda went ham on the point-free, but everything (except whileJustM) should be sensible
+*   Data.Either.Extra
+    -   (|||) and (+++) analogues from Control.Arrow, like Data.Tuple.Extra exports (&&&) and (***)
+*   Data.Foldable.Extra
+    -   moved Control.Monad.Extra and Data.List.Extra functions
+    -   make doctests work without clashing
+*   Data.Function.Extra
+    -   on2 for saving computations
+    -   applyN :: Integral n => n -> (a -> a) -> (a -> a)
+    -   #63, applyWhen :: Bool -> (a -> a) -> (a -> a)
+    -   #60, (.:)
+*   Data.List.Extra
+    -   specializes Data.Foldable.Extra functions (sum' and friends, maximumOn, minimumOn, firstJust), rather than re-implementing them (mostly to fix the doctests and also for code deduplication)
+    -   deprecate mconcatMap in favour of foldMap
+    -   move compareLength and comparingLength to Data.Foldable.Extra
+    -   #76, fix docs for zipFrom and zipWithFrom that were wrong since 1.7.0
+*   Data.Monoid.Extra
+    -   memptyNothing :: Monoid a => a -> Maybe a
+    -   memptyIf :: Monoid a => Bool -> a -> a
+*   Miscellaneous
+    -   explicit imports, except for re-exported modules
+    -   removed all traces of name shadowing
+    -   add hie.yaml and turn on -Wall for the library for easier debugging
+    -   add fourmolu.yaml, try to stay true to original format
 
 1.7.9, released 2020-12-19
     #72, add pureIf

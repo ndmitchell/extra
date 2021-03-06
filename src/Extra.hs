@@ -20,7 +20,7 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     notNull, sum', product', sumOn', productOn', anyM, allM, orM, andM, findM, firstJust, firstJustM, foldMapM, compareLength, comparingLength, maximumOn, minimumOn,
     -- * Data.Function.Extra
     -- | Extra functions available in @"Data.Function.Extra"@.
-    on2, applyN,
+    on2, applyN, applyWhen, (.:),
     -- * Data.Either.Extra
     -- | Extra functions available in @"Data.Either.Extra"@.
     fromLeft, fromRight, fromEither, fromLeft', fromRight', eitherToMaybe, maybeToEither, mapLeft, mapRight, (|||), (+++),
