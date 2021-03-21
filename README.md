@@ -24,4 +24,4 @@ A mapping between `base` versions and GHC compiler versions can be found [here](
 
 ## Contributing
 
-My general contribution preferences are [available here](https://github.com/ndmitchell/neil#contributions). In addition, this repo contains some generated code which is checked in, namely [src/Extra.hs](src/Extra.hs) and [test/TestGen.hs](test/TestGen.hs). You can generate those files by either running `runhaskell Generate.hs` or `ghci` (which uses the [`.ghci` file](.ghci)) and typing `:generate`. All PR's should contain regenerated versions of those files.
+My general contribution preferences are [available here](https://github.com/ndmitchell/neil#contributions). In addition, this repo contains some generated code which is checked in, namely [src/Extra.hs](src/Extra.hs) and [test/TestGen.hs](test/TestGen.hs). You can generate those files by either running `runghc Generate.hs` or `ghci` (which uses the [`.ghci` file](.ghci)) and typing `:generate`. All PR's should contain regenerated versions of those files.

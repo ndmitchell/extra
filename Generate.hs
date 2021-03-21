@@ -1,5 +1,5 @@
 -- This module generates the files src/Extra.hs and test/TestGen.hs.
--- Either call "runhaskell Generate" or start "ghci" and use ":generate".
+-- Either call "runghc Generate" or start "ghci" and use ":generate".
 
 module Generate(main) where
 
