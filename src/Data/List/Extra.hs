@@ -237,7 +237,7 @@ splitAtEnd i xs
 
 
 -- | 'zip' against an enumeration.
---   Never truncates the output - raises an error if the enumeration runs out.
+--   Truncates the output if the enumeration runs out.
 --
 -- > \i xs -> zip [i..] xs == zipFrom i xs
 -- > zipFrom False [1..3] == [(False,1),(True, 2)]
@@ -245,7 +245,7 @@ zipFrom :: Enum a => a -> [b] -> [(a, b)]
 zipFrom = zipWithFrom (,)
 
 -- | 'zipFrom' generalised to any combining operation.
---   Never truncates the output - raises an error if the enumeration runs out.
+--   Truncates the output if the enumeration runs out.
 --
 -- > \i xs -> zipWithFrom (,) i xs == zipFrom i xs
 zipWithFrom :: Enum a => (a -> b -> c) -> a -> [b] -> [c]
