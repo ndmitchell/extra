@@ -163,12 +163,12 @@ writeVar' v x = modifyVar_' v $ const $ pure x
 
 -- | Modify a 'Var' producing a new value and a return result.
 modifyVar :: Var a -> (a -> IO (a, b)) -> IO b
-modifyVar (Var x) f = modifyMVar x f
+modifyVar x f = modifyVar x f
 
 -- | Strict variant of 'modifyVar''
 modifyVar' :: Var a -> (a -> IO (a, b)) -> IO b
-modifyVar' (Var x) f = do
-    (newContents, res) <- modifyMVar x $ \v -> do
+modifyVar' x f = do
+    (newContents, res) <- modifyVar x $ \v -> do
         (newContents, res) <- f v
         return (newContents, (newContents, res))
     evaluate newContents
@@ -180,10 +180,10 @@ modifyVar_ (Var x) f = modifyMVar_ x f
 
 -- | Strict variant of 'modifyVar_'
 modifyVar_' :: Var a -> (a -> IO a) -> IO ()
-modifyVar_' (Var x) f = do
-    newContents <- modifyMVar x (fmap dupe . f)
+modifyVar_' x f = do
+    newContents <- modifyVar x (fmap dupe . f)
     _ <- evaluate newContents
-    return ()
+    pure ()
 
 -- | Perform some operation using the value in the 'Var',
 --   a restricted version of 'modifyVar'.
