@@ -170,9 +170,9 @@ modifyVar' :: Var a -> (a -> IO (a, b)) -> IO b
 modifyVar' x f = do
     (newContents, res) <- modifyVar x $ \v -> do
         (newContents, res) <- f v
-        return (newContents, (newContents, res))
+        pure (newContents, (newContents, res))
     evaluate newContents
-    return res
+    pure res
 
 -- | Modify a 'Var', a restricted version of 'modifyVar'.
 modifyVar_ :: Var a -> (a -> IO a) -> IO ()
