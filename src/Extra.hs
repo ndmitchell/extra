@@ -8,7 +8,7 @@
 module Extra {-# DEPRECATED "This module is provided as documentation of all new functions, you should import the more specific modules directly." #-} (
     -- * Control.Concurrent.Extra
     -- | Extra functions available in @"Control.Concurrent.Extra"@.
-    withNumCapabilities, once, onceFork, Lock, newLock, withLock, withLockTry, Var, newVar, readVar, writeVar, modifyVar, modifyVar_, withVar, Barrier, newBarrier, signalBarrier, waitBarrier, waitBarrierMaybe,
+    withNumCapabilities, once, onceFork, Lock, newLock, withLock, withLockTry, Var, newVar, readVar, writeVar, writeVar', modifyVar, modifyVar', modifyVar_, modifyVar_', withVar, Barrier, newBarrier, signalBarrier, waitBarrier, waitBarrierMaybe,
     -- * Control.Exception.Extra
     -- | Extra functions available in @"Control.Exception.Extra"@.
     Partial, retry, retryBool, errorWithoutStackTrace, showException, stringException, errorIO, ignore, catch_, handle_, try_, catchJust_, handleJust_, tryJust_, catchBool, handleBool, tryBool,
