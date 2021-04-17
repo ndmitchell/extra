@@ -18,7 +18,11 @@ module Control.Concurrent.Extra(
     -- * Lock
     Lock, newLock, withLock, withLockTry,
     -- * Var
-    Var, newVar, readVar, writeVar, modifyVar, modifyVar_, withVar,
+    Var, newVar, readVar,
+    writeVar, writeVar',
+    modifyVar, modifyVar',
+    modifyVar_, modifyVar_',
+    withVar,
     -- * Barrier
     Barrier, newBarrier, signalBarrier, waitBarrier, waitBarrierMaybe,
     ) where
@@ -30,6 +34,7 @@ import Data.Maybe
 import Data.Either.Extra
 import Data.Functor
 import Prelude
+import Data.Tuple.Extra (dupe)
 
 
 -- | On GHC 7.6 and above with the @-threaded@ flag, brackets a call to 'setNumCapabilities'.
@@ -152,13 +157,33 @@ readVar (Var x) = readMVar x
 writeVar :: Var a -> a -> IO ()
 writeVar v x = modifyVar_ v $ const $ pure x
 
+-- | Strict variant of 'writeVar'
+writeVar' :: Var a -> a -> IO ()
+writeVar' v x = modifyVar_' v $ const $ pure x
+
 -- | Modify a 'Var' producing a new value and a return result.
 modifyVar :: Var a -> (a -> IO (a, b)) -> IO b
 modifyVar (Var x) f = modifyMVar x f
 
+-- | Strict variant of 'modifyVar''
+modifyVar' :: Var a -> (a -> IO (a, b)) -> IO b
+modifyVar' x f = do
+    (newContents, res) <- modifyVar x $ \v -> do
+        (newContents, res) <- f v
+        pure (newContents, (newContents, res))
+    evaluate newContents
+    pure res
+
 -- | Modify a 'Var', a restricted version of 'modifyVar'.
 modifyVar_ :: Var a -> (a -> IO a) -> IO ()
 modifyVar_ (Var x) f = modifyMVar_ x f
+
+-- | Strict variant of 'modifyVar_'
+modifyVar_' :: Var a -> (a -> IO a) -> IO ()
+modifyVar_' x f = do
+    newContents <- modifyVar x (fmap dupe . f)
+    _ <- evaluate newContents
+    pure ()
 
 -- | Perform some operation using the value in the 'Var',
 --   a restricted version of 'modifyVar'.
