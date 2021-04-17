@@ -165,7 +165,7 @@ writeVar' v x = modifyVar_' v $ const $ pure x
 modifyVar :: Var a -> (a -> IO (a, b)) -> IO b
 modifyVar x f = modifyVar x f
 
--- | Strict variant of 'modifyVar''
+-- | Strict variant of 'modifyVar'
 modifyVar' :: Var a -> (a -> IO (a, b)) -> IO b
 modifyVar' x f = do
     (newContents, res) <- modifyVar x $ \v -> do
