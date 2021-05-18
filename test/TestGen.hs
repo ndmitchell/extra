@@ -26,6 +26,9 @@ tests = do
     testGen "ignore (fail \"die\") == pure ()" $ ignore (fail "die") == pure ()
     testGen "catch (errorIO \"Hello\") (\\(ErrorCall x) -> pure x) == pure \"Hello\"" $ catch (errorIO "Hello") (\(ErrorCall x) -> pure x) == pure "Hello"
     testGen "seq (errorIO \"foo\") (print 1) == print 1" $ seq (errorIO "foo") (print 1) == print 1
+    testGen "catch (assertIO True  >> pure 1) (\\(x :: AssertionFailed) -> pure 2) == pure 1" $ catch (assertIO True  >> pure 1) (\(x :: AssertionFailed) -> pure 2) == pure 1
+    testGen "catch (assertIO False >> pure 1) (\\(x :: AssertionFailed) -> pure 2) == pure 2" $ catch (assertIO False >> pure 1) (\(x :: AssertionFailed) -> pure 2) == pure 2
+    testGen "seq (assertIO False) (print 1) == print 1" $ seq (assertIO False) (print 1) == print 1
     testGen "retry 1 (print \"x\")  == print \"x\"" $ retry 1 (print "x")  == print "x"
     testGen "retry 3 (fail \"die\") == fail \"die\"" $ retry 3 (fail "die") == fail "die"
     testGen "whenJust Nothing  print == pure ()" $ whenJust Nothing  print == pure ()
