@@ -18,7 +18,7 @@ module Data.List.Extra(
     wordsBy, linesBy,
     breakOn, breakOnEnd, splitOn, split, chunksOf,
     -- * Basics
-    headDef, lastDef, notNull, list, unsnoc, cons, snoc,
+    headDef, lastDef, (!?), notNull, list, unsnoc, cons, snoc,
     drop1, dropEnd1, mconcatMap, compareLength, comparingLength,
     -- * Enum operations
     enumerate,
@@ -141,6 +141,19 @@ lastDef :: a -> [a] -> a
 lastDef d xs = foldl (\_ x -> x) d xs -- I know this looks weird, but apparently this is the fastest way to do this: https://hackage.haskell.org/package/base-4.12.0.0/docs/src/GHC.List.html#last
 {-# INLINE lastDef #-}
 
+-- | A total variant of the list index function `(!!)`.
+--
+-- > [2,3,4] !? 1    == Just 3
+-- > [2,3,4] !? (-1) == Nothing
+-- > []      !? 0    == Nothing
+(!?) :: [a] -> Int -> Maybe a
+xs !? n
+  | n < 0     = Nothing
+             -- Definition adapted from GHC.List
+  | otherwise = foldr (\x r k -> case k of
+                                   0 -> Just x
+                                   _ -> r (k-1)) (const Nothing) xs n
+{-# INLINABLE (!?) #-}
 
 -- | A composition of 'not' and 'null'.
 --

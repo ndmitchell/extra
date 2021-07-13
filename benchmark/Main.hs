@@ -11,6 +11,9 @@ main = defaultMain
     , bench "String: Many repeats" $ nf nubOrd stringMany
     , bench "String: Few repeats" $ nf nubOrd stringFew
     ]
+  , bgroup "list-index"
+    [ bench "Middle index" $ nf (!? 5000) ([1..10000] :: [Int])
+    ]
   ]
 
 inputSize :: Int

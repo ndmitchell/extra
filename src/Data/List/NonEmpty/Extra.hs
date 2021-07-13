@@ -4,7 +4,7 @@
 --   also exports the existing "Data.List.NonEmpty" functions.
 module Data.List.NonEmpty.Extra(
     module Data.List.NonEmpty,
-    (|:), (|>), snoc,
+    (|:), (|>), snoc, (!?),
     appendl, appendr,
     sortOn, union, unionBy,
     nubOrd, nubOrdBy, nubOrdOn,
@@ -36,6 +36,18 @@ snoc = (|>)
 -- > [1,2,3] |: 4 |> 5 == 1 :| [2,3,4,5]
 (|:) :: [a] -> a -> NonEmpty a
 (|:) xs x = foldr cons (pure x) xs
+
+-- | A total variant of the list index function `(!?)`.
+--
+-- > 2 :| [3,4] !? 1    == Just 3
+-- > 2 :| [3,4] !? (-1) == Nothing
+-- > 1 :| []    !? 1    == Nothing
+(!?) :: NonEmpty a -> Int -> Maybe a
+(!?) ~(x :| xs) n
+  | n == 0 = Just x
+  | n > 0  = xs List.!? (n - 1)
+  | otherwise = Nothing
+infixl 9 !?
 
 -- | Append a list to a non-empty list.
 --
