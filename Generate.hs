@@ -75,7 +75,7 @@ exclude = ["Data.Foldable.Extra"] -- because all their imports clash
 
 hidden :: String -> [String]
 hidden "Data.List.NonEmpty.Extra" = words
-    "cons snoc sortOn union unionBy nubOrd nubOrdBy nubOrdOn"
+    "cons snoc sortOn union unionBy nubOrd nubOrdBy nubOrdOn (!?)"
 hidden _ = []
 
 notHidden :: String -> String -> Bool
