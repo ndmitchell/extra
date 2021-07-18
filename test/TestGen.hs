@@ -271,9 +271,9 @@ tests = do
     testGen "comparingLength (1:2:3:undefined) [1,2] == GT" $ comparingLength (1:2:3:undefined) [1,2] == GT
     testGen "(1 :| [2,3]) |> 4 |> 5 == 1 :| [2,3,4,5]" $ (1 :| [2,3]) |> 4 |> 5 == 1 :| [2,3,4,5]
     testGen "[1,2,3] |: 4 |> 5 == 1 :| [2,3,4,5]" $ [1,2,3] |: 4 |> 5 == 1 :| [2,3,4,5]
-    testGen "2 :| [3,4] !? 1    == Just 3" $ 2 :| [3,4] !? 1    == Just 3
-    testGen "2 :| [3,4] !? (-1) == Nothing" $ 2 :| [3,4] !? (-1) == Nothing
-    testGen "1 :| []    !? 1    == Nothing" $ 1 :| []    !? 1    == Nothing
+    testGen "(2 :| [3,4]) !? 1    == Just 3" $ (2 :| [3,4]) !? 1    == Just 3
+    testGen "(2 :| [3,4]) !? (-1) == Nothing" $ (2 :| [3,4]) !? (-1) == Nothing
+    testGen "(1 :| [])    !? 1    == Nothing" $ (1 :| [])    !? 1    == Nothing
     testGen "appendl (1 :| [2,3]) [4,5] == 1 :| [2,3,4,5]" $ appendl (1 :| [2,3]) [4,5] == 1 :| [2,3,4,5]
     testGen "appendr [1,2,3] (4 :| [5]) == 1 :| [2,3,4,5]" $ appendr [1,2,3] (4 :| [5]) == 1 :| [2,3,4,5]
     testGen "(1 :| [3, 5, 3]) `union` (4 :| [5, 3, 5, 2]) == 1 :| [3, 5, 3, 4, 2]" $ (1 :| [3, 5, 3]) `union` (4 :| [5, 3, 5, 2]) == 1 :| [3, 5, 3, 4, 2]

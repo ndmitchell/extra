@@ -39,9 +39,9 @@ snoc = (|>)
 
 -- | A total variant of the list index function `(!?)`.
 --
--- > 2 :| [3,4] !? 1    == Just 3
--- > 2 :| [3,4] !? (-1) == Nothing
--- > 1 :| []    !? 1    == Nothing
+-- > (2 :| [3,4]) !? 1    == Just 3
+-- > (2 :| [3,4]) !? (-1) == Nothing
+-- > (1 :| [])    !? 1    == Nothing
 (!?) :: NonEmpty a -> Int -> Maybe a
 (!?) ~(x :| xs) n
   | n == 0 = Just x
