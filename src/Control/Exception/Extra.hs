@@ -89,7 +89,6 @@ withFrozenCallStack = id
 --   With optimizations enabled (and @-fgnore-asserts@) this function ignores its argument and does nothing.
 --
 -- > catch (assertIO True  >> pure 1) (\(x :: AssertionFailed) -> pure 2) == pure 1
--- > catch (assertIO False >> pure 1) (\(x :: AssertionFailed) -> pure 2) == pure 2
 -- > seq (assertIO False) (print 1) == print 1
 assertIO :: Partial => Bool -> IO ()
 assertIO x = withFrozenCallStack $ evaluate $ assert x ()
