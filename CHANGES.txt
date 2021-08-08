@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #81, add assertIO function
     #85, add !? to do !! list indexing returning a Maybe
     #80, add strict Var functions modifyVar', modifyVar_', writeVar'
 1.7.9, released 2020-12-19
