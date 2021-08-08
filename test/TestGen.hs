@@ -4,8 +4,6 @@
 {-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables, TypeApplications, ViewPatterns #-}
 module TestGen(tests) where
 import TestUtil
-import qualified Data.List
-import qualified Data.List.NonEmpty.Extra
 import qualified Data.Ord
 import Test.QuickCheck.Instances.Semigroup ()
 default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))
@@ -272,18 +270,6 @@ tests = do
     testGen "\\(xs :: [Int]) (ys :: [Int]) -> comparingLength xs ys == Data.Ord.comparing length xs ys" $ \(xs :: [Int]) (ys :: [Int]) -> comparingLength xs ys == Data.Ord.comparing length xs ys
     testGen "comparingLength [1,2] (1:2:3:undefined) == LT" $ comparingLength [1,2] (1:2:3:undefined) == LT
     testGen "comparingLength (1:2:3:undefined) [1,2] == GT" $ comparingLength (1:2:3:undefined) [1,2] == GT
-    testGen "(1 :| [2,3]) |> 4 |> 5 == 1 :| [2,3,4,5]" $ (1 :| [2,3]) |> 4 |> 5 == 1 :| [2,3,4,5]
-    testGen "[1,2,3] |: 4 |> 5 == 1 :| [2,3,4,5]" $ [1,2,3] |: 4 |> 5 == 1 :| [2,3,4,5]
-    testGen "(2 :| [3,4]) !? 1    == Just 3" $ (2 :| [3,4]) !? 1    == Just 3
-    testGen "(2 :| [3,4]) !? (-1) == Nothing" $ (2 :| [3,4]) !? (-1) == Nothing
-    testGen "(1 :| [])    !? 1    == Nothing" $ (1 :| [])    !? 1    == Nothing
-    testGen "appendl (1 :| [2,3]) [4,5] == 1 :| [2,3,4,5]" $ appendl (1 :| [2,3]) [4,5] == 1 :| [2,3,4,5]
-    testGen "appendr [1,2,3] (4 :| [5]) == 1 :| [2,3,4,5]" $ appendr [1,2,3] (4 :| [5]) == 1 :| [2,3,4,5]
-    testGen "(1 :| [3, 5, 3]) `union` (4 :| [5, 3, 5, 2]) == 1 :| [3, 5, 3, 4, 2]" $ (1 :| [3, 5, 3]) `union` (4 :| [5, 3, 5, 2]) == 1 :| [3, 5, 3, 4, 2]
-    testGen "Data.List.NonEmpty.Extra.nubOrd (1 :| [2, 3, 3, 4, 1, 2]) == 1 :| [2, 3, 4]" $ Data.List.NonEmpty.Extra.nubOrd (1 :| [2, 3, 3, 4, 1, 2]) == 1 :| [2, 3, 4]
-    testGen "\\xs -> Data.List.NonEmpty.Extra.nubOrd xs == Data.List.NonEmpty.Extra.nub xs" $ \xs -> Data.List.NonEmpty.Extra.nubOrd xs == Data.List.NonEmpty.Extra.nub xs
-    testGen "Data.List.NonEmpty.Extra.nubOrdBy (compare `on` Data.List.length) (\"a\" :| [\"test\",\"of\",\"this\"]) == \"a\" :| [\"test\",\"of\"]" $ Data.List.NonEmpty.Extra.nubOrdBy (compare `on` Data.List.length) ("a" :| ["test","of","this"]) == "a" :| ["test","of"]
-    testGen "Data.List.NonEmpty.Extra.nubOrdOn Data.List.length (\"a\" :| [\"test\",\"of\",\"this\"]) == \"a\" :| [\"test\",\"of\"]" $ Data.List.NonEmpty.Extra.nubOrdOn Data.List.length ("a" :| ["test","of","this"]) == "a" :| ["test","of"]
     testGen "first succ (1,\"test\") == (2,\"test\")" $ first succ (1,"test") == (2,"test")
     testGen "second reverse (1,\"test\") == (1,\"tset\")" $ second reverse (1,"test") == (1,"tset")
     testGen "firstM (\\x -> [x-1, x+1]) (1,\"test\") == [(0,\"test\"),(2,\"test\")]" $ firstM (\x -> [x-1, x+1]) (1,"test") == [(0,"test"),(2,"test")]

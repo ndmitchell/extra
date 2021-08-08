@@ -24,7 +24,7 @@ main = do
         let funcs = filter validIdentifier $ takeWhile (/= "where") $
                     words $ replace "," " " $ drop1 $ dropWhile (/= '(') $
                     unlines $ filter (\x -> not $ any (`isPrefixOf` trim x) ["--","#"]) $ lines src
-        let tests = mapMaybe (stripPrefix "-- > ") $ lines src
+        let tests = if mod `elem` excludeTests then [] else mapMaybe (stripPrefix "-- > ") $ lines src
         pure (mod, funcs, tests)
     writeFileBinaryChanged "src/Extra.hs" $ unlines $
         ["-- GENERATED CODE - DO NOT MODIFY"
@@ -49,8 +49,6 @@ main = do
         ,"{-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables, TypeApplications, ViewPatterns #-}"
         ,"module TestGen(tests) where"
         ,"import TestUtil"
-        ,"import qualified Data.List"
-        ,"import qualified Data.List.NonEmpty.Extra"
         ,"import qualified Data.Ord"
         ,"import Test.QuickCheck.Instances.Semigroup ()"
         ,"default(Maybe Bool,Int,Double,Maybe (Maybe Bool),Maybe (Maybe Char))"
@@ -71,7 +69,15 @@ writeFileBinaryChanged file x = do
         writeFileBinary file x
 
 exclude :: [String]
-exclude = ["Data.Foldable.Extra"] -- because all their imports clash
+exclude =
+    ["Data.Foldable.Extra" -- because all their imports clash
+    ]
+
+excludeTests :: [String]
+-- FIXME: Should probably generate these in another module
+excludeTests =
+    ["Data.List.NonEmpty.Extra" -- because !? clashes and is tested
+    ]
 
 hidden :: String -> [String]
 hidden "Data.List.NonEmpty.Extra" = words
