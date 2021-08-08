@@ -13,7 +13,7 @@ module Control.Exception.Extra(
     retry, retryBool,
     errorWithoutStackTrace,
     showException, stringException,
-    errorIO,
+    errorIO, assertIO,
     -- * Exception catching/ignoring
     ignore,
     catch_, handle_, try_,
@@ -85,6 +85,14 @@ withFrozenCallStack :: a -> a
 withFrozenCallStack = id
 #endif
 
+-- | An 'IO' action that when evaluated calls 'assert' in the 'IO' monad, which throws an 'AssertionFailed' exception if the argument is 'False'.
+--   With optimizations enabled (and @-fgnore-asserts@) this function ignores its argument and does nothing.
+--
+-- > catch (assertIO True  >> pure 1) (\(x :: AssertionFailed) -> pure 2) == pure 1
+-- > catch (assertIO False >> pure 1) (\(x :: AssertionFailed) -> pure 2) == pure 2
+-- > seq (assertIO False) (print 1) == print 1
+assertIO :: Partial => Bool -> IO ()
+assertIO x = withFrozenCallStack $ evaluate $ assert x ()
 
 -- | Retry an operation at most /n/ times (/n/ must be positive).
 --   If the operation fails the /n/th time it will throw that final exception.
