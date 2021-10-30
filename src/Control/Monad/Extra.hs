@@ -30,6 +30,7 @@ import Prelude
 -- General utilities
 
 -- | Perform some operation on 'Just', given the field inside the 'Just'.
+--   This is a specialized 'Data.Foldable.for_'.
 --
 -- > whenJust Nothing  print == pure ()
 -- > whenJust (Just 1) print == print 1
