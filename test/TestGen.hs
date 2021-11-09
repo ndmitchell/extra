@@ -81,6 +81,10 @@ tests = do
     testGen "mapLeft show (Right True) == Right True" $ mapLeft show (Right True) == Right True
     testGen "mapRight show (Left 1) == Left 1" $ mapRight show (Left 1) == Left 1
     testGen "mapRight show (Right True) == Right \"True\"" $ mapRight show (Right True) == Right "True"
+    testGen "replaceLeft \"One\" (Left 1) == Left \"One\"" $ replaceLeft "One" (Left 1) == Left "One"
+    testGen "replaceLeft \"One\" (Right 1) == Right 1" $ replaceLeft "One" (Right 1) == Right 1
+    testGen "replaceRight \"One\" (Left 1) == Left 1" $ replaceRight "One" (Left 1) == Left 1
+    testGen "replaceRight \"One\" (Right 1) == Right \"One\"" $ replaceRight "One" (Right 1) == Right "One"
     testGen "\\xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs" $ \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
     testGen "\\xs -> repeatedly word1 (trim xs) == words xs" $ \xs -> repeatedly word1 (trim xs) == words xs
     testGen "\\xs -> repeatedly line1 xs == lines xs" $ \xs -> repeatedly line1 xs == lines xs

@@ -102,3 +102,19 @@ mapLeft f = either (Left . f) Right
 -- > mapRight show (Right True) == Right "True"
 mapRight :: (b -> c) -> Either a b -> Either a c
 mapRight = fmap
+
+-- | The `replaceLeft` function takes a value and an Either value and
+-- replaces the Either value if the Either value takes the form @'Left' _@.
+--
+-- > replaceLeft "One" (Left 1) == Left "One"
+-- > replaceLeft "One" (Right 1) == Right 1
+replaceLeft :: c -> Either a b -> Either c b
+replaceLeft l = mapLeft $ const l
+
+-- | The `replaceRight` function takes a value and an Either value and
+-- replaces the Either value if the Either value takes the form @'Right' _@.
+--
+-- > replaceRight "One" (Left 1) == Left 1
+-- > replaceRight "One" (Right 1) == Right "One"
+replaceRight :: c -> Either a b -> Either a c
+replaceRight r = mapRight $ const r
