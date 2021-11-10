@@ -13,6 +13,7 @@ module Data.Either.Extra(
     fromLeft', fromRight',
     eitherToMaybe, maybeToEither,
     mapLeft, mapRight,
+    replaceLeft, replaceRight,
     ) where
 
 import Data.Either
