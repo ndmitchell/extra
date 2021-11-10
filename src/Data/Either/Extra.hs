@@ -110,7 +110,7 @@ mapRight = fmap
 -- > replaceLeft "One" (Left 1) == Left "One"
 -- > replaceLeft "One" (Right 1) == Right 1
 replaceLeft :: c -> Either a b -> Either c b
-replaceLeft l = mapLeft $ const l
+replaceLeft = mapLeft . const
 
 -- | The `replaceRight` function takes a value and an Either value and
 -- replaces the Either value if the Either value takes the form @'Right' _@.
@@ -118,4 +118,4 @@ replaceLeft l = mapLeft $ const l
 -- > replaceRight "One" (Left 1) == Left 1
 -- > replaceRight "One" (Right 1) == Right "One"
 replaceRight :: c -> Either a b -> Either a c
-replaceRight r = mapRight $ const r
+replaceRight = mapRight . const
