@@ -8,7 +8,8 @@ module Data.List.NonEmpty.Extra(
     appendl, appendr,
     sortOn, union, unionBy,
     nubOrd, nubOrdBy, nubOrdOn,
-    maximum1, minimum1, maximumBy1, minimumBy1, maximumOn1, minimumOn1
+    maximum1, minimum1, maximumBy1, minimumBy1, maximumOn1, minimumOn1,
+    foldl1'
     ) where
 
 import           Data.Function
@@ -123,3 +124,7 @@ maximumOn1 f = maximumBy1 (compare `on` f)
 -- | A version of 'minimum1' where the comparison is done on some extracted value.
 minimumOn1 :: Ord b => (a -> b) -> NonEmpty a -> a
 minimumOn1 f = minimumBy1 (compare `on` f)
+
+-- | A strict variant of variant `foldl1`
+foldl1' :: (a -> a -> a) -> NonEmpty a -> a
+foldl1' f (x:|xs) =  List.foldl' f x xs
