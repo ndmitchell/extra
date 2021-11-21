@@ -81,7 +81,7 @@ excludeTests =
 
 hidden :: String -> [String]
 hidden "Data.List.NonEmpty.Extra" = words
-    "cons snoc sortOn union unionBy nubOrd nubOrdBy nubOrdOn (!?)"
+    "cons snoc sortOn union unionBy nubOrd nubOrdBy nubOrdOn (!?) foldl1'"
 hidden _ = []
 
 notHidden :: String -> String -> Bool
