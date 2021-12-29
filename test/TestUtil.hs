@@ -83,12 +83,9 @@ instance Testable a => Testable (IO a) where
 -- So we print out full information on failure
 instance (Show a, Eq a) => Eq (IO a) where
     a == b = unsafePerformIO $ do
-        a <- try_ $ captureOutput a
-        b <- try_ $ captureOutput b
-        -- On Windows/Mac it seems we sometimes get failures
-        -- on two errors, even though the errors are visually
-        -- indistinguishable. That's close enough for a test.
-        if a == b || show a == show b then pure True else
+        a <- captureOutput $ try_ a
+        b <- captureOutput $ try_ b
+        if a == b then pure True else
             error $ show ("IO values not equal", a, b)
 
 instance Show (IO a) where
