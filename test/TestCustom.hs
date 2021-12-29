@@ -1,5 +1,5 @@
 
-module TestCustom(testCustom) where
+module TestCustom(testSetup, testCustom) where
 
 import Control.Concurrent.Extra
 import Control.Monad
@@ -9,6 +9,14 @@ import TestUtil
 import Data.List.Extra as X
 
 
+-- | Test that the basic test mechanisms work
+testSetup :: IO ()
+testSetup = do
+    testGen "withTempFile" $ withTempFile (\file -> writeFile file "") == pure ()
+    testGen "captureOutput" $ captureOutput (print 1) == pure ("1\n", ())
+
+
+-- | Custom written tests
 testCustom :: IO ()
 testCustom = do
     -- check that Extra really does export these things

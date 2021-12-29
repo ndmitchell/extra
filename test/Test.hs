@@ -16,5 +16,6 @@ _unused6 x = x :: Seconds
 
 main :: IO ()
 main = runTests $ do
+    testSetup
     tests
     testCustom
