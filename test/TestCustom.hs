@@ -12,7 +12,7 @@ import Data.List.Extra as X
 -- | Test that the basic test mechanisms work
 testSetup :: IO ()
 testSetup = do
-    testGen "withTempFile" $ withTempFile (\file -> writeFile file "") == pure ()
+    testGen "withTempFile" $ withTempFile (`writeFile` "") == pure ()
     testGen "captureOutput" $ captureOutput (print 1) == pure ("1\n", ())
 
 
