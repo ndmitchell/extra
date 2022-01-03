@@ -15,7 +15,7 @@ When producing a library of extra functions I have been guided by a few principl
 
 * I have been using most of these functions in my packages - they have proved useful enough to be worth copying/pasting into each project.
 * The functions follow the spirit of the original Prelude/base libraries. I am happy to provide partial functions (e.g. `fromRight`), and functions which are specialisations of more generic functions (`whenJust`).
-* Most of the functions have trivial implementations. If a beginner couldn't write the function, it probably doesn't belong here.
+* Most of the functions have trivial implementations that are obvious from their name/signature. If a beginner couldn't write the function, it probably doesn't belong here.
 * I have defined only a few new data types or type aliases. It's a package for defining new utilities on existing types, not new types or concepts.
 
 ## Base versions
