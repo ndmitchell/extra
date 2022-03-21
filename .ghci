@@ -1,5 +1,5 @@
-:set -fwarn-unused-binds -fwarn-unused-imports -fwarn-orphans
-:set -fno-warn-deprecations
+:set -Wunused-binds -Wunused-imports -Worphans
+:set -Wno-deprecations
 :set -isrc -itest
 :load Extra Generate Test
 :module Extra
