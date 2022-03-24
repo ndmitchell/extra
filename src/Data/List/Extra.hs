@@ -72,7 +72,7 @@ disjoint xs = null . intersect xs
 -- | /O((m+n) log m), m <= n/. Are two lists disjoint, with no elements in common.
 --
 -- @disjointOrd@ is more strict than `disjoint`. For example, @disjointOrd@ cannot
--- terminate if both lists are inifite, while `disjoint` can.
+-- terminate if both lists are infinite, while `disjoint` can.
 --
 -- > disjointOrd [1,2,3] [4,5] == True
 -- > disjointOrd [1,2,3] [4,1] == False
