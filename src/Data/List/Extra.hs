@@ -25,7 +25,7 @@ module Data.List.Extra(
     -- * List operations
     groupSort, groupSortOn, groupSortBy,
     nubOrd, nubOrdBy, nubOrdOn,
-    nubOn, groupOn,
+    nubOn, groupOn, groupOnKey,
     nubSort, nubSortBy, nubSortOn,
     maximumOn, minimumOn,
     sum', product',
@@ -415,6 +415,15 @@ groupOn :: Eq b => (a -> b) -> [a] -> [[a]]
 groupOn f = groupBy ((==) `on2` f)
     -- redefine on so we avoid duplicate computation for most values.
     where (.*.) `on2` f = \x -> let fx = f x in \y -> fx .*. f y
+
+
+-- | A version of 'groupOn' which pairs each group with its "key" - the
+--   extracted value used for equality testing.
+groupOnKey :: Eq b => (a -> b) -> [a] -> [(b, [a])]
+groupOnKey _ []     = []
+groupOnKey f (x:xs) = (fx, (x:matchesFirst)) : groupOnKey f rest
+    where fx = f x
+          (matchesFirst, rest) = span (\y -> fx == f y) xs
 
 
 -- | /DEPRECATED/ Use 'nubOrdOn', since this function is _O(n^2)_.
