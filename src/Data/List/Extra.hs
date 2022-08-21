@@ -411,6 +411,8 @@ unescapeJSON [] = []
 
 
 -- | A version of 'group' where the equality is done on some extracted value.
+--
+-- > groupOn abs [1,-1,2] == [[1,-1], [2]]
 groupOn :: Eq k => (a -> k) -> [a] -> [[a]]
 groupOn f = groupBy ((==) `on2` f)
     -- redefine on so we avoid duplicate computation for most values.
@@ -419,6 +421,8 @@ groupOn f = groupBy ((==) `on2` f)
 
 -- | A version of 'groupOn' which pairs each group with its "key" - the
 --   extracted value used for equality testing.
+--
+-- > groupOnKey abs [1,-1,2] == [(1, [1,-1]), (2, [2])]
 groupOnKey :: Eq k => (a -> k) -> [a] -> [(k, [a])]
 groupOnKey _ []     = []
 groupOnKey f (x:xs) = (fx, (x:yes)) : groupOnKey f no
