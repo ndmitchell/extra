@@ -1,7 +1,7 @@
 cabal-version:      1.18
 build-type:         Simple
 name:               extra
-version:            1.7.10
+version:            1.7.11
 license:            BSD3
 license-file:       LICENSE
 category:           Development

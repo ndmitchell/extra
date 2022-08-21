@@ -1,5 +1,6 @@
 Changelog for Extra
 
+1.7.11, released 2022-08-21
     #95, add List.repeatedlyNE and NonEmpty.repeatedly
     #94, add groupOnKey
     #91, add foldl1' to NonEmpty
