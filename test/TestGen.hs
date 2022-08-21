@@ -171,6 +171,8 @@ tests = do
     testGen "escapeJSON \"\\ttab\\nnewline\\\\\" == \"\\\\ttab\\\\nnewline\\\\\\\\\"" $ escapeJSON "\ttab\nnewline\\" == "\\ttab\\nnewline\\\\"
     testGen "escapeJSON \"\\ESC[0mHello\" == \"\\\\u001b[0mHello\"" $ escapeJSON "\ESC[0mHello" == "\\u001b[0mHello"
     testGen "\\xs -> unescapeJSON (escapeJSON xs) == xs" $ \xs -> unescapeJSON (escapeJSON xs) == xs
+    testGen "groupOn abs [1,-1,2] == [[1,-1], [2]]" $ groupOn abs [1,-1,2] == [[1,-1], [2]]
+    testGen "groupOnKey abs [1,-1,2] == [(1, [1,-1]), (2, [2])]" $ groupOnKey abs [1,-1,2] == [(1, [1,-1]), (2, [2])]
     testGen "maximumOn id [] == undefined" $ erroneous $ maximumOn id []
     testGen "maximumOn length [\"test\",\"extra\",\"a\"] == \"extra\"" $ maximumOn length ["test","extra","a"] == "extra"
     testGen "minimumOn id [] == undefined" $ erroneous $ minimumOn id []
