@@ -54,9 +54,9 @@ import Data.List.NonEmpty (NonEmpty ((:|)))
 -- | Apply some operation repeatedly, producing an element of output
 --   and the remainder of the list.
 --
--- When empty list is reached it is returned.
--- So operation is @never@ applied to empty input.
--- To use this invariant without partial functions see 'repeatedlyNE'
+-- When the empty list is reached it is returned, so the operation
+-- is /never/ applied to the empty input.
+-- That fact is encoded in the type system with 'repeatedlyNE'
 --
 -- > \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
 -- > \xs -> repeatedly word1 (trim xs) == words xs
@@ -68,9 +68,8 @@ repeatedly f as = b : repeatedly f as'
 
 -- | Apply some operation repeatedly, producing an element of output
 --   and the remainder of the list.
--- 
--- It's exactly the same as 'repeatedly', but allows to take a non-empty
--- list in operation
+--
+-- Identical to 'repeatedly', but has a more precise type signature.
 repeatedlyNE :: (NonEmpty a -> (b, [a])) -> [a] -> [b]
 repeatedlyNE f [] = []
 repeatedlyNE f (a : as) = b : repeatedlyNE f as'
