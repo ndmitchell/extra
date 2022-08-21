@@ -425,7 +425,7 @@ groupOn f = groupBy ((==) `on2` f)
 -- > groupOnKey abs [1,-1,2] == [(1, [1,-1]), (2, [2])]
 groupOnKey :: Eq k => (a -> k) -> [a] -> [(k, [a])]
 groupOnKey _ []     = []
-groupOnKey f (x:xs) = (fx, (x:yes)) : groupOnKey f no
+groupOnKey f (x:xs) = (fx, x:yes) : groupOnKey f no
     where
         fx = f x
         (yes, no) = span (\y -> fx == f y) xs
