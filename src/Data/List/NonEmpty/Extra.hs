@@ -9,7 +9,7 @@ module Data.List.NonEmpty.Extra(
     sortOn, union, unionBy,
     nubOrd, nubOrdBy, nubOrdOn,
     maximum1, minimum1, maximumBy1, minimumBy1, maximumOn1, minimumOn1,
-    foldl1'
+    foldl1', repeatedly
     ) where
 
 import           Data.Function
@@ -128,3 +128,9 @@ minimumOn1 f = minimumBy1 (compare `on` f)
 -- | A strict variant of variant `foldl1`
 foldl1' :: (a -> a -> a) -> NonEmpty a -> a
 foldl1' f (x:|xs) =  List.foldl' f x xs
+
+-- | Apply some operation repeatedly, producing an element of output
+--   and the remainder of the list.
+repeatedly :: (NonEmpty a -> (b, [a])) -> NonEmpty a -> NonEmpty b
+repeatedly f (a :| as) = b :| List.repeatedlyNE f as'
+    where (b, as') = f (a :| as)

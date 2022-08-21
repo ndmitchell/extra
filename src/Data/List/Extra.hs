@@ -31,7 +31,7 @@ module Data.List.Extra(
     sum', product',
     sumOn', productOn',
     disjoint, disjointOrd, disjointOrdBy, allSame, anySame,
-    repeatedly, firstJust,
+    repeatedly, repeatedlyNE, firstJust,
     concatUnzip, concatUnzip3,
     zipFrom, zipWithFrom, zipWithLongest,
     replace, merge, mergeBy,
@@ -48,10 +48,15 @@ import Numeric
 import Data.Functor
 import Data.Foldable
 import Prelude
+import Data.List.NonEmpty (NonEmpty ((:|)))
 
 
 -- | Apply some operation repeatedly, producing an element of output
 --   and the remainder of the list.
+--
+-- When empty list is reached it is returned.
+-- So operation is @never@ applied to empty input.
+-- To use this invariant without partial functions see 'repeatedlyNE'
 --
 -- > \xs -> repeatedly (splitAt 3) xs  == chunksOf 3 xs
 -- > \xs -> repeatedly word1 (trim xs) == words xs
@@ -60,6 +65,17 @@ repeatedly :: ([a] -> (b, [a])) -> [a] -> [b]
 repeatedly f [] = []
 repeatedly f as = b : repeatedly f as'
     where (b, as') = f as
+
+-- | Apply some operation repeatedly, producing an element of output
+--   and the remainder of the list.
+-- 
+-- It's exactly the same as 'repeatedly', but allows to take a non-empty
+-- list in operation
+repeatedlyNE :: (NonEmpty a -> (b, [a])) -> [a] -> [b]
+repeatedlyNE f [] = []
+repeatedlyNE f (a : as) = b : repeatedlyNE f as'
+    where (b, as') = f (a :| as)
+
 
 
 -- | Are two lists disjoint, with no elements in common.
