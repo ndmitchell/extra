@@ -1,5 +1,6 @@
 module Data.Foldable.Extra
     ( module Data.Foldable
+    , notNull
     , sum'
     , product'
     , sumOn'
@@ -14,6 +15,10 @@ module Data.Foldable.Extra
 
 import Data.Foldable
 import qualified Control.Monad.Extra as MX
+
+-- | Composition of 'not' and 'null'
+notNull :: Foldable f => f a -> Bool
+notNull = not . null
 
 -- | A generalization of 'Data.List.Extra.sum'' to 'Foldable' instances.
 sum' :: (Foldable f, Num a) => f a -> a
