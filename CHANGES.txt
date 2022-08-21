@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #94, add groupOnKey
     #91, add foldl1' to NonEmpty
 1.7.10, released 2021-08-29
     #81, add assertIO function
