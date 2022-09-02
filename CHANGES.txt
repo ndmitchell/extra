@@ -1,5 +1,8 @@
 Changelog for Extra
 
+    #98, make both lazy in its argument
+    #98, make first3,second3,third3 lazy in their argument
+    #98, make firstM,secondM lazy in their argument
     #86, add notNull for Foldable
 1.7.11, released 2022-08-21
     #95, add List.repeatedlyNE and NonEmpty.repeatedly

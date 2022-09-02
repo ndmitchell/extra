@@ -38,13 +38,13 @@ second = Arrow.second
 --
 -- > firstM (\x -> [x-1, x+1]) (1,"test") == [(0,"test"),(2,"test")]
 firstM :: Functor m => (a -> m a') -> (a, b) -> m (a', b)
-firstM f (a,b) = (,b) <$> f a
+firstM f ~(a,b) = (,b) <$> f a
 
 -- | Update the second component of a pair.
 --
 -- > secondM (\x -> [reverse x, x]) (1,"test") == [(1,"tset"),(1,"test")]
 secondM :: Functor m => (b -> m b') -> (a, b) -> m (a, b')
-secondM f (a,b) = (a,) <$> f b
+secondM f ~(a,b) = (a,) <$> f b
 
 -- | Given two functions, apply one to the first component and one to the second.
 --   A specialised version of 'Control.Arrow.***'.
@@ -70,7 +70,7 @@ dupe x = (x,x)
 --
 -- > both succ (1,2) == (2,3)
 both :: (a -> b) -> (a, a) -> (b, b)
-both f (x,y) = (f x, f y)
+both f ~(x,y) = (f x, f y)
 
 -- | Extract the 'fst' of a triple.
 fst3 :: (a,b,c) -> a
@@ -97,16 +97,16 @@ uncurry3 f ~(a,b,c) = f a b c
 --
 -- > first3 succ (1,1,1) == (2,1,1)
 first3 :: (a -> a') -> (a, b, c) -> (a', b, c)
-first3 f (a,b,c) = (f a,b,c)
+first3 f ~(a,b,c) = (f a,b,c)
 
 -- | Update the second component of a triple.
 --
 -- > second3 succ (1,1,1) == (1,2,1)
 second3 :: (b -> b') -> (a, b, c) -> (a, b', c)
-second3 f (a,b,c) = (a,f b,c)
+second3 f ~(a,b,c) = (a,f b,c)
 
 -- | Update the third component of a triple.
 --
 -- > third3 succ (1,1,1) == (1,1,2)
 third3 :: (c -> c') -> (a, b, c) -> (a, b, c')
-third3 f (a,b,c) = (a,b,f c)
+third3 f ~(a,b,c) = (a,b,f c)
