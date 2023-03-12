@@ -1,4 +1,4 @@
-{-# LANGUAGE TupleSections, ConstraintKinds #-}
+{-# LANGUAGE CPP, TupleSections, ConstraintKinds #-}
 
 -- | This module extends "Data.List" with extra functions of a similar nature.
 --   The package also exports the existing "Data.List" functions.
@@ -156,6 +156,7 @@ lastDef :: a -> [a] -> a
 lastDef d xs = foldl (\_ x -> x) d xs -- I know this looks weird, but apparently this is the fastest way to do this: https://hackage.haskell.org/package/base-4.12.0.0/docs/src/GHC.List.html#last
 {-# INLINE lastDef #-}
 
+#if !MIN_VERSION_base(4,19,0)
 -- | A total variant of the list index function `(!!)`.
 --
 -- > [2,3,4] !? 1    == Just 3
@@ -169,6 +170,7 @@ xs !? n
                                    0 -> Just x
                                    _ -> r (k-1)) (const Nothing) xs n
 {-# INLINABLE (!?) #-}
+#endif
 
 -- | A composition of 'not' and 'null'.
 --
