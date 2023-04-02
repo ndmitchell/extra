@@ -1,4 +1,3 @@
-{-# LANGUAGE TupleSections #-}
 
 -- | Extra functions for working with monoids.
 module Data.Monoid.Extra(
