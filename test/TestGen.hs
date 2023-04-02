@@ -190,8 +190,9 @@ tests = do
     testGen "\\xs ys -> merge (sort xs) (sort ys) == sort (xs ++ ys)" $ \xs ys -> merge (sort xs) (sort ys) == sort (xs ++ ys)
     testGen "replace \"el\" \"_\" \"Hello Bella\" == \"H_lo B_la\"" $ replace "el" "_" "Hello Bella" == "H_lo B_la"
     testGen "replace \"el\" \"e\" \"Hello\"       == \"Helo\"" $ replace "el" "e" "Hello"       == "Helo"
-    testGen "replace \"\" \"e\" \"Hello\"         == undefined" $ erroneous $ replace "" "e" "Hello"
-    testGen "\\xs ys -> not (null xs) ==> replace xs xs ys == ys" $ \xs ys -> not (null xs) ==> replace xs xs ys == ys
+    testGen "replace \"\" \"x\" \"Hello\"         == \"xHxexlxlxox\"" $ replace "" "x" "Hello"         == "xHxexlxlxox"
+    testGen "replace \"\" \"x\" \"\"              == \"x\"" $ replace "" "x" ""              == "x"
+    testGen "\\xs ys -> replace xs xs ys == ys" $ \xs ys -> replace xs xs ys == ys
     testGen "breakEnd isLower \"youRE\" == (\"you\",\"RE\")" $ breakEnd isLower "youRE" == ("you","RE")
     testGen "breakEnd isLower \"youre\" == (\"youre\",\"\")" $ breakEnd isLower "youre" == ("youre","")
     testGen "breakEnd isLower \"YOURE\" == (\"\",\"YOURE\")" $ breakEnd isLower "YOURE" == ("","YOURE")

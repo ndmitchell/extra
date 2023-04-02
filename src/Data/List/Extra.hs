@@ -551,15 +551,17 @@ mergeBy f (x:xs) (y:ys)
     | otherwise = y : mergeBy f (x:xs) ys
 
 
--- | Replace a subsequence everywhere it occurs. The first argument must
---   not be the empty list.
+-- | Replace a subsequence everywhere it occurs.
 --
 -- > replace "el" "_" "Hello Bella" == "H_lo B_la"
 -- > replace "el" "e" "Hello"       == "Helo"
--- > replace "" "e" "Hello"         == undefined
--- > \xs ys -> not (null xs) ==> replace xs xs ys == ys
-replace :: (Partial, Eq a) => [a] -> [a] -> [a] -> [a]
-replace [] _ _ = error "Extra.replace, first argument cannot be empty"
+-- > replace "" "x" "Hello"         == "xHxexlxlxox"
+-- > replace "" "x" ""              == "x"
+-- > \xs ys -> replace xs xs ys == ys
+replace :: Eq a => [a] -> [a] -> [a] -> [a]
+replace [] to xs = go xs
+    where go [] = to
+          go (x:xs) = to ++ x : go xs
 replace from to xs | Just xs <- stripPrefix from xs = to ++ replace from to xs
 replace from to (x:xs) = x : replace from to xs
 replace from to [] = []
