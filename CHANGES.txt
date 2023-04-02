@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #101, future-proof against addition of Data.List.!?
 1.7.12, released 2022-09-02
     #98, make both lazy in its argument
     #98, make first3,second3,third3 lazy in their argument
