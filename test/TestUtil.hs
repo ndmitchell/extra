@@ -24,7 +24,7 @@ import Data.IORef.Extra as X
 import Data.List.Extra as X hiding (union, unionBy)
 import Data.List.NonEmpty.Extra as X (NonEmpty(..), (|>), (|:), appendl, appendr, union, unionBy)
 import Data.Maybe as X
-import Data.Monoid as X
+import Data.Monoid.Extra as X
 import Data.Tuple.Extra as X
 import Data.Version.Extra as X
 import Numeric.Extra as X

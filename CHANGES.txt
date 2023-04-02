@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #102, add mwhen :: Monoid a => Bool -> a -> a
     #99, make replace with an empty from intersperse the replacement
     #101, future-proof against addition of Data.List.!?
 1.7.12, released 2022-09-02

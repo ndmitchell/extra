@@ -27,6 +27,9 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     -- * Data.List.NonEmpty.Extra
     -- | Extra functions available in @"Data.List.NonEmpty.Extra"@.
     (|:), (|>), appendl, appendr, maximum1, minimum1, maximumBy1, minimumBy1, maximumOn1, minimumOn1,
+    -- * Data.Monoid.Extra
+    -- | Extra functions available in @"Data.Monoid.Extra"@.
+    mwhen,
     -- * Data.Tuple.Extra
     -- | Extra functions available in @"Data.Tuple.Extra"@.
     first, second, (***), (&&&), dupe, both, firstM, secondM, fst3, snd3, thd3, first3, second3, third3, curry3, uncurry3,
@@ -60,6 +63,7 @@ import Data.Either.Extra
 import Data.IORef.Extra
 import Data.List.Extra
 import Data.List.NonEmpty.Extra hiding (cons, snoc, sortOn, union, unionBy, nubOrd, nubOrdBy, nubOrdOn, (!?), foldl1', repeatedly)
+import Data.Monoid.Extra
 import Data.Tuple.Extra
 import Data.Version.Extra
 import Numeric.Extra

@@ -272,6 +272,8 @@ tests = do
     testGen "\\(xs :: [Int]) (ys :: [Int]) -> comparingLength xs ys == Data.Ord.comparing length xs ys" $ \(xs :: [Int]) (ys :: [Int]) -> comparingLength xs ys == Data.Ord.comparing length xs ys
     testGen "comparingLength [1,2] (1:2:3:undefined) == LT" $ comparingLength [1,2] (1:2:3:undefined) == LT
     testGen "comparingLength (1:2:3:undefined) [1,2] == GT" $ comparingLength (1:2:3:undefined) [1,2] == GT
+    testGen "mwhen True  \"test\" == \"test\"" $ mwhen True  "test" == "test"
+    testGen "mwhen False \"test\" == \"\"" $ mwhen False "test" == ""
     testGen "first succ (1,\"test\") == (2,\"test\")" $ first succ (1,"test") == (2,"test")
     testGen "second reverse (1,\"test\") == (1,\"tset\")" $ second reverse (1,"test") == (1,"tset")
     testGen "firstM (\\x -> [x-1, x+1]) (1,\"test\") == [(0,\"test\"),(2,\"test\")]" $ firstM (\x -> [x-1, x+1]) (1,"test") == [(0,"test"),(2,"test")]
