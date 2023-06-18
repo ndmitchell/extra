@@ -38,7 +38,7 @@ module Data.List.Extra(
     ) where
 
 import Partial
-import Data.List
+import Data.List hiding (unsnoc, (!?))
 import Data.Maybe
 import Data.Function
 import Data.Char
@@ -288,7 +288,7 @@ zipWithFrom f a = zipWith f [a..]
 --
 -- > concatUnzip [("a","AB"),("bc","C")] == ("abc","ABC")
 concatUnzip :: [([a], [b])] -> ([a], [b])
-concatUnzip = (concat *** concat) . unzip
+concatUnzip = (concat *** concat) . Prelude.unzip
 
 -- | A merging of 'unzip3' and 'concat'.
 --
