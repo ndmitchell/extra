@@ -189,6 +189,7 @@ list :: b -> (a -> [a] -> b) -> [a] -> b
 list nil cons [] = nil
 list nil cons (x:xs) = cons x xs
 
+#if !MIN_VERSION_base(4,19,0)
 -- | If the list is empty returns 'Nothing', otherwise returns the 'init' and the 'last'.
 --
 -- > unsnoc "test" == Just ("tes",'t')
@@ -199,6 +200,7 @@ unsnoc [] = Nothing
 unsnoc [x] = Just ([], x)
 unsnoc (x:xs) = Just (x:a, b)
     where Just (a,b) = unsnoc xs
+#endif
 
 -- | Append an element to the start of a list, an alias for '(:)'.
 --
