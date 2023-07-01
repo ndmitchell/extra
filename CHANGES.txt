@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    #103, future-proof against addition of Data.List.unsnoc
 1.7.13, released 2023-04-22
     #102, add mwhen :: Monoid a => Bool -> a -> a
     #99, make replace with an empty from intersperse the replacement
