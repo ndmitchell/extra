@@ -156,7 +156,7 @@ lastDef :: a -> [a] -> a
 lastDef d xs = foldl (\_ x -> x) d xs -- I know this looks weird, but apparently this is the fastest way to do this: https://hackage.haskell.org/package/base-4.12.0.0/docs/src/GHC.List.html#last
 {-# INLINE lastDef #-}
 
-#if !MIN_VERSION_base(4,19,0)
+#if __GLASGOW_HASKELL__ >= 807
 -- | A total variant of the list index function `(!!)`.
 --
 -- > [2,3,4] !? 1    == Just 3
@@ -189,7 +189,7 @@ list :: b -> (a -> [a] -> b) -> [a] -> b
 list nil cons [] = nil
 list nil cons (x:xs) = cons x xs
 
-#if !MIN_VERSION_base(4,19,0)
+#if __GLASGOW_HASKELL__ >= 807
 -- | If the list is empty returns 'Nothing', otherwise returns the 'init' and the 'last'.
 --
 -- > unsnoc "test" == Just ("tes",'t')
