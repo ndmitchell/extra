@@ -290,7 +290,7 @@ zipWithFrom f a = zipWith f [a..]
 --
 -- > concatUnzip [("a","AB"),("bc","C")] == ("abc","ABC")
 concatUnzip :: [([a], [b])] -> ([a], [b])
-concatUnzip = (concat *** concat) . unzip
+concatUnzip = (concat *** concat) . Prelude.unzip
 
 -- | A merging of 'unzip3' and 'concat'.
 --
