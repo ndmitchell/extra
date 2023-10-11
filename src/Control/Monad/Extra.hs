@@ -52,7 +52,7 @@ pureIf :: (Alternative m) => Bool -> a -> m a
 pureIf b a = if b then pure a else empty
 
 -- | Like 'when', but return either 'Nothing' if the predicate was 'False',
---   of 'Just' with the result of the computation.
+--   or 'Just' with the result of the computation.
 --
 -- > whenMaybe True  (print 1) == fmap Just (print 1)
 -- > whenMaybe False (print 1) == pure Nothing
