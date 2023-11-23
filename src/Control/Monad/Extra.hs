@@ -11,6 +11,7 @@ module Control.Monad.Extra(
     whenMaybe, whenMaybeM,
     unit,
     maybeM, fromMaybeM, eitherM,
+    guarded,
     -- * Loops
     loop, loopM, whileM, whileJustM, untilJustM,
     -- * Lists
@@ -87,6 +88,15 @@ fromMaybeM n x = maybeM n pure x
 -- | Monadic generalisation of 'either'.
 eitherM :: Monad m => (a -> m c) -> (b -> m c) -> m (Either a b) -> m c
 eitherM l r x = either l r =<< x
+
+-- | Either lifts a value into an alternative context or gives a
+--   minimal value depending on a predicate. Works with 'Alternative's.
+--
+-- > guarded even 2 == [2]
+-- > guarded odd 2 == Nothing
+-- > guarded (not.null) "My Name" == Just "My Name"
+guarded :: Alternative m => (a -> Bool) -> a -> m a
+guarded pred x = if pred x then pure x else empty
 
 -- | A variant of 'foldM' that has no base case, and thus may only be applied to non-empty lists.
 --
