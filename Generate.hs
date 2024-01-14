@@ -2,7 +2,7 @@
 -- Typical usage is run:
 --
 -- * `cabal test` to install the necessary packages
--- * `cabal exec repl` to get into GHCi
+-- * `cabal exec ghci` to get into GHCi
 -- * `:go` or `:generate` to run this generator
 
 module Generate(main) where
