@@ -496,7 +496,8 @@ minimumOn f (x:xs) = g x (f x) xs
 -- > \xs -> map fst (groupSort xs) == sort (nub (map fst xs))
 -- > \xs -> concatMap snd (groupSort xs) == map snd (sortOn fst xs)
 groupSort :: Ord k => [(k, v)] -> [(k, [v])]
-groupSort = map (\x -> (fst $ head x, map snd x)) . groupOn fst . sortOn fst
+groupSort = map (\x -> (fst $ headErr x, map snd x)) . groupOn fst . sortOn fst
+    where headErr (x:_) = x
 
 -- | A combination of 'group' and 'sort', using a part of the value to compare on.
 --
