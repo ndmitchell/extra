@@ -47,6 +47,7 @@ main = do
         ,"-- See Generate.hs for details of how to generate"
         ,""
         ,"{-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables, TypeApplications, ViewPatterns #-}"
+        ,"{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}"
         ,"module TestGen(tests) where"
         ,"import TestUtil"
         ,"import qualified Data.Ord"
