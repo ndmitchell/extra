@@ -1,5 +1,6 @@
 Changelog for Extra
 
+    Test with GHC 9.8
 1.7.14, released 2023-07-01
     #106, add compatibility with GHC 9.7
     #103, future-proof against addition of Data.List.unsnoc

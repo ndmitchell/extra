@@ -1,5 +1,9 @@
 -- This module generates the files src/Extra.hs and test/TestGen.hs.
--- Either call "runghc Generate" or start "ghci" and use ":generate".
+-- Typical usage is run:
+--
+-- * `cabal test` to install the necessary packages
+-- * `cabal exec ghci` to get into GHCi
+-- * `:go` or `:generate` to run this generator
 
 module Generate(main) where
 
@@ -47,6 +51,7 @@ main = do
         ,"-- See Generate.hs for details of how to generate"
         ,""
         ,"{-# LANGUAGE ExtendedDefaultRules, ScopedTypeVariables, TypeApplications, ViewPatterns #-}"
+        ,"{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}"
         ,"module TestGen(tests) where"
         ,"import TestUtil"
         ,"import qualified Data.Ord"

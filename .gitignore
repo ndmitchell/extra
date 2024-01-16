@@ -6,3 +6,4 @@
 stack.yaml
 stack.yaml.lock
 tags
+/.sl/
