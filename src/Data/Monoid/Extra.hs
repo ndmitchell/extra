@@ -21,7 +21,7 @@ mwhen :: Monoid a => Bool -> a -> a
 mwhen b x = if b then x else mempty
 
 -- | The intersection of 'Data.Monoid.Endo' and 'Control.Arrow.Kleisli'. This
---   type provides a monoid instance for composition of monadic actions
+--   type provides a 'Monoid' instance for composition of monadic actions
 --   @a -> m a@.
 newtype KEndo m a = KEndo { appKEndo :: a -> m a }
 
