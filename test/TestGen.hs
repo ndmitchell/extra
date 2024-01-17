@@ -37,6 +37,12 @@ tests = do
     testGen "whenMaybe True  (print 1) == fmap Just (print 1)" $ whenMaybe True  (print 1) == fmap Just (print 1)
     testGen "whenMaybe False (print 1) == pure Nothing" $ whenMaybe False (print 1) == pure Nothing
     testGen "\\(x :: Maybe ()) -> unit x == x" $ \(x :: Maybe ()) -> unit x == x
+    testGen "guarded even 2 == [2]" $ guarded even 2 == [2]
+    testGen "guarded odd 2 == Nothing" $ guarded odd 2 == Nothing
+    testGen "guarded (not.null) \"My Name\" == Just \"My Name\"" $ guarded (not.null) "My Name" == Just "My Name"
+    testGen "guardedA (return . even) 42    == Just [42]" $ guardedA (return . even) 42    == Just [42]
+    testGen "guardedA (return . odd) 42     == Just []" $ guardedA (return . odd) 42     == Just []
+    testGen "guardedA (const Nothing) 42    == (Nothing :: Maybe [Int])" $ guardedA (const Nothing) 42    == (Nothing :: Maybe [Int])
     testGen "fold1M (\\x y -> Just x) [] == undefined" $ erroneous $ fold1M (\x y -> Just x) []
     testGen "fold1M (\\x y -> Just $ x + y) [1, 2, 3] == Just 6" $ fold1M (\x y -> Just $ x + y) [1, 2, 3] == Just 6
     testGen "partitionM (Just . even) [1,2,3] == Just ([2], [1,3])" $ partitionM (Just . even) [1,2,3] == Just ([2], [1,3])
