@@ -11,7 +11,7 @@ module Control.Monad.Extra(
     whenMaybe, whenMaybeM,
     unit,
     maybeM, fromMaybeM, eitherM,
-    guarded,
+    guarded, guardedA,
     -- * Loops
     loop, loopM, whileM, whileJustM, untilJustM,
     -- * Lists
@@ -97,6 +97,15 @@ eitherM l r x = either l r =<< x
 -- > guarded (not.null) "My Name" == Just "My Name"
 guarded :: Alternative m => (a -> Bool) -> a -> m a
 guarded pred x = if pred x then pure x else empty
+
+-- | A variant of `guarded` using 'Functor'-wrapped values.
+--
+-- > guardedA (return . even) 42    == Just [42]
+-- > guardedA (return . odd) 42     == Just []
+-- > guardedA (const Nothing) 42    == (Nothing :: Maybe [Int])
+guardedA :: (Functor f, Alternative m) => (a -> f Bool) -> a -> f (m a)
+guardedA pred x = fmap inner (pred x)
+    where inner b = if b then pure x else empty
 
 -- | A variant of 'foldM' that has no base case, and thus may only be applied to non-empty lists.
 --
