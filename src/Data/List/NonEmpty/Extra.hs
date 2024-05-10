@@ -6,7 +6,10 @@ module Data.List.NonEmpty.Extra(
     module Data.List.NonEmpty,
     (|:), (|>), snoc, (!?),
     appendl, appendr,
-    sortOn, union, unionBy,
+#if !(MIN_VERSION_base(4,20,0))
+    sortOn,
+#endif
+    union, unionBy,
     nubOrd, nubOrdBy, nubOrdOn,
     maximum1, minimum1, maximumBy1, minimumBy1, maximumOn1, minimumOn1,
     foldl1', repeatedly
@@ -62,11 +65,13 @@ appendl (x :| xs) l = x :| (xs ++ l)
 appendr :: [a] -> NonEmpty a -> NonEmpty a
 appendr l nel = foldr cons nel l
 
+#if !(MIN_VERSION_base(4,20,0))
 -- | Sort by comparing the results of a function applied to each element.
 --   The sort is stable, and the function is evaluated only once for
 --   each element.
 sortOn :: Ord b => (a -> b) -> NonEmpty a -> NonEmpty a
 sortOn f = fromList . List.sortOn f . toList
+#endif
 
 -- | Return the union of two non-empty lists. Duplicates, and elements of the
 --   first list, are removed from the the second list, but if the first list
