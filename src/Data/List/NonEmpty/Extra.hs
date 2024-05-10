@@ -1,4 +1,5 @@
 {-# LANGUAGE CPP #-}
+{-# OPTIONS_GHC -fno-warn-duplicate-exports #-}
 
 -- | Extra functions for working with 'NonEmpty' lists. The package
 --   also exports the existing "Data.List.NonEmpty" functions.
@@ -6,10 +7,7 @@ module Data.List.NonEmpty.Extra(
     module Data.List.NonEmpty,
     (|:), (|>), snoc, (!?),
     appendl, appendr,
-#if !(MIN_VERSION_base(4,20,0))
-    sortOn,
-#endif
-    union, unionBy,
+    sortOn, union, unionBy,
     nubOrd, nubOrdBy, nubOrdOn,
     maximum1, minimum1, maximumBy1, minimumBy1, maximumOn1, minimumOn1,
     foldl1', repeatedly
@@ -65,7 +63,7 @@ appendl (x :| xs) l = x :| (xs ++ l)
 appendr :: [a] -> NonEmpty a -> NonEmpty a
 appendr l nel = foldr cons nel l
 
-#if !(MIN_VERSION_base(4,20,0))
+#if __GLASGOW_HASKELL__ <= 910
 -- | Sort by comparing the results of a function applied to each element.
 --   The sort is stable, and the function is evaluated only once for
 --   each element.
