@@ -1,5 +1,6 @@
 Changelog for Extra
 
+1.7.15, released 2024-05-10
     #111, work with GHC 9.10
     Test with GHC 9.8
 1.7.14, released 2023-07-01
