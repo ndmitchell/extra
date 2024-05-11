@@ -63,7 +63,7 @@ appendl (x :| xs) l = x :| (xs ++ l)
 appendr :: [a] -> NonEmpty a -> NonEmpty a
 appendr l nel = foldr cons nel l
 
-#if __GLASGOW_HASKELL__ <= 910
+#if __GLASGOW_HASKELL__ <= 908
 -- | Sort by comparing the results of a function applied to each element.
 --   The sort is stable, and the function is evaluated only once for
 --   each element.
