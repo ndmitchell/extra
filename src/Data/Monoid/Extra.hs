@@ -27,7 +27,7 @@ newtype KEndo m a = KEndo { appKEndo :: a -> m a }
 
 instance (Monad m) => Semigroup (KEndo m a) where
     -- | Left-to-right composition
-    KEndo f <> KEndo g = KEndo (f >=> g)
+    KEndo f <> KEndo g = KEndo (f <=< g)
 
 instance (Monad m) => Monoid (KEndo m a) where
     mempty = KEndo pure
