@@ -26,7 +26,7 @@ mwhen b x = if b then x else mempty
 newtype KEndo m a = KEndo { appKEndo :: a -> m a }
 
 instance (Monad m) => Semigroup (KEndo m a) where
-    -- | Left-to-right composition
+    -- | Right-to-left composition
     KEndo f <> KEndo g = KEndo (f <=< g)
 
 instance (Monad m) => Monoid (KEndo m a) where
