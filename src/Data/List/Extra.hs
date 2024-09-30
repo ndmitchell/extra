@@ -902,6 +902,7 @@ zipWithLongest f (x:xs) (y:ys) = f (Just x) (Just y) : zipWithLongest f xs ys
 zipWithLongest f [] ys = map (f Nothing . Just) ys
 zipWithLongest f xs [] = map ((`f` Nothing) . Just) xs
 
+#if __GLASGOW_HASKELL__ <= 910
 -- | Lazily compare the length of a 'Foldable' with a number.
 --
 -- > compareLength [1,2,3] 1 == GT
@@ -910,6 +911,7 @@ zipWithLongest f xs [] = map ((`f` Nothing) . Just) xs
 -- > compareLength (1:2:3:undefined) 2 == GT
 compareLength :: (Ord b, Num b, Foldable f) => f a -> b -> Ordering
 compareLength = foldr (\_ acc n -> if n > 0 then acc (n - 1) else GT) (compare 0)
+#endif
 
 -- | Lazily compare the length of two 'Foldable's.
 -- > comparingLength [1,2,3] [False] == GT

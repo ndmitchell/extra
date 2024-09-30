@@ -62,7 +62,7 @@ import Control.Monad.Extra
 import Data.Either.Extra
 import Data.IORef.Extra
 import Data.List.Extra
-import Data.List.NonEmpty.Extra hiding (cons, snoc, sortOn, union, unionBy, nubOrd, nubOrdBy, nubOrdOn, (!?), foldl1', repeatedly)
+import Data.List.NonEmpty.Extra hiding (cons, compareLength, snoc, sortOn, union, unionBy, nubOrd, nubOrdBy, nubOrdOn, (!?), foldl1', repeatedly)
 import Data.Monoid.Extra
 import Data.Tuple.Extra
 import Data.Version.Extra
