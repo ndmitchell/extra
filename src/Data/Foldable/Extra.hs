@@ -11,6 +11,7 @@ module Data.Foldable.Extra
     , andM
     , findM
     , firstJustM
+    , compareLength
     ) where
 
 import Data.Foldable
@@ -59,3 +60,12 @@ findM p = foldr (\x -> MX.ifM (p x) (pure $ Just x)) (pure Nothing)
 -- | A generalization of 'Control.Monad.Extra.firstJustM' to 'Foldable' instances.
 firstJustM :: (Foldable f, Monad m) => (a -> m (Maybe b)) -> f a -> m (Maybe b)
 firstJustM p = MX.firstJustM p . toList
+
+-- | Lazily compare the length of a 'Foldable' with a number.
+--
+-- > compareLength [1,2,3] 1 == GT
+-- > compareLength [1,2] 2 == EQ
+-- > \(xs :: [Int]) n -> compareLength xs n == compare (length xs) n
+-- > compareLength (1:2:3:undefined) 2 == GT
+compareLength :: Foldable f => f a -> Int -> Ordering
+compareLength = foldr (\_ acc n -> if n > 0 then acc (n - 1) else GT) (compare 0)

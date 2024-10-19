@@ -10,7 +10,8 @@ module Data.List.NonEmpty.Extra(
     sortOn, union, unionBy,
     nubOrd, nubOrdBy, nubOrdOn,
     maximum1, minimum1, maximumBy1, minimumBy1, maximumOn1, minimumOn1,
-    foldl1', repeatedly
+    foldl1', repeatedly,
+    compareLength
     ) where
 
 import           Data.Function
@@ -137,3 +138,35 @@ foldl1' f (x:|xs) =  List.foldl' f x xs
 repeatedly :: (NonEmpty a -> (b, [a])) -> NonEmpty a -> NonEmpty b
 repeatedly f (a :| as) = b :| List.repeatedlyNE f as'
     where (b, as') = f (a :| as)
+
+#if __GLASGOW_HASKELL__ <= 910
+-- | Use 'compareLength' @xs@ @n@ as a safer and faster alternative
+-- to 'compare' ('length' @xs@) @n@. Similarly, it's better
+-- to write @compareLength xs 10 == LT@ instead of @length xs < 10@.
+--
+-- While 'length' would force and traverse
+-- the entire spine of @xs@ (which could even diverge if @xs@ is infinite),
+-- 'compareLength' traverses at most @n@ elements to determine its result.
+--
+-- >>> compareLength ('a' :| []) 1
+-- EQ
+-- >>> compareLength ('a' :| ['b']) 3
+-- LT
+-- >>> compareLength (0 :| [1..]) 100
+-- GT
+-- >>> compareLength undefined 0
+-- GT
+-- >>> compareLength ('a' :| 'b' : undefined) 1
+-- GT
+--
+-- @since 4.21.0.0
+--
+compareLength :: NonEmpty a -> Int -> Ordering
+compareLength xs n
+  | n < 1 = GT
+  | otherwise = foldr
+    (\_ f m -> if m > 0 then f (m - 1) else GT)
+    (\m -> if m > 0 then LT else EQ)
+    xs
+    n
+#endif

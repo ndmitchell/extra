@@ -1,5 +1,7 @@
 Changelog for Extra
 
+    #112, make Data.List.Extra.compareLength work on list/int only
+    #112, add compareLength to List.NonEmpty and Foldable
 1.7.16, released 2024-05-11
     Fix to actually work with GHC 9.10
 1.7.15, released 2024-05-10

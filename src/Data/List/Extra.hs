@@ -902,14 +902,41 @@ zipWithLongest f (x:xs) (y:ys) = f (Just x) (Just y) : zipWithLongest f xs ys
 zipWithLongest f [] ys = map (f Nothing . Just) ys
 zipWithLongest f xs [] = map ((`f` Nothing) . Just) xs
 
--- | Lazily compare the length of a 'Foldable' with a number.
+#if __GLASGOW_HASKELL__ <= 910
+-- | Use 'compareLength' @xs@ @n@ as a safer and faster alternative
+-- to 'compare' ('length' @xs@) @n@. Similarly, it's better
+-- to write @compareLength xs 10 == LT@ instead of @length xs < 10@.
 --
--- > compareLength [1,2,3] 1 == GT
--- > compareLength [1,2] 2 == EQ
--- > \(xs :: [Int]) n -> compareLength xs n == compare (length xs) n
--- > compareLength (1:2:3:undefined) 2 == GT
-compareLength :: (Ord b, Num b, Foldable f) => f a -> b -> Ordering
-compareLength = foldr (\_ acc n -> if n > 0 then acc (n - 1) else GT) (compare 0)
+-- While 'length' would force and traverse
+-- the entire spine of @xs@ (which could even diverge if @xs@ is infinite),
+-- 'compareLength' traverses at most @n@ elements to determine its result.
+--
+-- >>> compareLength [] 0
+-- EQ
+-- >>> compareLength [] 1
+-- LT
+-- >>> compareLength ['a'] 1
+-- EQ
+-- >>> compareLength ['a', 'b'] 1
+-- GT
+-- >>> compareLength [0..] 100
+-- GT
+-- >>> compareLength undefined (-1)
+-- GT
+-- >>> compareLength ('a' : undefined) 0
+-- GT
+--
+-- @since 4.21.0.0
+--
+compareLength :: [a] -> Int -> Ordering
+compareLength xs n
+  | n < 0 = GT
+  | otherwise = foldr
+    (\_ f m -> if m > 0 then f (m - 1) else GT)
+    (\m -> if m > 0 then LT else EQ)
+    xs
+    n
+#endif
 
 -- | Lazily compare the length of two 'Foldable's.
 -- > comparingLength [1,2,3] [False] == GT
