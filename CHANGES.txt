@@ -1,5 +1,6 @@
 Changelog for Extra (* = breaking change)
 
+    Test with GHC 9.12
 1.8, released 2024-10-19
     #109, add guarded to lift predicates into Alternatives
 *   #112, make Data.List.Extra.compareLength work on list/int only
