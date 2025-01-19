@@ -49,6 +49,7 @@ library
         Control.Monad.Extra
         Data.Foldable.Extra
         Data.Either.Extra
+        Data.Function.Extra
         Data.IORef.Extra
         Data.List.Extra
         Data.List.NonEmpty.Extra
