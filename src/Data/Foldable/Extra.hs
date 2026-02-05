@@ -15,6 +15,7 @@ module Data.Foldable.Extra
     ) where
 
 import Data.Foldable
+import Data.Monoid (Ap(..))
 import qualified Control.Monad.Extra as MX
 
 -- | Composition of 'not' and 'null'
@@ -69,3 +70,7 @@ firstJustM p = MX.firstJustM p . toList
 -- > compareLength (1:2:3:undefined) 2 == GT
 compareLength :: Foldable f => f a -> Int -> Ordering
 compareLength = foldr (\_ acc n -> if n > 0 then acc (n - 1) else GT) (compare 0)
+
+-- | A generalization of 'Control.Monad.Extra.concatMapM', 'anyM', 'allM', etc., to an aribtrary 'Monoid'.
+foldMapM :: (Foldable f, Applicative m, Monoid b) => (a -> m b) -> f a -> m b
+foldMapM f = getAp . foldMap (Ap . f)
