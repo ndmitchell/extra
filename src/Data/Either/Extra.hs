@@ -102,3 +102,7 @@ mapLeft f = either (Left . f) Right
 -- > mapRight show (Right True) == Right "True"
 mapRight :: (b -> c) -> Either a b -> Either a c
 mapRight = fmap
+
+-- | Lift an 'Either String' to a 'MonadFail'
+failLeft :: MonadFail m => Either String a -> m a
+failLeft = either fail pure
