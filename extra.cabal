@@ -6,7 +6,7 @@ license:            BSD3
 license-file:       LICENSE
 category:           Development
 author:             Neil Mitchell <ndmitchell@gmail.com>
-maintainer:         Neil Mitchell <ndmitchell@gmail.com>, David Fox <ddssff@gmail.com>
+maintainer:         Neil Mitchell <ndmitchell@gmail.com>
 copyright:          Neil Mitchell 2014-2025
 synopsis:           Extra functions I use.
 description:
@@ -36,7 +36,7 @@ library
         filepath,
         process,
         time
-    if !impl(ghcjs) && !arch(javascript)
+    if !arch(javascript)
         build-depends: clock >= 0.7
     if !os(windows)
         build-depends: unix

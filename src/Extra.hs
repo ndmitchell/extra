@@ -56,7 +56,7 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     -- * System.Time.Extra
     -- | Extra functions available in @"System.Time.Extra"@.
     Seconds, sleep, timeout, showDuration
-#if !__GHCJS__ && !defined(javascript_HOST_ARCH)
+#if !defined(javascript_HOST_ARCH)
     , offsetTime, offsetTimeIncrease, duration
 #endif
     ) where

@@ -9,13 +9,13 @@ module System.Time.Extra(
     Seconds,
     sleep, timeout,
     showDuration
-#if !__GHCJS__ && !defined(javascript_HOST_ARCH)
+#if !defined(javascript_HOST_ARCH)
     , offsetTime, offsetTimeIncrease, duration
 #endif
     ) where
 
 import Control.Concurrent
-#if !__GHCJS__ && !defined(javascript_HOST_ARCH)
+#if !defined(javascript_HOST_ARCH)
 import System.Clock
 #endif
 import Numeric.Extra
@@ -91,7 +91,7 @@ showDuration x
         f x m s = show ms ++ m ++ ['0' | ss < 10] ++ show ss ++ s
             where (ms,ss) = round x `divMod` 60
 
-#if !__GHCJS__ && !defined(javascript_HOST_ARCH)
+#if !defined(javascript_HOST_ARCH)
 -- | Call once to start, then call repeatedly to get the elapsed time since the first call.
 --   The time is guaranteed to be monotonic. This function is robust to system time changes.
 --
