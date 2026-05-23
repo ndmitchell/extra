@@ -1,3 +1,5 @@
+{-# LANGUAGE CPP #-}
+
 -- GENERATED CODE - DO NOT MODIFY
 -- See Generate.hs for details of how to generate
 
@@ -53,7 +55,10 @@ module Extra {-# DEPRECATED "This module is provided as documentation of all new
     system_, systemOutput, systemOutput_,
     -- * System.Time.Extra
     -- | Extra functions available in @"System.Time.Extra"@.
-    Seconds, sleep, timeout, showDuration, offsetTime, offsetTimeIncrease, duration,
+    Seconds, sleep, timeout, showDuration
+#if !__GHCJS__ && !defined(javascript_HOST_ARCH)
+    , offsetTime, offsetTimeIncrease, duration
+#endif
     ) where
 
 import Control.Concurrent.Extra

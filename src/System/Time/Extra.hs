@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE CPP, DeriveDataTypeable #-}
 
 -- | Extra functions for working with times. Unlike the other modules in this package, there is no
 --   corresponding @System.Time@ module. This module enhances the functionality
@@ -8,12 +8,16 @@
 module System.Time.Extra(
     Seconds,
     sleep, timeout,
-    showDuration,
-    offsetTime, offsetTimeIncrease, duration
+    showDuration
+#if !__GHCJS__ && !defined(javascript_HOST_ARCH)
+    , offsetTime, offsetTimeIncrease, duration
+#endif
     ) where
 
 import Control.Concurrent
+#if !__GHCJS__ && !defined(javascript_HOST_ARCH)
 import System.Clock
+#endif
 import Numeric.Extra
 import Control.Monad.IO.Class
 import Control.Monad.Extra
@@ -87,7 +91,7 @@ showDuration x
         f x m s = show ms ++ m ++ ['0' | ss < 10] ++ show ss ++ s
             where (ms,ss) = round x `divMod` 60
 
-
+#if !__GHCJS__ && !defined(javascript_HOST_ARCH)
 -- | Call once to start, then call repeatedly to get the elapsed time since the first call.
 --   The time is guaranteed to be monotonic. This function is robust to system time changes.
 --
@@ -115,3 +119,4 @@ duration act = do
     res <- act
     time <- liftIO time
     pure (time, res)
+#endif

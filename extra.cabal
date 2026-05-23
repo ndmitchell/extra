@@ -1,12 +1,12 @@
 cabal-version:      1.18
 build-type:         Simple
 name:               extra
-version:            1.8.1
+version:            1.9
 license:            BSD3
 license-file:       LICENSE
 category:           Development
 author:             Neil Mitchell <ndmitchell@gmail.com>
-maintainer:         Neil Mitchell <ndmitchell@gmail.com>
+maintainer:         Neil Mitchell <ndmitchell@gmail.com>, David Fox <ddssff@gmail.com>
 copyright:          Neil Mitchell 2014-2025
 synopsis:           Extra functions I use.
 description:
@@ -35,8 +35,9 @@ library
         directory,
         filepath,
         process,
-        clock >= 0.7,
         time
+    if !impl(ghcjs) && !arch(javascript)
+        build-depends: clock >= 0.7
     if !os(windows)
         build-depends: unix
 
