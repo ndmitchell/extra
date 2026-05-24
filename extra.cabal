@@ -1,7 +1,7 @@
 cabal-version:      1.18
 build-type:         Simple
 name:               extra
-version:            1.8.1
+version:            1.9
 license:            BSD3
 license-file:       LICENSE
 category:           Development
@@ -35,8 +35,9 @@ library
         directory,
         filepath,
         process,
-        clock >= 0.7,
         time
+    if !arch(javascript)
+        build-depends: clock >= 0.7
     if !os(windows)
         build-depends: unix
 
